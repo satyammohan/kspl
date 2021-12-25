@@ -1,4 +1,6 @@
-Ledger of : <b>{$party.0.name}</b><br>
+<h3>
+    Ledger of : <b>{$party.0.name}</b><br>
+</h3>
 <fieldset>
     <form method="post" action="index.php?module=partner&func=ledger">
         <table>
@@ -31,7 +33,7 @@ Ledger of : <b>{$party.0.name}</b><br>
     {section name=x loop=$data}
     <tr>
         <td>{$smarty.section.x.index_next}</td>
-        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{$data[x].date|date_format:"%d-%m-%Y"}</td>
         <td>{if $data[x].dhead==$smarty.request.id}{$partyname=$head[$data[x].chead]}{else}{$partyname=$head[$data[x].dhead]}{/if}
         {if $data[x].date}
             {$partyname} {$data[x].refno}
