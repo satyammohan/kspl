@@ -27,20 +27,19 @@
     <table border="1" id="report">
         <thead>
         <tr>
-            <th>Sl.</th><th>Company</th><th>Item</th><th class="right">Opening</th><th class="right">Purchase</th><th class="right">Sales</th><th class="right">Closing</th>
+            <th>Date</th><th>Particulars</th><th>Type</th><th>Ref.No.</th><th class="right">Stock-In</th><th class="right">Stock-Out</th><th class="right">Balance</th>
         </tr>
         </thead>
         <tbody>
-            {$sl=1}
             {foreach from=$list item=mod}
             <tr>
-                <td class="right">{$sl++}</td>
-                <td>{$mod.cname}</td>
-                <td>{$mod.name}</td>
-                <td class="right">{$mod.o|string_format:'%.0f'}</td>
-                <td class="right">{$mod.p|string_format:'%.0f'}</td>
-                <td class="right">{$mod.s|string_format:'%.0f'}</td>
-                <td class="right">{$mod.c|string_format:'%.0f'}</td>
+                <td>{$mod.date|date_format:"%d/%m/%Y"}</td>
+                <td>{$mod.particulars}</td>
+                <td>{$mod.type}</td>
+                <td>{$mod.refno}</td>
+                <td class="right">{$mod.in|string_format:'%.0f'}</td>
+                <td class="right">{$mod.out|string_format:'%.0f'}</td>
+                <td class="right">{$bal|string_format:'%.0f'}</td>
             <t/r>
             {/foreach}
         </tbody>
