@@ -1,0 +1,17 @@
+{include file="common/header.tpl.html"}
+<body id="page-top">
+
+    {if isset($smarty.session.id_user) && isset($smarty.session.id_info)}
+        {include file="common/body.tpl.html"}
+        {include file="common/addon.tpl.html"}
+    {else}
+        {include file=$page}
+    {/if}
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+</body>
+</html>

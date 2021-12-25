@@ -1,0 +1,64 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Purchase Chart</h6>
+    </div>
+    <div class="card-body">
+        <div class="chart-bar">
+            <canvas id="myBarChart"></canvas>
+        </div>        
+    </div>
+</div>
+
+<script src="vendor/chart.js/Chart.min.js"></script>
+
+<script>
+
+var data_lable = new Array();
+var data_data = new Array();
+{foreach from=$purc item=mod}
+    //data_lable
+    data_lable.push('{$mod.month}-{$mod.year}');
+    data_data.push({$mod.total});
+{/foreach}
+//data_lable = ["January", "February", "March", "April", "May", "June"];
+//data_data = [1, 5312, 6251, 7841, 9821, 14984];
+console.log(data_data)
+console.log(data_lable)
+
+
+
+var ctx = document.getElementById("myBarChart");
+var myBarChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: data_lable,
+    datasets: [{
+      label: "Purchase",
+      backgroundColor: "#4e73df",
+      data: data_data
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [{
+        ticks: {
+          min: 0
+        }
+      }],
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      callbacks: {
+        label: function(tooltipItem, chart) {
+          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+          return datasetLabel + ': Rs.' + tooltipItem.yLabel;
+        }
+      }
+    },
+  }
+});
+
+</script>
