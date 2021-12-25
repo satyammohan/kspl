@@ -2,7 +2,7 @@
 class partner extends common {
 
     function __construct() {
-        $this->checklogin();
+        //$this->checklogin();
         $this->table_prefix();
         parent:: __construct();
     }
@@ -265,7 +265,7 @@ class partner extends common {
     function getLedgerBalance($lid) {
         $sql = "SELECT SUM(debit) AS debit, SUM(credit) AS credit FROM {$this->prefix}tb WHERE id_head='$lid'";
         $res = $this->m->sql_getall($sql);
-        $balance = -$res[0]['debit'] + $res[0]['credit'];
+        $balance = round(-$res[0]['debit'] + $res[0]['credit'],2);
         $this->sm->assign("balance", $balance);
     }
     function unbilledOrder() {
@@ -313,7 +313,6 @@ class partner extends common {
                 WHERE o.id_head='{$id}' AND o.id_product=p.id_product  $wcond ORDER BY date DESC, time";
         $ord = $this->m->sql_getall($sql);
         $this->sm->assign("order", $ord);
-        $this->sm->assign("page", "myOrders.tpl.html");
     }
     function createOrder() {
         $this->access("party");
@@ -328,7 +327,6 @@ class partner extends common {
 		    WHERE p.showtoparty='YES' AND p.id_company=c.id_company ORDER BY c.name, p.name";
         $items = $this->m->sql_getall($sql, 1, "", "cname", "id_product");
         $this->sm->assign("items", $items);
-        $this->sm->assign("page", "createOrder.tpl.html");
     }
     function checkpartner() {
         $sql = "CREATE TABLE IF NOT EXISTS {$this->prefix}partner (id_partner int(11) NOT NULL AUTO_INCREMENT, 

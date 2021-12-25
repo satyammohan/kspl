@@ -29,12 +29,12 @@ class user extends common {
     }
     function login() {
         $this->selectcompany();
-        $sql = "SELECT id_head AS id_user, partyuser AS user, name, email AS pemail, 0 AS is_admin, address1 AS paddress, address2 AS paddress1, phone AS pphone, 'partner' AS type
+        $sql = "SELECT id_head AS id_user, partyuser AS user, name, email AS pemail, 0 AS is_admin, address1 AS paddress, address2 AS paddress1, phone AS pphone, 'party' AS type
                 FROM {$this->prefix}head WHERE partyuser='".$_REQUEST['user']['uname']."' AND partyuser!='' AND partypass='".$_REQUEST['user']['pass']."'";
         $user = $this->m->fetch_assoc($sql);
         if ($user) {
-            $_SESSION['type'] = "party";
             $this->set_session($user);
+            $_SESSION['type'] = "party";
             $this->set_permission();
             $this->config();
             $this->savelogininfo($_SESSION['type'], $_SERVER['REMOTE_ADDR'], $user['id_user'], "Login");
