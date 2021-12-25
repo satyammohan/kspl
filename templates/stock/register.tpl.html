@@ -27,20 +27,32 @@
     <table border="1" id="report">
         <thead>
         <tr>
-            <th>Date</th><th>Particulars</th><th>Type</th><th>Ref.No.</th><th class="right">Stock-In</th><th class="right">Stock-Out</th><th class="right">Balance</th>
+            <th>Date</th><th>Particulars</th><th>Ref.No.</th><th class="right">Stock-In</th><th class="right">Stock-Out</th><th class="right">Balance</th>
         </tr>
         </thead>
         <tbody>
             {foreach from=$list item=mod}
-            <tr>
-                <td>{$mod.date|date_format:"%d/%m/%Y"}</td>
-                <td>{$mod.particulars}</td>
-                <td>{$mod.type}</td>
-                <td>{$mod.refno}</td>
-                <td class="right">{$mod.in|string_format:'%.0f'}</td>
-                <td class="right">{$mod.out|string_format:'%.0f'}</td>
-                <td class="right">{$bal|string_format:'%.0f'}</td>
-            <t/r>
+                <tr><td colspan="7">Item Name : <b>{$mod.name}</b></td></tr>
+                {$bal = $mod.open}
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>Opening Balance</td>
+                    <td>&nbsp;</td>
+                    <td class="right">{if $mod.open>=0}{$mod.open|string_format:'%.0f'}{else}&nbsp;{/if}</td>
+                    <td class="right">{if $mod.open<0}{$mod.open*-1|string_format:'%.0f'}{else}&nbsp;{/if}</td>
+                    <td class="right">{$bal|string_format:'%.0f'}</td>
+                </tr>
+                {foreach from=$trans[$mod.id_product] item=m}
+                {$bal = $bal + $m.purc - $m.sale}
+                <tr>
+                    <td>{$m.date|date_format:"%d/%m/%Y"}</td>
+                    <td>{$m.particulars}</td>
+                    <td>{$m.refno}</td>
+                    <td class="right">{if $m.purc>0}{$m.purc|string_format:'%.0f'}{else}&nbsp;{/if}</td>
+                    <td class="right">{if $m.sale>0}{$m.sale|string_format:'%.0f'}{else}&nbsp;{/if}</td>
+                    <td class="right">{$bal|string_format:'%.0f'}</td>
+                </tr>
+                {/foreach}
             {/foreach}
         </tbody>
     </table>
