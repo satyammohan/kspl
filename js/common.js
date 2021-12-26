@@ -23,10 +23,6 @@ function tbl_handler() {
     $('#dataTable').DataTable();
 }
 $(document).ready(function() {
-    document.getElementById("start_date").min = sdate;
-    document.getElementById("start_date").max = edate;
-    document.getElementById("end_date").min = sdate;
-    document.getElementById("end_date").max = edate;
     $('.openPopup').on('click',function(){
         var dataURL = $(this).attr('data-href');
         $('.modal-body').load(dataURL,function(){
@@ -34,6 +30,12 @@ $(document).ready(function() {
         });
     });
     tbl_handler();
+    if (document.getElementById("start_date")  != null ) {
+        document.getElementById("start_date").min = sdate;
+        document.getElementById("start_date").max = edate;
+        document.getElementById("end_date").min = sdate;
+        document.getElementById("end_date").max = edate;
+    }
 });
 function update_status(tbl, id, row_status, list_status) {
     let url = "index.php?module=" + tbl + "&func=update_flag&table=" + tbl + "&id=" + id + "&row_status=" + row_status + "&list_status=" + list_status;

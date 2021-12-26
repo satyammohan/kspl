@@ -17,7 +17,7 @@
     }
     var preq=0; prea=0;
 </script>
-<b><div class="float-left"><h3>Add Order</h3></div><div class="float-right">Ledg:{if $balance<0}{abs($balance)} DB{else}{abs($balance)} CR{/if}</div></b><br><br>
+<b><div class="float-left"><h3>Add Sales Order</h3></div><div class="float-right">Ledger Balance : {abs($balance)} {if $balance<0}DB{else}CR{/if}</div></b><br><br>
 {$sl = 1}
 <form method="post" action="index.php?module=partner&func=saveOrder">
     {foreach from=$items item=mod key=k}
@@ -34,9 +34,9 @@
                 {$price = $m.seller_price}
             {/if}
             <td class="right">
-                <input tabindex="-1" name="price[{$m.id_product}]" value="{$price}" readonly="readonly" class="ns">
+                <input tabindex="-1" name="price[{$m.id_product}]" value="{$price}" readonly="readonly" class="right">
             </td>
-            <td><input name="item[{$m.id_product}]" min="0" type="number" class="ns" onfocus="myFunction(this.value, {$price})" onblur="update('q_{$sl}', this.value, {$price})" size="4"></td>
+            <td><input name="item[{$m.id_product}]" min="0" type="number" class="right" onfocus="myFunction(this.value, {$price})" onblur="update('q_{$sl}', this.value, {$price})" size="4"></td>
         </tr>
         {/foreach}
         </table>
