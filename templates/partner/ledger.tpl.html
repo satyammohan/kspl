@@ -5,8 +5,8 @@
     <form method="post" action="index.php?module=partner&func=ledger">
         <table>
             <tr>
-                <td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
-                <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+                <td><input type="date" id="start_date" name="start_date" value='{$smarty.request.start_date}' /></td>
+                <td><input type="date" id="end_date" name="end_date" value='{$smarty.request.end_date}' /></td>
                 <td>
                     <input type="hidden" name="id"  value='{$smarty.request.id}' />
                     <input type="submit" value="Go" />

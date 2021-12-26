@@ -23,6 +23,10 @@ function tbl_handler() {
     $('#dataTable').DataTable();
 }
 $(document).ready(function() {
+    document.getElementById("start_date").min = sdate;
+    document.getElementById("start_date").max = edate;
+    document.getElementById("end_date").min = sdate;
+    document.getElementById("end_date").max = edate;
     $('.openPopup').on('click',function(){
         var dataURL = $(this).attr('data-href');
         $('.modal-body').load(dataURL,function(){
