@@ -1,0 +1,51 @@
+<h3>
+    Sales Bill Listing<hr>
+</h3>
+<fieldset>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" id="start_date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" id="end_date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<table id="dataTable"  class="table table-striped table-bordered" width="100%">
+    <thead>
+    <tr>
+       	<th>Sl.</th>
+       	<th>Invno</th>
+       	<th>Date</th>
+        <th>Party</th>
+       	<th align="right">Goods Value</th>
+       	<th align="right">Discount</th>
+       	<th align="right">GST</th>
+       	<th align="right">Other</th>
+       	<th align="right">Total</th>
+        <th><a class="btn btn-primary" href="index.php?module=sales&func=edit" title="Add Sales Bill"><i class="fa fa-plus"></i></a></th></th>
+    </tr>
+    </thead>
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].invno}</td>
+        <td>{$data[x].date|date_format:"%d-%m-%Y"}</td>
+        <td>{$data[x].party_name}</td>
+        <td align="right">{$data[x].totalamt|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].discount}</td>
+        <td align="right">{$data[x].gst}</td>
+        <td align="right">{$data[x].round}</td>
+        <td align="right">{$data[x].total}</td>
+        <td>
+            <a class="btn btn-primary" href="index.php?module=sales&func=edit&id={$mod.id_partner_sale}" title="Edit Sales Bill"><i class="fa fa-edit"></i></a>
+            <a class="btn btn-primary" href="index.php?module=sales&func=delete&id={$mod.id_partner_sale}" onclick="return confirm('Do you want to delete?');" title="Delete Sales Bill"><i class="fa fa-trash"></i></a>
+        </td>
+    </tr>
+    {/section}
+</table>

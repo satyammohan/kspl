@@ -23,7 +23,7 @@ class sreport extends common {
                     $detail = $this->m->sql_getall($sql_detail, 1, "", "id_sale", "id_saledetail");
                     $this->sm->assign("detail", $detail);
                 }
-                $sql = "SELECT s.*, CAST(SUBSTRING(invno, POSITION('/' IN invno)+1) AS signed) AS myno, SUBSTRING(invno, 1, POSITION('/' IN invno)-1) AS pref, h.gstin, h.local FROM `{$this->prefix}partner_stock` s LEFT JOIN `{$this->prefix}head` h ON s.id_head=h.id_head  WHERE `date` >= '$sdate' AND `date` <= '$edate' {$wcond} ORDER BY `date`, pref, myno, invno";
+                $sql = "SELECT s.* FROM `{$this->prefix}partner_stock` s WHERE `date` >= '$sdate' AND `date` <= '$edate' {$wcond} ORDER BY date";
                 break;
             case 2:
                 $sql = "SELECT `date`, SUM(totalamt-discount) AS totalamt, SUM(vat) AS vat, SUM(totalcess) AS totalcess, SUM(`total`) AS `total`, COUNT(IF(cash=2,1,NULL)) AS cashbills, COUNT(IF(cash=1,1,NULL)) AS creditbills , SUM(IF(cash=2,total,0.00)) AS cashtotal, SUM(IF(cash=1,total,0.00)) AS credittotal FROM `{$this->prefix}partner_stock` s WHERE `date` >= '$sdate' AND `date` <= '$edate' {$wcond} GROUP BY `date` ORDER BY `date`";
