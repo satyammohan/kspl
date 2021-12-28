@@ -60,7 +60,7 @@ class sales extends common {
         $list = $this->m->getall($this->m->query($sql));
         $this->sm->assign("data", $list);
     }
-    function print() {
+    function printbill() {
         $id = $_REQUEST['id'];
         $sql = "SELECT s.*, h.* FROM {$this->prefix}partner_sale s
                 LEFT JOIN {$this->prefix}partner_party h ON s.id_party=h.id_party

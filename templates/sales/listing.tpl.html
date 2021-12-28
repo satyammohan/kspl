@@ -17,7 +17,7 @@
 <table id="dataTable"  class="table table-striped table-bordered" width="100%">
     <thead>
     <tr>
-       	<th>Sl.</th><th>Invno</th><th>Date</th><th>Party</th><th>Goods Value</th><th>Discount</th><th>GST</th><th>Other</th><th>Total</th>
+       	<th>Sl.</th><th>Invno</th><th>Date</th><th>Party</th><th>Goods Value</th><th>GST</th><th>Total</th>
         <th><a class="btn btn-primary" href="index.php?module=sales&func=edit" title="Add Sales Bill"><i class="fa fa-plus"></i></a></th></th>
     </tr>
     </thead>
@@ -28,13 +28,11 @@
         <td>{$data[x].date|date_format:"%d-%m-%Y"}</td>
         <td>{$data[x].name}</td>
         <td class="right">{$data[x].totalamt|string_format:"%.2f"}</td>
-        <td class="right">{$data[x].discount}</td>
         <td class="right">{$data[x].gst}</td>
-        <td class="right">{$data[x].round}</td>
         <td class="right">{$data[x].total}</td>
         <td>
             <a class="btn btn-primary" href="index.php?module=sales&func=edit&id={$data[x].id_partner_sale}" title="Edit Sales Bill"><i class="fa fa-edit"></i></a>
-            <a class="btn btn-primary" href="index.php?module=sales&func=print&id={$data[x].id_partner_sale}" title="Print Sales Bill"><i class="fa fa-print"></i></a>
+            <a class="btn btn-primary" href="index.php?module=sales&func=printbill&id={$data[x].id_partner_sale}" title="Print Sales Bill"><i class="fa fa-print"></i></a>
             <a class="btn btn-primary" href="index.php?module=sales&func=delete&id={$data[x].id_partner_sale}" onclick="return confirm('Do you want to delete?');" title="Delete Sales Bill"><i class="fa fa-trash"></i></a>
         </td>
     </tr>

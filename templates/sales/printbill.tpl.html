@@ -92,7 +92,7 @@
             <table width="100%" style="font-size:11px">
                 <thead>
                     <tr>
-                        <th>Sl.</th><th>Product Name</th><th>HSN Code</th><th>Batch</th><th>Mfg.Date</th><th>Rate</th><th>Shipped<br>Qty.</th><th>Billed<br>Qty</th><th>Amount</th><th>CGST %</th><th>CGST</th><th>SGST %</th><th>SGST</th><th>IGST %</th><th>IGST</th><th>Cess %</th><th>Cess</th><th>Net Value</th>
+                        <th>Sl.</th><th>Product Name</th><th>HSN Code</th><th>Rate</th><th>Shipped<br>Qty.</th><th>Billed<br>Qty</th><th>Amount</th><th>CGST %</th><th>CGST</th><th>SGST %</th><th>SGST</th><th>Cess %</th><th>Cess</th><th>Net Value</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -122,30 +122,14 @@
                         <td>{$smarty.foreach.items.iteration}</td>
                         <td>{$mod.item}</td>
                         <td>{$mod.hsncode}</td>
-                        <td>{$mod.batch_no}</td>
-                        <td>{$mod.mfg_date}</td>
                         <td align="right">{$mod.rate|string_format:"%.2f"}</td>
                         <td align="right">{($mod.qty+$mod.free)|string_format:"%d"}</td>
                         <td align="right">{$mod.qty|string_format:"%d"}</td>
                         <td align="right">{$mod.amount|string_format:"%.2f"}</td>
-                        <!---<td align="right">
-                            {($mod.discount_amount1+$mod.discount_amount2+$mod.discount_amount3)|string_format:"%.2f"}
-                        </td>-->
-                        {if $ch.local==0}
-                            <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
-                            <td align="right">{($mod.tax_amount/2)|string_format:"%.2f"}</td>
-                            <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
-                            <td align="right">{($mod.tax_amount/2)|string_format:"%.2f"}</td>
-                            <td align="right">{0|string_format:"%.2f"}</td>
-                            <td align="right">{0|string_format:"%.2f"}</td>
-                        {else}
-                            <td align="right">{0|string_format:"%.2f"}</td>
-                            <td align="right">{0|string_format:"%.2f"}</td>
-                            <td align="right">{0|string_format:"%.2f"}</td>
-                            <td align="right">{0|string_format:"%.2f"}</td>
-                            <td align="right">{($mod.tax_per)|string_format:"%.2f"}</td>
-                            <td align="right">{($mod.tax_amount)|string_format:"%.2f"}</td>
-                        {/if}
+                        <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
+                        <td align="right">{($mod.tax_amount/2)|string_format:"%.2f"}</td>
+                        <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
+                        <td align="right">{($mod.tax_amount/2)|string_format:"%.2f"}</td>
                         <td align="right">{$mod.cess|string_format:"%.2f"}</td>
                         <td align="right">{$mod.cessamt}</td>
                         <td align="right">{$mod.net_amount}</td>
