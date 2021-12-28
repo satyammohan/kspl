@@ -11284,3 +11284,8 @@ body.sidebar-toggled footer.sticky-footer {
 .right {
   text-align: right !important;
 }
+.err_msg {
+  background-color:#FF0000;
+  font-size:20px;
+  text-align:center;
+}

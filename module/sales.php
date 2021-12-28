@@ -40,9 +40,15 @@ class sales extends common {
     }
     function delete() {
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $sql = $this->create_update("{$this->prefix}partner_sale", $data, "id_partner_sale='{$id}'");
-        $this->m->query($sql);
-        $_SESSION['msg'] = "Sales Deleted Successfully.";
+        if ($id) {
+            $sql = "DELETE FROM {$this->prefix}partner_sale WHERE id_partner_sale='{$id}'";
+            $this->m->query($sql);
+            $sql = "DELETE FROM {$this->prefix}partner_stock WHERE id_partner_sale='{$id}'";
+            $this->m->query($sql);
+            $_SESSION['msg'] = "Sales Deleted Successfully.";
+        } else {
+            $_SESSION['msg'] = "Sales bill not found. Deleted not possible.";
+        }
         $this->redirect("index.php?module=sales&func=listing");
     }
     function listing() {
@@ -50,6 +56,22 @@ class sales extends common {
         $sql = "SELECT s.*, p.name FROM {$this->prefix}partner_sale s LEFT JOIN {$this->prefix}partner_party p ON s.id_party=p.id_party WHERE s.id_head='$id' ORDER BY 1";
         $list = $this->m->getall($this->m->query($sql));
         $this->sm->assign("data", $list);
+    }
+    function print() {
+        $id = $_REQUEST['id'];
+        $sql = "SELECT s.*, h.* FROM {$this->prefix}partner_sale s
+                LEFT JOIN {$this->prefix}partner_party h ON s.id_party=h.id_party
+                WHERE s.id_partner_sale IN ($id) GROUP BY s.id_partner_sale ";
+        $res1 = $this->m->sql_getall($sql);
+        foreach ($res1 as $key => $val) {
+            $res1[$key]['w'] = $this->convert_number(round($val['total']));
+        }
+        $this->sm->assign("sale", $res1);
+        $sql = "SELECT s.*, p.name AS item, p.hsncode, p.case, p.pack, p.unit FROM {$this->prefix}saledetail s, {$this->prefix}product p WHERE s.id_product=p.id_product AND s.id_sale IN ($id)";
+        $res = $this->m->sql_getall($sql, 1, "", "id_sale", "id_saledetail");
+        $this->sm->assign("saledetail", $res);
+        $sql = "SELECT id_taxmaster AS id, name FROM {$this->prefix}taxmaster";
+        $this->sm->assign("tax", $this->m->sql_getall($sql, 2, "name", "id"));
     }
 }
 ?>

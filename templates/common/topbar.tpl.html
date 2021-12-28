@@ -20,7 +20,14 @@
             </div>
         </div>
     </form> -->
-
+    <div class="err_msg"><b>{$smarty.session.msg}</b></div>
+    <script>
+        $( document ).ready(function() {
+          setTimeout(function(){
+            $('.err_msg').hide('slow');
+          }, 8000);
+        });
+    </script>
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 

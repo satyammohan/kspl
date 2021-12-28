@@ -6,12 +6,10 @@
         <table>
             <tr>
                 <td>Start</td>
-                <td><input type="date" id="start_date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td><input type="date" id="start_date" name="start_date" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
                 <td>End</td>
-                <td><input type="date" id="end_date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
-                <td colspan="4" align="center">
-                    <input type="submit" value="Go" />
-                </td>
+                <td><input type="date" id="end_date" name="end_date" placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="submit" value="Go" /></td>
             </tr>
         </table>
     </form>
@@ -35,9 +33,9 @@
         <td class="right">{$data[x].round}</td>
         <td class="right">{$data[x].total}</td>
         <td>
-            <a class="btn btn-primary" href="index.php?module=sales&func=edit&id={$mod.id_partner_sale}" title="Edit Sales Bill"><i class="fa fa-edit"></i></a>
-            <a class="btn btn-primary" href="index.php?module=sales&func=print&id={$mod.id_partner_sale}" title="Print Sales Bill"><i class="fa fa-print"></i></a>
-            <a class="btn btn-primary" href="index.php?module=sales&func=delete&id={$mod.id_partner_sale}" onclick="return confirm('Do you want to delete?');" title="Delete Sales Bill"><i class="fa fa-trash"></i></a>
+            <a class="btn btn-primary" href="index.php?module=sales&func=edit&id={$data[x].id_partner_sale}" title="Edit Sales Bill"><i class="fa fa-edit"></i></a>
+            <a class="btn btn-primary" href="index.php?module=sales&func=print&id={$data[x].id_partner_sale}" title="Print Sales Bill"><i class="fa fa-print"></i></a>
+            <a class="btn btn-primary" href="index.php?module=sales&func=delete&id={$data[x].id_partner_sale}" onclick="return confirm('Do you want to delete?');" title="Delete Sales Bill"><i class="fa fa-trash"></i></a>
         </td>
     </tr>
     {/section}
