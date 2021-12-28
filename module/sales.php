@@ -52,8 +52,11 @@ class sales extends common {
         $this->redirect("index.php?module=sales&func=listing");
     }
     function listing() {
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $id = $_SESSION['id_user'];
-        $sql = "SELECT s.*, p.name FROM {$this->prefix}partner_sale s LEFT JOIN {$this->prefix}partner_party p ON s.id_party=p.id_party WHERE s.id_head='$id' ORDER BY 1";
+        $sql = "SELECT s.*, p.name FROM {$this->prefix}partner_sale s LEFT JOIN {$this->prefix}partner_party p ON s.id_party=p.id_party 
+                WHERE s.id_head='$id' AND date>='$sdate' AND date<='$edate' ORDER BY date, invno";
         $list = $this->m->getall($this->m->query($sql));
         $this->sm->assign("data", $list);
     }
