@@ -27,7 +27,7 @@ class party extends common {
         $sql = $this->create_update("{$this->prefix}partner_party", $data, "id_party='{$id}'");
         $this->m->query($sql);
         $_SESSION['msg'] = "Party Updated Successfully.";
-        $this->redirect("index.php?module=rooms&func=listing");
+        $this->redirect("index.php?module=party&func=listing");
     }
     function edit() {
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";

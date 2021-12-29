@@ -11286,6 +11286,7 @@ body.sidebar-toggled footer.sticky-footer {
 }
 .err_msg {
   background-color:var(--blue);
+  color: white;
   font-size:20px;
   text-align:center;
 }

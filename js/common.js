@@ -59,3 +59,67 @@ function update_listing(tbl, id) {
     else
         window.location.href = "index.php?module=" + tbl + "&func=listing&status=" + id;
 }
+function callauto(id, url, hid, headers='') {
+    $("#" + id).addClass("ac_dropdown");
+    $("#" + id).focus(function() {
+        $("#" + id).select();
+    });
+    $("#" + id).autocomplete({
+        delay: 1000,
+        autoFocus: true,
+        open: function() {
+            if (headers) {
+                col_names = "";
+                $.each( headers, function( key, value ) {
+                    firstcol = (key==0) ? "ACFirst" : "ACColumn";
+                    col_names += "<div class='" + firstcol +"'>"+value+"</div>";
+                });
+                $('ul.ui-autocomplete').prepend("<li><div class='ACRow ACtitle'>"+col_names+"</div></li>");
+            }
+        },
+        source: function(request, response) {
+            var name = $("#" + id).val();
+            $.ajax({
+                url: url,
+                dataType: "json",
+                data: { filter: name },
+                    success: function(data) {
+                    response(jQuery.map(data, function(item) {
+                        if (typeof (hid) == "string") {
+                            return { value: item.name, key: item.id };
+                        } else {
+                            return item;
+                        }
+                    }));
+                }
+            });
+        },
+        select: function(event, ui) {
+            if (typeof (hid) == "string") {
+                $("#" + hid).val(ui.item.key);
+            } else {
+                for (j in hid) {
+                    $("#" + hid[j]).val(ui.item["col" + j]).trigger('change');
+                }
+            }
+        }
+    });
+    $(".ac_dropdown").on("click", function() {
+        $("#" + this.id).autocomplete("search", "a");
+    });
+}
+
+$.ui.autocomplete.prototype._renderItem = function (ul, item) {
+    if (typeof item.filter == 'string') {
+        mycolumns = item.filter;
+        headers = mycolumns.split(",");
+        item.label = "<div class='ACRow'>";
+        $.each( headers, function( key, value ) {
+            firstcol = (key==0) ? "ACFirst" : "ACColumn";
+            item.label += "<div class='" + firstcol +"'>"+item[value]+"</div>";
+        });
+        item.label += "</div>";
+    }
+    return $("<li></li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);
+};   
+

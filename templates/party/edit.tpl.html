@@ -1,8 +1,9 @@
 <h3>
     {if $data.id_party}Edit{else}Add{/if} Party<hr>
 </h3>
-<form name="tax" id="add_tax" method="post" action="index.php?module=party&func={if $data.id_party}update{else}insert{/if}">
+<form method="post" action="index.php?module=party&func={if $data.id_party}update{else}insert{/if}">
     <table>
+        
         <tr>
             <td><b>Name:</b></td>
             <td><input class="form-control"  type="text" name="entry[name]" required value="{$data.name}"/></td>
@@ -17,7 +18,10 @@
         </tr>
         <tr>
             <td><b>Opening Balance:</b></td>
-            <td><input class="form-control"  type="text" name="entry[opening_balance]" value="{$data.opening_balance}"/></td>
+            <td><input class="form-control right"  type="text" name="entry[opening_balance]" value="{$data.opening_balance}"/></td>
+            <td><select name="entry[otype]" >
+                {html_options  options=$ini.balance_type selected=$data.otype } 
+            </select></td>
         </tr>
         <tr>
             <td><b>State Code:</b></td>
@@ -33,7 +37,7 @@
         </tr>
         <tr>
             <td><b>Pin:</b></td>
-            <td><input class="form-control"  type="text" name="entry[pincode]" required value="{$data.pincode}"/></td>
+            <td><input class="form-control"  type="text" name="entry[pincode]" value="{$data.pincode}"/></td>
         </tr>
         <tr>
             <td><b>Location:</b></td>

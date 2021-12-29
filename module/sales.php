@@ -32,6 +32,13 @@ class sales extends common {
     }
     function edit() {
         $hid = $_SESSION['id_user'];
+        $sql = "SELECT id_taxmaster, name FROM {$this->prefix}taxmaster ORDER BY tax_per";
+        $this->sm->assign("tax", $this->m->sql_getall($sql, 2, "name", "id_taxmaster"));
+        $sql = "SELECT id_taxmaster, tax_per FROM {$this->prefix}taxmaster ORDER BY tax_per";
+        $this->sm->assign("taxrates", json_encode($this->m->sql_getall($sql, 2, "tax_per", "id_taxmaster")));
+
+        $sql = "SELECT id, name FROM {$this->prefix}partner_sale_prefix WHERE id_head='$hid' ORDER BY name";
+        $this->sm->assign("series", $this->m->sql_getall($sql, 2, "name", "id"));
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
         $sql = $this->create_select("{$this->prefix}partner_sale", "id_partner_sale='$id' AND id_head='$hid'");
         $data = $this->m->fetch_assoc($sql);
