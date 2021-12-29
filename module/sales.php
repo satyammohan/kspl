@@ -8,7 +8,6 @@ class sales extends common {
     }
     function _default() {
     }
-
     function insert() {
         $data = $_REQUEST['entry'];
         $data['id_head'] = $_SESSION['id_user'];
