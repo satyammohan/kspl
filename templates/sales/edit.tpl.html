@@ -22,13 +22,25 @@
                     </tr>
                     <tr>
                         <td>
-                            {if !$sdata.id_sale}<select name="series" id="series">{html_options options=$series
-                                selected=$sdata.id_series}</select>{/if}
-                            <input type="text" name="sales[invno]" required size="12" value="{$sdata.invno}" {if
-                                !$sdata.id_sale} id="inv" {/if} /><br><span id="msgbox"></span>
+                            {if !$sdata.id_sale}<select name="series" id="series">{html_options options=$series selected=$sdata.id_series}</select>{/if}
+                            <input type="text" name="sales[invno]" required size="12" value="{$sdata.invno}" {if !$sdata.id_sale} id="inv" {/if} />
+                            <br><span id="msgbox"></span>
                         </td>
                         <td>
-                            <input type="date" name='sales[date]' required id="date" value="{$sdata.date}" />
+                            {if isset($sdata.date)}
+                                {$date=$sdata.date}
+                            {else}
+                                {if $smarty.now|date_format:'%Y-%m-%d'>=$smarty.session.start_date && $smarty.now|date_format:'%Y-%m-%d'<=$smarty.session.end_date}
+                                    {if $smarty.session.current_sale_date}
+                                        {$date=$smarty.session.current_sale_date}
+                                    {else}
+                                        {$date=$smarty.now|date_format:'%Y-%m-%d'}
+                                    {/if}
+                                {else}
+                                    {$date=$smarty.session.end_date}
+                                {/if}
+                            {/if}
+                            <input type="date" name='sales[date]' required id="date" value="{$date}" />
                         </td>
                         <td><input type="text" name="sales[challan_no]" value="{$sdata.challan_no}" /></td>
                         <td><input type="date" name="sales[challan_date]" value="{$sdata.challan_date}" /></td>

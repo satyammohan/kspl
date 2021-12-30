@@ -82,5 +82,31 @@ class sales extends common {
         $sql = "SELECT id_taxmaster AS id, name FROM {$this->prefix}taxmaster";
         $this->sm->assign("tax", $this->m->sql_getall($sql, 2, "name", "id"));
     }
+    function getsuffix() {
+        $sdate = $_SESSION['start_date'];
+        $edate = $_SESSION['end_date'];
+        $series = @$_REQUEST['series'];
+        if ($series) {
+            $pos = strlen($series) + 1;
+            $sql = "SELECT MAX(CAST(substring(invno, {$pos}) as decimal(11))) AS maxid FROM {$this->prefix}partner_sale WHERE invno LIKE '$series%' AND date>='$sdate' AND date<='$edate'";
+            $pstr = $series;
+        } else {
+            $sql = "SELECT MAX(CAST(SUBSTRING(invno, 2) AS UNSIGNED)) AS maxid FROM {$this->prefix}partner_sale WHERE date>='$sdate' AND date<='$edate'";
+            $pstr = "T";
+        }
+        $data = $this->m->fetch_assoc($sql);
+        echo $pstr . ($data['maxid'] + 1);
+        exit;
+    }
+    function check() {
+        $invno = trim($_REQUEST['invno']);
+        $sdate = $_SESSION['start_date'];
+        $edate = $_SESSION['end_date'];
+        $sql = $this->create_select("{$this->prefix}partner_sale", "invno='$invno' AND `date`>='$sdate' AND `date`<='$edate'");
+        $num = $this->m->num_rows($this->m->query($sql));
+        echo ($invno=="") ? 1 : $num;
+        exit;
+    }
+
 }
 ?>
