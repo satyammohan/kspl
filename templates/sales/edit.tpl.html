@@ -71,7 +71,7 @@
                             <tr class="tabRow">
                                 <td><a onclick="removeRow(this);" href="#" tabindex="-1"><img src="{$source}img/close.png" /></a></td>
                                 <td>
-                                    <input type="text" name="items[]" id="item__1" size="40" onblur="getValues();getbatch(this.id);" required="required" />
+                                    <input type="text" name="items[]" id="item__1" size="30" onblur="getValues();getbatch(this.id);" required="required" />
                                     <input type="hidden" name="id_product[]" id="id_product__1" />
                                     <input type="hidden" name="discount_amount1[]" id="discount_amount1__1" />
                                     <input type="hidden" name="discount_amount2[]" id="discount_amount2__1" />
@@ -116,17 +116,17 @@
             <td valign="top">
                 <table>
                     <tr>
-                        <td><b>Goods Value : </b></td>
-                        <td><input type="text" name="sales[totalamt]" size="12" id="totalamt" class="right" value="{$sdata.totalamt}" readonly /></td>
-                        <td><b>Discount : </b></td>
-                        <td><input type="text" name="sales[discount]" size="12" id="tdiscount" class="right" value="{$sdata.discount}" readonly /></td>
-                        <td><b>GST : </b></td>
-                        <td><input type="text" name="sales[vat]" size="12" id="vat" class="right" value="{$sdata.vat}" readonly /></td>
-                        <td><b>CESS : </b></td>
-                        <td><input type="text" name="sales[totalcess]" size="12" id="totalcess" class="right" value="{$sdata.totalcess}" readonly /></td>
-                        <td><b>Round off : </b></td>
-                        <td><input type="text" name="sales[round]" size="10" id="roundof" class="right" value="{$sdata.round}" onblur="getValues()" /></td>
-                        <td><b>Total : </b></td>
+                        <td><b>Goods Value</b></td>
+                        <td><input type="text" name="sales[totalamt]" size="8" id="totalamt" class="right" value="{$sdata.totalamt}" readonly /></td>
+                        <td><b>Discount</b></td>
+                        <td><input type="text" name="sales[discount]" size="8" id="tdiscount" class="right" value="{$sdata.discount}" readonly /></td>
+                        <td><b>GST</b></td>
+                        <td><input type="text" name="sales[vat]" size="8" id="vat" class="right" value="{$sdata.vat}" readonly /></td>
+                        <td><b>CESS</b></td>
+                        <td><input type="text" name="sales[totalcess]" size="8" id="totalcess" class="right" value="{$sdata.totalcess}" readonly /></td>
+                        <td><b>Round off</b></td>
+                        <td><input type="text" name="sales[round]" size="8" id="roundof" class="right" value="{$sdata.round}" onblur="getValues()" /></td>
+                        <td><b>Total</b></td>
                         <td>
                             <input type="text" name="sales[total]" id="total" class="right" value="{$sdata.total}" readonly />
                             <input type="text" id="prev_total" class="right" value="{$sdata.total}" style="display: none;" />
