@@ -32,6 +32,8 @@ function removeRow(obj) {
     getValues();
 }
 function rowadd(obj, tid) {
+    var parts = id.match(/(\D+)(\d+)$/);
+    //itemid = $("#id_product__" + parts[2]).val();itemid!=""
     if ($(obj).closest('tr').is(':last-child')) {
         addRow(tid)
     }

@@ -11289,28 +11289,31 @@ body.sidebar-toggled footer.sticky-footer {
   font-size:20px;
   text-align:center;
 }
-
 .ACtitle {
-    font-weight:bolder;
-    font-size: 12px;
-    padding-left: 4px;
-    padding-top: 4px;
-    height: 20px;
-    vertical-align: middle;
-    background-color: #99CCFF;
+  font-weight:bolder;
+  font-size: 12px;
+  padding-left: 4px;
+  padding-top: 4px;
+  height: 20px;
+  vertical-align: middle;
+  background-color: #99CCFF;
 }
 .ACRow {
-    display: table;
-    table-layout: fixed;
-    width:500px;
-    font-size: 8px !important;
+  display: table;
+  table-layout: fixed;
+  width:500px;
+  font-size: 8px !important;
 }
 .ACColumn {
-    display: table-cell;
-    width: 100px;
+  display: table-cell;
+  width: 100px;
 }
 .ACFirst {
-    display: table-cell;
-    width: 200px;
-    font-size: 10px !important;
+  display: table-cell;
+  width: 200px;
+  font-size: 10px !important;
+}
+input[readonly] {
+  background-color: lightgray;
+  border: none;
 }
