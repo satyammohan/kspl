@@ -79,14 +79,14 @@
                                     <input type="hidden" name="discount_amount4[]" id="discount_amount4__1" />
                                     <input type="hidden" id="itemcase__1" />
                                 </td>
-                                <td><input type="text" name="batch_no[]" id="batch_no__1" size="10" onfocus='$("#" + this.id).autocomplete("search", "a")' />
+                                <td><input type="text" name="batch_no[]" id="batch_no__1" size="8" onfocus='$("#" + this.id).autocomplete("search", "a")' />
                                     <input type="hidden" name="id_batch[]" id="id_batch__1" />
-                                    <input type="text" name="exp_date[]" onfocus="jumpnext(this.id, 'rate__');" tabindex="-1" id="exp_date__1" size="6" />
+                                    <input type="text" name="exp_date[]" onfocus="jumpnext(this.id, 'rate__');" tabindex="-1" id="exp_date__1" size="5" />
                                 </td>
                                 <td><input type="text" size="5" name="rate[]" id="rate__1" tabindex="-1" class="right"  onblur="getValues();" /></td>
                                 <td><input type="text" size="5" name="quantity[]"  onblur="getValues();" id="qty__1" required="required" class="right" /></td>
                                 <td><input type="text" size="5" name="free[]" id="free__1" class="right" /></td>
-                                <td><input type="text" size="7" name="amount[]" tabindex="-1" readonly="readonly" id="amount__1" class="right" /></td>
+                                <td><input type="text" size="6" name="amount[]" tabindex="-1" readonly="readonly" id="amount__1" class="right" /></td>
                                 <td><input type="text" size="5" name="discount3[]" id="discount3__1" onblur="getValues()" class="right" />
                                     <select name="discount_type3[]" onchange="getValues()" id="discount_type3__1" class="select" tabindex=-1>
                                         {html_options options=$ini.discount}
@@ -99,11 +99,11 @@
                                     </select>
                                     <input type="hidden" name="tax_per[]" id="tax_per__1" />
                                     <input type="hidden" name="goods_amount[]" id="goods_amount__1" />
-                                    <input type="text" name="tax_amount[]" tabindex="-1" id="taxamt__1" readonly="readonly" size="6" class="right" />
+                                    <input type="text" name="tax_amount[]" tabindex="-1" id="taxamt__1" readonly="readonly" size="5" class="right" />
                                 </td>
                                 <td>
                                     <input type="text" size="5" name="cess[]" id="cess__1" onblur="getValues();rowadd(this, 'mtable');" class="right" />
-                                    <input type="text" name="cessamt[]" tabindex="-1" id="cessamt__1" readonly="readonly" size="6" class="right" />
+                                    <input type="text" name="cessamt[]" tabindex="-1" id="cessamt__1" readonly="readonly" size="5" class="right" />
                                 </td>
                             </tr>
                         </tbody>
