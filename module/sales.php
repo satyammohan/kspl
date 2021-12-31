@@ -9,29 +9,60 @@ class sales extends common {
     function _default() {
     }
     function insert() {
-        $data = $_REQUEST['entry'];
+        $data = $_REQUEST['sales'];
         $data['id_head'] = $_SESSION['id_user'];
         $data['ip'] = $_SERVER['REMOTE_ADDR'];
         $data['id_create'] = $_SESSION['id_user'];
         $data['id_modify'] = $_SESSION['id_user'];
         $data['create_date'] = date("Y-m-d h:i:s");
+        $_SESSION['current_sale_date'] = $data['date'];
+
         $sql = $this->create_insert("{$this->prefix}partner_sale", $data);
-        ob_clean();
-        $this->pr($_REQUEST);
-        exit;
-        //$this->m->query($sql);
-        //$_SESSION['msg'] = "Sales Added Successfully.";
-        //$this->redirect("index.php?module=sales&func=listing");
+        $insert_id = $this->m->query($sql);
+        $id = $this->m->getinsertID($insert_id);
+        for ($i = 0; $i < count($_REQUEST['items']); $i++) {
+            if ($_REQUEST['id_product'][$i]) {
+                $net_amount = $_REQUEST['goods_amount'][$i] + $_REQUEST['tax_amount'][$i] + $_REQUEST['cessamt'][$i];
+                $detail = array("invno" => "{$data['invno']}", "date" => "{$data['date']}", "id_product" => "{$_REQUEST['id_product'][$i]}",
+                    "rate" => "{$_REQUEST['rate'][$i]}", "qty" => "{$_REQUEST['quantity'][$i]}", "free" => "{$_REQUEST['free'][$i]}", "amount" => "{$_REQUEST['amount'][$i]}",
+                    "discount_type3" => "{$_REQUEST['discount_type3'][$i]}", "discount3" => "{$_REQUEST['discount3'][$i]}", "discount_amount3" => "{$_REQUEST['discount_amount3'][$i]}",
+                    "id_taxmaster" => "{$_REQUEST['id_taxmaster'][$i]}", "tax_per" => "{$_REQUEST['tax_per'][$i]}", "tax_amount" => "{$_REQUEST['tax_amount'][$i]}",
+                    "cess" => "{$_REQUEST['cess'][$i]}", "cessamt" => "{$_REQUEST['cessamt'][$i]}", "goods_amount" => "{$_REQUEST['goods_amount'][$i]}",
+                    "bill_no"=>"{$data['bill_no']}", "id_partner_sale" => "{$id}", "id_head" => "{$data['id_head']}", 
+                    "id_party" => "{$data['id_party']}", "net_amount" => $net_amount,
+                    "id_batch" => "{$_REQUEST['id_batch'][$i]}", "batch_no" => "{$_REQUEST['batch_no'][$i]}", "exp_date" => "{$_REQUEST['exp_date'][$i]}");
+                $sqldetail = $this->create_insert("{$this->prefix}partner_stock", $detail);
+                $this->m->query($sqldetail);
+            }
+        }
+        $_SESSION['msg'] = "Sales Successfully Inserted";
+        $this->redirect("index.php?module=sales&func=edit");
     }
     function update() {
-        $data = $_REQUEST['entry'];
-        $data['id_head'] = $_SESSION['id_user'];
-        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $sql = $this->create_update("{$this->prefix}partner_sale", $data, "id_partner_sale='{$id}' AND id_head='$hid'");
-        $this->pr($_REQUEST);
-        // $this->m->query($sql);
-        // $_SESSION['msg'] = "Sales Updated Successfully.";
-        // $this->redirect("index.php?module=sales&func=listing");
+        $data = $_REQUEST['sales'];
+        $hid = $data['id_head'] = $_SESSION['id_user'];
+        $data['id_modify'] = $_SESSION['id_user'];
+        $data['modify_date'] = date("Y-m-d h:i:s");
+        $id = $_REQUEST['id'];
+        $this->m->query($this->create_update("{$this->prefix}partner_sale", $data, "id_partner_sale='$id' AND id_head='$hid'"));
+        $this->m->query($this->create_delete("{$this->prefix}partner_stock", "id_partner_sale='$id' AND id_head='$hid'"));
+        for ($i = 0; $i < count($_REQUEST['items']); $i++) {
+            if ($_REQUEST['id_product'][$i]) {
+                $net_amount = $_REQUEST['goods_amount'][$i] + $_REQUEST['tax_amount'][$i] + $_REQUEST['cessamt'][$i];
+                $detail = array("invno" => "{$data['invno']}", "date" => "{$data['date']}", "id_product" => "{$_REQUEST['id_product'][$i]}",
+                    "rate" => "{$_REQUEST['rate'][$i]}", "qty" => "{$_REQUEST['quantity'][$i]}", "free" => "{$_REQUEST['free'][$i]}", "amount" => "{$_REQUEST['amount'][$i]}",
+                    "discount_type3" => "{$_REQUEST['discount_type3'][$i]}", "discount3" => "{$_REQUEST['discount3'][$i]}", "discount_amount3" => "{$_REQUEST['discount_amount3'][$i]}",
+                    "id_taxmaster" => "{$_REQUEST['id_taxmaster'][$i]}", "tax_per" => "{$_REQUEST['tax_per'][$i]}", "tax_amount" => "{$_REQUEST['tax_amount'][$i]}",
+                    "cess" => "{$_REQUEST['cess'][$i]}", "cessamt" => "{$_REQUEST['cessamt'][$i]}", "goods_amount" => "{$_REQUEST['goods_amount'][$i]}",
+                    "bill_no"=>"{$data['bill_no']}", "id_partner_sale" => "{$id}", "id_head" => "{$data['id_head']}", 
+                    "id_party" => "{$data['id_party']}", "net_amount" => $net_amount,
+                    "id_batch" => "{$_REQUEST['id_batch'][$i]}", "batch_no" => "{$_REQUEST['batch_no'][$i]}", "exp_date" => "{$_REQUEST['exp_date'][$i]}");
+                $sqldetail = $this->create_insert("{$this->prefix}partner_stock", $detail);
+                $this->m->query($sqldetail);
+            }
+        }
+        $_SESSION['msg'] = "Sales Updated Successfully.";
+        $this->redirect("index.php?module=sales&func=listing");
     }
     function edit() {
         $hid = $_SESSION['id_user'];
@@ -39,20 +70,24 @@ class sales extends common {
         $this->sm->assign("tax", $this->m->sql_getall($sql, 2, "name", "id_taxmaster"));
         $sql = "SELECT id_taxmaster, tax_per FROM {$this->prefix}taxmaster ORDER BY tax_per";
         $this->sm->assign("taxrates", json_encode($this->m->sql_getall($sql, 2, "tax_per", "id_taxmaster")));
-
         $sql = "SELECT id, name FROM {$this->prefix}partner_sale_prefix WHERE id_head='$hid' ORDER BY name";
         $this->sm->assign("series", $this->m->sql_getall($sql, 2, "name", "id"));
+
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $sql = $this->create_select("{$this->prefix}partner_sale", "id_partner_sale='$id' AND id_head='$hid'");
+        $sql = "SELECT s.*, p.name AS item FROM {$this->prefix}partner_stock s, {$this->prefix}product p WHERE s.id_product=p.id_product AND s.id_partner_sale='$id' ORDER BY id_partner_stock";
+        $this->sm->assign("data", $this->m->sql_getall($sql));
+
+        $sql = "SELECT s.*, p.name, p.address1, p.address2, p.gstin FROM {$this->prefix}partner_sale s, {$this->prefix}partner_party p WHERE s.id_party=p.id_party AND s.id_partner_sale='$id' AND s.id_head='$hid'";
         $data = $this->m->fetch_assoc($sql);
-        $this->sm->assign("data", $data);
+        $this->sm->assign("sdata", $data);
     }
     function delete() {
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
         if ($id) {
-            $sql = "DELETE FROM {$this->prefix}partner_sale WHERE id_partner_sale='{$id}'";
+            $hid = $_SESSION['id_user'];
+            $sql = "DELETE FROM {$this->prefix}partner_sale WHERE id_partner_sale='{$id}' AND id_head='$hid'";
             $this->m->query($sql);
-            $sql = "DELETE FROM {$this->prefix}partner_stock WHERE id_partner_sale='{$id}'";
+            $sql = "DELETE FROM {$this->prefix}partner_stock WHERE id_partner_sale='{$id}' AND id_head='$hid'";
             $this->m->query($sql);
             $_SESSION['msg'] = "Sales Deleted Successfully.";
         } else {
@@ -70,17 +105,19 @@ class sales extends common {
         $this->sm->assign("data", $list);
     }
     function printbill() {
+        $hid = $_SESSION['id_user'];
+        $sql = "SELECT * FROM {$this->prefix}head WHERE id_head='$hid' LIMIT 1";
+        $this->sm->assign("head", $this->m->sql_getall($sql));
         $id = $_REQUEST['id'];
-        $sql = "SELECT s.*, h.* FROM {$this->prefix}partner_sale s
-                LEFT JOIN {$this->prefix}partner_party h ON s.id_party=h.id_party
+        $sql = "SELECT s.*, h.* FROM {$this->prefix}partner_sale s LEFT JOIN {$this->prefix}partner_party h ON s.id_party=h.id_party
                 WHERE s.id_partner_sale IN ($id) GROUP BY s.id_partner_sale ";
         $res1 = $this->m->sql_getall($sql);
         foreach ($res1 as $key => $val) {
             $res1[$key]['w'] = $this->convert_number(round($val['total']));
         }
         $this->sm->assign("sale", $res1);
-        $sql = "SELECT s.*, p.name AS item, p.hsncode, p.case, p.pack, p.unit FROM {$this->prefix}saledetail s, {$this->prefix}product p WHERE s.id_product=p.id_product AND s.id_sale IN ($id)";
-        $res = $this->m->sql_getall($sql, 1, "", "id_sale", "id_saledetail");
+        $sql = "SELECT s.*, p.name AS item, p.hsncode, p.case, p.pack, p.unit FROM {$this->prefix}partner_stock s, {$this->prefix}product p WHERE s.id_product=p.id_product AND s.id_partner_sale IN ($id)";
+        $res = $this->m->sql_getall($sql, 1, "", "id_partner_sale", "id_partner_stock");
         $this->sm->assign("saledetail", $res);
         $sql = "SELECT id_taxmaster AS id, name FROM {$this->prefix}taxmaster";
         $this->sm->assign("tax", $this->m->sql_getall($sql, 2, "name", "id"));

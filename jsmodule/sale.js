@@ -32,10 +32,8 @@ function removeRow(obj) {
     getValues();
 }
 function rowadd(obj, tid) {
-    var parts = id.match(/(\D+)(\d+)$/);
-    //itemid = $("#id_product__" + parts[2]).val();itemid!=""
     if ($(obj).closest('tr').is(':last-child')) {
-        addRow(tid)
+        addRow(tid);
     }
 }
 function findvalue(o_name, idx) {
@@ -59,7 +57,7 @@ function find_discount(d1, d1_type, amt, qty) {
     return parseFloat(disc_amt).toFixed(2);
 }
 function getValues() {
-    var totaldisc = 0, totalamt = 0, vat = 0, res = 0.00, cessamt = 0, billcase = 0, billqty = 0;
+    var totaldisc = 0, totalamt = 0, gst = 0, res = 0.00, cessamt = 0, billcase = 0, billqty = 0;
     var obj = $("input[name='amount[]']");
     var caseext = $("input[name='case[]']").length;
     for (var i = 0; i < obj.length; i++) {
@@ -82,16 +80,16 @@ function getValues() {
         var goods_amount = $("input[name='goods_amount[]']");
         goods_amount[i].value = amt.toFixed(2);
 
-        vatamt = parseFloat(amt * tax / 100).toFixed(2);
+        gstamt = parseFloat(amt * tax / 100).toFixed(2);
         itemcess = parseFloat(amt * cess / 100).toFixed(2);
 
-        vat = parseFloat(vat) + parseFloat(vatamt);
+        gst = parseFloat(gst) + parseFloat(gstamt);
         cessamt = parseFloat(cessamt) + parseFloat(itemcess);
-        amt = parseFloat(amt) + parseFloat(vatamt) + parseFloat(itemcess);
+        amt = parseFloat(amt) + parseFloat(gstamt) + parseFloat(itemcess);
         totaldisc = parseFloat(totaldisc) + parseFloat(disc3_amt);
 
         var taxfld = $("input[name='tax_amount[]']");
-        taxfld[i].value = vatamt;
+        taxfld[i].value = gstamt;
         var cessfld = $("input[name='cessamt[]']");
         cessfld[i].value = itemcess;
         var d3_amt = $("input[name='discount_amount3[]']");
@@ -99,54 +97,13 @@ function getValues() {
     }
     document.getElementById("totalamt").value = parseFloat(totalamt).toFixed(2);
     document.getElementById("tdiscount").value = parseFloat(totaldisc).toFixed(2);
-    document.getElementById("vat").value = vat.toFixed(2);
+    document.getElementById("gst").value = gst.toFixed(2);
     document.getElementById("totalcess").value = cessamt.toFixed(2);
     bill_ro = parseFloat(document.getElementById("roundof").value ? document.getElementById("roundof").value : 0.00);
-    res = parseFloat((parseFloat(totalamt) + parseFloat(vat) - parseFloat(totaldisc) + parseFloat(cessamt)) + parseFloat(bill_ro));
-    var tcs_per = document.getElementById("tcsper").value;
-    if (tcs_per > 0) {
-        var bill_tcs = parseFloat(res * tcs_per / 100).toFixed(2);
-    } else {
-        var bill_tcs = 0;
-    }
-    $("#tcsamt").val(bill_tcs);
-    res = parseFloat((parseFloat(totalamt) + parseFloat(vat) - parseFloat(totaldisc) + parseFloat(cessamt)) + parseFloat(bill_ro) + parseFloat(bill_tcs));
+    res = parseFloat((parseFloat(totalamt) + parseFloat(gst) - parseFloat(totaldisc) + parseFloat(cessamt)) + parseFloat(bill_ro));
     document.getElementById("total").value = res.toFixed(2);
     $("#billtotcase").html(billcase);
     $("#billtotqty").html(billqty);
-}
-function findtcs() {
-    var id_head = $("#id_head").val();
-    var date = $("#date").val();
-    $.post("index.php?module=sales&func=gettcs", { id_head: id_head, date: date }, function (res) {
-        tilltodaysales = JSON.parse((res));
-        _ptotal = parseFloat($("#prev_total").val() ? $("#prev_total").val() : 0);
-        _ctotal = parseFloat($("#total").val() ? $("#total").val() : 0);
-        var _st = (parseFloat(tilltodaysales[0]['total']) - _ptotal + _ctotal).toFixed(2);
-        _sdt = new Date(tilltodaysales[0]['date']);
-        _edt = new Date("2020/10/01");
-        if (_st < 5000000 || _sdt < _edt) {
-            tilltodaysales[0]['tcsper'] = 0;
-            $("#sales_till_now").html("Sales till " + date + " is : " + _st);
-            var tcs_per = 0;
-        } else {
-            $("#sales_till_now").html("Sales till " + date + " is : " + _st + ". Please charge TCS on this bill.");
-            var tcs_per = tilltodaysales[0]['tcsper'];
-        }
-        $("#tcsper").val(tcs_per);
-        getValues();
-        $("#sub").removeAttr("disabled");
-        $("#print").removeAttr("disabled");
-    })
-}
-
-function roundbill() {
-    document.getElementById("roundof").value = 0.00;
-    getValues();
-    var alltot = document.getElementById("total").value;
-    var bill_ro = eval(Math.round(alltot) - alltot).toFixed(2);
-    document.getElementById("roundof").value = parseFloat(bill_ro).toFixed(2);
-    document.getElementById("total").value = Math.round(alltot).toFixed(2);
 }
 function product_dropdown() {
     callauto("item__" + start, "index.php?module=sales&func=showproduct&ce=0", ["id_product__" + start, "rate__" + start, "tax_per__" + start, "id_taxmaster__" + start, "cess__" + start, "itemcase__" + start]);
@@ -162,7 +119,12 @@ $(document).ready(function () {
     $("#sidebarToggle").click();
     $("#sub").click(function () {
         act = ($("#sale_id").val() == '') ? "insert" : "update";
-        document.sales.action = 'index.php?module=sales&ce=0&func=' + act;
+        if ($("#id_party").val()=="") {
+            alert("Select Party.")
+            $("#party").focus();
+            return;
+        }
+        document.sales.action = 'index.php?module=sales&func=' + act;
         $("form").submit();
         return;
         $("#sub").unbind('click');
@@ -199,7 +161,7 @@ $(document).ready(function () {
     });
     rowcontent = $("#mtable tr:first").clone(true);
     product_dropdown();
-    callauto("party", "index.php?module=sales&func=showparty&ce=0", ["id_head", "address1", "address2", "gstin"]);
+    callauto("party", "index.php?module=sales&func=showparty&ce=0", ["id_party", "address1", "address2", "gstin"]);
     $('input[type=text]').on("keydown", function (e) {
         var next_idx = $('input[type=text]').index(this) + 1;
         var tot_idx = $('body').find('input[type=text]').length;

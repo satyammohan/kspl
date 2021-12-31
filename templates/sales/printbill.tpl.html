@@ -33,7 +33,8 @@
                         <font size="-3">{$smarty.session.config.SALEBILLFOOTER}</font>
                     </td>
                     <td>
-                        <font size="-2">{$smarty.session.config.SALEBILLFOOTERRIGHT}</font>
+                        <font size="-2">E. & O. E.<br>{$head.0.name}<br><br>AUTHORISIED SIGNATORY
+                        </font>
                     </td>
                 </tr>
             </table>
@@ -43,48 +44,30 @@
 {capture name=header}
 <table width="100%" border="1" class="logo">
     <tr>
-        <th colspan="3"><font size="+2">{if $ch.taxbill==1}TAX INVOICE{else}TAX INVOICE{/if}</font></th>
-    </tr>
-    <tr>
         <td valign="top" width="40%">
-            <font size="+1"><b>{$smarty.session.companyname}</b></font><br>
-            <font size="-1">{$smarty.session.address} {$smarty.session.state}<br>
-            E-mail : {$smarty.session.email}<br>
-            PHONE : {$smarty.session.phone}<br>
-            GSTIN : {$smarty.session.gstin}<br>
-            ADHAR : {$smarty.session.adhar}
-            {if $smarty.session.flicence}<br>FSSAI : {$smarty.session.flicence}{/if}
-            {if $smarty.session.dlicence}<br>Drug Licence : {$smarty.session.dlicence}{/if}
+            <font size="+1"><b>{$head.0.name}</b></font><br>
+            <font size="-1">{$head.0.address1} <br>
+            State : {$head.0.state},    PHONE : {$head.0.phone}<br>
+            GSTIN : {$head.0.gstin}<br>
+            ADHAR : {$head.0.adhar}
+            {if $head.0.flicence}<br>FSSAI : {$head.0.flicence}{/if}
+            {if $head.0.dlicence}<br>Drug Licence : {$data.0.dlicence}{/if}
             </font>
         </td>
-        <td valign="top" width="35%">Party : <b>{$ch.party_name}</b><br>
-            {if $ch.address1}
-		{if strpos($smarty.session.companyname, "ODIRAY") != false}
-                {$ch.address1}, {$ch.address2}<br>
-                {$ch.address3} {$ch.pincode}<br>
-		{else}
-                {$ch.address2}, {$ch.address3}<br>
-                {$ch.address1} Pin:{$ch.pincode}<br>
-		{/if}
-            {else}
-                {$ch.party_address}<br>
-                {$ch.party_address1}<br>
-            {/if}
+        <td valign="top" width="35%">Party : <b>{$ch.name}</b><br>
+                {$ch.address1}<br>
+                {$ch.address2}<br>
             Phone : {$ch.phone} {$ch.mobile} {$ch.state}<br>
             GSTIN : {$ch.gstin}&nbsp;&nbsp;&nbsp;&nbsp;
             Panno : {$ch.panno}<br>
             Adhar : {$ch.adhar}
         </td>
         <td>
-            <b>{if $ch.local==0}In-State Sale{else}Inter-State Sale{/if}</b><br>
-            {if $smarty.session.name != "ODI RAY INDUSTRIES LIMITED"}
-                {if $ch.cash==1}CREDIT BILL{else}CASH BILL{/if}
-            {/if}
+            {if $ch.cash==1}CREDIT BILL{else}CASH BILL{/if}
             <br>
-            Bill No : <b>{$ch.invno}</b><br>
+            Inv No : <b>{$ch.invno}</b><br>
             Date : <b>{$ch.date|date_format:$ini.smarty_date}</b><br>
-            Challan No : {$ch.challan_no}<br>
-            Date : {$ch.challan_date|date_format:$ini.smarty_date}
+            Bill No : {$ch.bill_no}<br>
         </td>
     </tr>
     <tr>
@@ -112,9 +95,9 @@
 </table>
 {/capture}
                     {$qty=0}
-                    {$vat=[]}
+                    {$gst=[]}
                     {$smarty.capture.header}
-                    {foreach from=$saledetail[{$ch.id_sale}] item=mod name=items}
+                    {foreach from=$saledetail[{$ch.id_partner_sale}] item=mod name=items}
                     {if $smarty.foreach.items.iteration % $max == 1 && $smarty.foreach.items.iteration != 1}
                         {$smarty.capture.footer}<p></p>{$smarty.capture.header}
                     {/if}
@@ -134,14 +117,14 @@
                         <td align="right">{$mod.cessamt}</td>
                         <td align="right">{$mod.net_amount}</td>
                     </tr>
-                    {if !isset($vat[$mod.id_taxmaster])}
-                    {$vat[$mod.id_taxmaster].amt = 0}
-                    {$vat[$mod.id_taxmaster].tax_per = 0}
-                    {$vat[$mod.id_taxmaster].vat = 0}
+                    {if !isset($gst[$mod.id_taxmaster])}
+                    {$gst[$mod.id_taxmaster].amt = 0}
+                    {$gst[$mod.id_taxmaster].tax_per = 0}
+                    {$gst[$mod.id_taxmaster].gst = 0}
                     {/if}
-                    {$vat[$mod.id_taxmaster].vat = $vat[$mod.id_taxmaster].vat + $mod.tax_amount}
-                    {$vat[$mod.id_taxmaster].tax_per = $mod.tax_per}
-                    {$vat[$mod.id_taxmaster].amt = $vat[$mod.id_taxmaster].amt + $mod.goods_amount}
+                    {$gst[$mod.id_taxmaster].gst = $gst[$mod.id_taxmaster].gst + $mod.tax_amount}
+                    {$gst[$mod.id_taxmaster].tax_per = $mod.tax_per}
+                    {$gst[$mod.id_taxmaster].amt = $gst[$mod.id_taxmaster].amt + $mod.goods_amount}
                     {$qty=$qty + $mod.qty + $mod.free }
                     {/foreach}
                     {if $smarty.foreach.items.iteration!=$max}
@@ -164,18 +147,10 @@
                     <td><b>Quantity</b><br>{$qty}</td>
                     <td><b>Goods Value</b><br>{$ch.totalamt|string_format:"%.2f"}</td>
                     <td><b>Discount</b><br>{$ch.discount|string_format:"%.2f"}</td>
-                    {if $ch.local==0}
-                        <td><b>CGST</b><br>{($ch.vat/2)|string_format:"%.2f"}</td>
-                        <td><b>SGST</b><br>{($ch.vat/2)|string_format:"%.2f"}</td>
-                        <td><b>IGST</b><br>{0|string_format:"%.2f"}</td>
-                    {else}
-                        <td><b>CGST</b><br>{0|string_format:"%.2f"}</td>
-                        <td><b>SGST</b><br>{0|string_format:"%.2f"}</td>
-                        <td><b>IGST</b><br>{$ch.vat|string_format:"%.2f"}</td>
-                    {/if}
+                    <td><b>CGST</b><br>{($ch.gst/2)|string_format:"%.2f"}</td>
+                    <td><b>SGST</b><br>{($ch.gst/2)|string_format:"%.2f"}</td>
                     <td><b>CESS Amt</b><br>{$ch.totalcess|string_format:"%.2f"}</td>
                     <td><b>R/off</b><br>{($ch.add-$ch.less+$ch.round)|string_format:"%.2f"}</td>
-                    <td><b>TCS</b><br>{($ch.tcsamt)|string_format:"%.2f"}</td>
                     <td><b>Total</b><br>{$ch.total|string_format:"%.2f"}</td>
                 </tr>
             </table>
@@ -183,16 +158,11 @@
     </tr>
     <tr>
         <td colspan="10"><b>GST Bifurcation:</b>
-        {foreach from=$vat item=v key=k1}
-            {$v.amt|string_format:"%.2f"} @ {$tax[$k1]}={$v.vat|string_format:"%.2f"}  ||  
+        {foreach from=$gst item=v key=k1}
+            {$v.amt|string_format:"%.2f"} @ {$tax[$k1]}={$v.gst|string_format:"%.2f"}  ||  
         {/foreach}
         </td>
     </tr>
-    {if $ch.vehicle_contact}
-        <tr>
-            <td colspan="10"><b>Contact Person : </b>{$ch.vehicle_contact}&nbsp;<b>Vehicle : </b>{$ch.vehicle_number}<b>Amount : </b>{$ch.vehicle_amount}</td>
-        </tr>
-    {/if}
     {$smarty.capture.pgfooter}
 </table>
 <div class="pagenum"></div>

@@ -22,6 +22,12 @@ $(function() {
 function tbl_handler() {
     $('#dataTable').DataTable();
 }
+function jumpnext(id, nextid) {
+    var parts = id.match(/(\D+)(\d+)$/);
+    setTimeout(function() {
+        $("#"+nextid + parts[2]).focus();
+    }, 1);
+}
 $(document).ready(function() {
     $('.openPopup').on('click',function(){
         var dataURL = $(this).attr('data-href');

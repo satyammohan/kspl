@@ -46,7 +46,7 @@ class stock extends common {
                 SELECT id_product, SUM(-qty) AS qty FROM {$this->prefix}partner_stock WHERE id_head='{$id}' AND date<'$sdate' GROUP BY 1) a GROUP BY 1";
         $open = $this->m->getall($this->m->query($sql), 2, "qty", "id_product");
         
-        $sql = "SELECT date, id_product, 'Purchase' AS particulars, 'Purchase' AS type, invno AS refno, qty+free AS purc, 0 AS sale FROM {$this->prefix}saledetail WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' UNION ALL SELECT date, id_product, 'Sales' AS particulars, 'Sales' AS type, '' AS refno, 0 AS purc, qty AS sale FROM {$this->prefix}partner_stock WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' ORDER BY 1";
+        $sql = "SELECT date, id_product, 'Purchase' AS particulars, 'Purchase' AS type, invno AS refno, qty+free AS purc, 0 AS sale FROM {$this->prefix}saledetail WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' UNION ALL SELECT date, id_product, concat('Sales ', bill_no) AS particulars, 'Sales' AS type, invno AS refno, 0 AS purc, qty AS sale FROM {$this->prefix}partner_stock WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' ORDER BY 1";
 
         $trans = array();
         $rs = $this->m->query($sql);

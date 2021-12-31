@@ -1,7 +1,7 @@
 <table border="1" id="report">
     <thead>
     <tr>
-       	<th>Sl.</th><th>Product Name</th><th>Invno</th><th>Date</th><th align="right">Qty</th><th align="right">Free</th><th align="right">Rate</th><th align="right">Total GST</th><th align="right">Cess</th><th align="right">Total</th>
+       	<th>Sl.</th><th>Product Name</th><th>Invno</th><th>Bill No.</th><th>Date</th><th align="right">Qty</th><th align="right">Free</th><th align="right">Rate</th><th align="right">Total GST</th><th align="right">Cess</th><th align="right">Total</th>
     </tr>
     </thead>
     {$qty=0}{$free=0}{$amt=0}{$cess=0}{$gst=0}
@@ -10,6 +10,7 @@
             <td>{$smarty.section.x.index_next}</td>
             <td>{$data[x].name}</td>
             <td>{$data[x].invno}</td>
+            <td>{$data[x].bill_no}</td>
             <td>{$data[x].date|date_format:"%d-%m-%Y"}</td>
             <td align="right">{$data[x].qty|string_format:"%.0f"}</td>
             <td align="right">{if $data[x].free>0}{$data[x].free|string_format:"%.0f"}{/if}</td>
@@ -25,7 +26,7 @@
         {$gst = $gst + $data[x].tax_amount}
     {/section}
     <tr>
-        <th colspan="4">Total</th>
+        <th colspan="5">Total</th>
        	<th align="right">{$qty|string_format:"%.0f"}</th>
         <th align="right">{$free|string_format:"%.0f"}</th>
         <th align="right">&nbsp;</th>

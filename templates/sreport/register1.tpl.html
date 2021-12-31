@@ -38,21 +38,21 @@
         <td>{$smarty.section.x.index_next}</td>
         <td>{$data[x].invno}</td>
         <td>{$data[x].date|date_format:"%d-%m-%Y"}</td>
-        <td>{$data[x].party_name}</td>
+        <td>{$data[x].name}</td>
         <td align="right">{($data[x].totalamt-$data[x].discount)|string_format:"%.2f"}</td>
         {if $data[x].local && $data[x].local==1}
-            {$igst = $igst + $data[x].vat}
-            <td align="right">{$data[x].vat}</td>
+            {$igst = $igst + $data[x].gst}
+            <td align="right">{$data[x].gst}</td>
             <td align="right">0.00</td>
             <td align="right">0.00</td>
         {else}
-            {$cgst = $cgst + $data[x].vat/2}
-            {$sgst = $sgst + $data[x].vat/2}
+            {$cgst = $cgst + $data[x].gst/2}
+            {$sgst = $sgst + $data[x].gst/2}
             <td align="right">0.00</td>
-            <td align="right">{($data[x].vat/2)|string_format:"%.2f"}</td>
-            <td align="right">{($data[x].vat/2)|string_format:"%.2f"}</td>
+            <td align="right">{($data[x].gst/2)|string_format:"%.2f"}</td>
+            <td align="right">{($data[x].gst/2)|string_format:"%.2f"}</td>
         {/if}
-        <td align="right">{$data[x].vat}</td>
+        <td align="right">{$data[x].gst}</td>
         <td align="right">{$data[x].totalcess}</td>
         <td align="right">{$data[x].tcsamt}</td>
         <td align="right">{($data[x].add+$data[x].less+$data[x].round+$dta[x].packing)|string_format:"%.2f"}</td>
@@ -93,7 +93,7 @@
     {$amt = $amt + $data[x].totalamt-$data[x].discount}
     {$cess = $cess + $data[x].totalcess}
     {$tcs = $tcs + $data[x].tcsamt}
-    {$vattot = $vattot + $data[x].vat}
+    {$vattot = $vattot + $data[x].gst}
     {$total = $total + $data[x].total}
     {$other = $other + ($data[x].add+$data[x].less+$data[x].round+$dta[x].packing)}
 
