@@ -10863,7 +10863,6 @@ a:focus {
 .bg-login-image {
   background: url("../config/odiray.jpg");
   background-position: center;
-  background-size: 90%;
   background-size: cover;
 }
 
@@ -11289,4 +11288,29 @@ body.sidebar-toggled footer.sticky-footer {
   color: white;
   font-size:20px;
   text-align:center;
+}
+
+.ACtitle {
+    font-weight:bolder;
+    font-size: 12px;
+    padding-left: 4px;
+    padding-top: 4px;
+    height: 20px;
+    vertical-align: middle;
+    background-color: #99CCFF;
+}
+.ACRow {
+    display: table;
+    table-layout: fixed;
+    width:500px;
+    font-size: 8px !important;
+}
+.ACColumn {
+    display: table-cell;
+    width: 100px;
+}
+.ACFirst {
+    display: table-cell;
+    width: 200px;
+    font-size: 10px !important;
 }

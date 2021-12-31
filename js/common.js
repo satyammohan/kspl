@@ -60,10 +60,6 @@ function update_listing(tbl, id) {
         window.location.href = "index.php?module=" + tbl + "&func=listing&status=" + id;
 }
 function callauto(id, url, hid, headers='') {
-    $("#" + id).addClass("ac_dropdown");
-    $("#" + id).focus(function() {
-        $("#" + id).select();
-    });
     $("#" + id).autocomplete({
         delay: 1000,
         autoFocus: true,
@@ -104,22 +100,4 @@ function callauto(id, url, hid, headers='') {
             }
         }
     });
-    $(".ac_dropdown").on("click", function() {
-        $("#" + this.id).autocomplete("search", "a");
-    });
 }
-
-$.ui.autocomplete.prototype._renderItem = function (ul, item) {
-    if (typeof item.filter == 'string') {
-        mycolumns = item.filter;
-        headers = mycolumns.split(",");
-        item.label = "<div class='ACRow'>";
-        $.each( headers, function( key, value ) {
-            firstcol = (key==0) ? "ACFirst" : "ACColumn";
-            item.label += "<div class='" + firstcol +"'>"+item[value]+"</div>";
-        });
-        item.label += "</div>";
-    }
-    return $("<li></li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);
-};   
-

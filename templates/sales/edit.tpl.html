@@ -13,12 +13,11 @@
             <td colspan="2">
                 <table width="100%">
                     <tr>
-                        <td width="25%"><b>Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Invoice No</b>
-                        </td>
-                        <td><b>Date</b></td>
-                        <td><b>Ref. No</b></td>
-                        <td><b>Ref. Date</b></td>
+                        <td width="20%"><b>Inv. No</b></td>
+                        <td width="15%"><b>Date</b></td>
                         <td><b>Party Name</b></td>
+                        <td width="15%"><b>Ref. No</b></td>
+                        <td width="15%"><b>Ref. Date</b></td>
                     </tr>
                     <tr>
                         <td>
@@ -42,36 +41,26 @@
                             {/if}
                             <input type="date" name='sales[date]' required id="date" value="{$date}" />
                         </td>
-                        <td><input type="text" name="sales[challan_no]" value="{$sdata.challan_no}" /></td>
-                        <td><input type="date" name="sales[challan_date]" value="{$sdata.challan_date}" /></td>
-                        <td><input type="text" name="sales[party_name]" required id="party" size="50" value="{$sdata.party_name}" onblur="checkpartybalance();" />
-                            <br><span id="valid_party"></span>
+                        <td><input type="text" name="sales[party_name]" required id="party" size="40" value="{$sdata.party_name}"/>
                             <input type="hidden" name="sales[id_head]" value="{$sdata.id_head}" id="id_head" />
                         </td>
+                        <td><input type="text" name="sales[challan_no]" value="{$sdata.challan_no}" /></td>
+                        <td><input type="date" name="sales[challan_date]" value="{$sdata.challan_date}" /></td>
+                    </tr>
+                    <tr>
+                        <td><b>&nbsp;</b></td>
+                        <td><b>Address1</b></td>
+                        <td><b>Address2</b></td>
+                        <td><b>GST No</b></td>
                     </tr>
                     <tr>
                         <td>
                             {if $sdata}{$select=$sdata.cash} {else} {$select=1} {/if}
                             {html_radios name='sales[cash]' options=$ini.tran_type selected=$select}
                         </td>
-                        <td colspan="3">
-                            <table id="partydetail">
-                                <tr>
-                                    <td><b>Address1</b></td>
-                                    <td><b>Address2</b></td>
-                                    <td><b>GST No</b></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="text" name="sales[party_address]" style="border:none;" tabindex="-1" id="paddr" value="{$sdata.party_address}"></td>
-                                    <td><input type="text" name="sales[party_address1]" style="border:none;" tabindex="-1" id="paddr2" value="{$sdata.party_address1}"></td>
-                                    <input type="hidden" name="sales[party_vattype]" value="{$sdata.party_vattype}" id="vattype" />
-                                    <td valign="top">
-                                        <input type="text" name="sales[party_vatno]" style="border:none;" value="{$sdata.party_vatno}" id="vatno" />
-                                        <input type="hidden" id="dealer" value="{$sdata.dealer}" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
+                        <td><input type="text" name="sales[party_address]" style="border:none;" tabindex="-1" id="address1" value="{$sdata.party_address}"></td>
+                        <td><input type="text" name="sales[party_address1]" style="border:none;" tabindex="-1" id="address2" value="{$sdata.party_address1}"></td>
+                        <td><input type="text" name="sales[party_vattype]" style="border:none;" tabindex="-1" id="gstin" value="{$sdata.party_vattype}" /></td>
                     </tr>
                 </table>
             </td>
@@ -90,7 +79,6 @@
                                 <td><a onclick="removeRow(this);" href="#" tabindex="-1"><img src="{$source}img/close.png" /></a></td>
                                 <td>
                                     <input class="drop" type="text" name="items[]" id="item__1" style="width:210px" size="35" onblur="getValues();getbatch(this.id);" required="required" />
-                                    <!-- <br>Stock : <input type="text" readonly="readonly" onfocus="jumpnext(this.id, 'batch_no__');" tabindex="-1" size="10" name="balance[]" id="balance__1" /> -->
                                     <input type="hidden" name="id_product[]" id="id_product__1" />
                                     <input type="hidden" name="discount_amount1[]" id="discount_amount1__1" />
                                     <input type="hidden" name="discount_amount2[]" id="discount_amount2__1" />
@@ -103,7 +91,7 @@
                                     <input type="text" name="exp_date[]" onfocus="jumpnext(this.id, 'rate__');" tabindex="-1" id="exp_date__1" size="6" />
                                 </td>
                                 <td><input type="text" size="5" name="rate[]" id="rate__1" tabindex="-1" class="right"  onblur="getValues();" /></td>
-                                <td><input type="text" size="5" name="quantity[]"  onblur="getbonus(this.id); getValues(); getdiscount();" id="qty__1" required="required" class="right" /></td>
+                                <td><input type="text" size="5" name="quantity[]"  onblur="getValues();" id="qty__1" required="required" class="right" /></td>
                                 <td><input type="text" size="5" name="free[]" id="free__1" class="right" /></td>
                                 <td><input type="text" size="5" name="amount[]" tabindex="-1" readonly="readonly" id="amount__1" class="right" /></td>
                                 <td><input type="text" size="5" name="discount3[]" id="discount3__1" onblur="getValues()" class="right" />
@@ -132,45 +120,39 @@
             </td>
         </tr>
         <tr>
-            <td valign="top" align="right">
+            <td valign="top">
                 <table>
                     <tr>
                         <td align="right"><b>Goods Value:</b></td>
                         <td><input type="text" name="sales[totalamt]" id="totalamt" class="right" value="{$sdata.totalamt}" readonly /></td>
-                    </tr>
-                    <tr>
                         <td align="right"><b>Discount:</b></td>
                         <td><input type="text" name="sales[discount]" id="tdiscount" class="right" value="{$sdata.discount}" readonly /></td>
-                    </tr>
-                    <tr>
                         <td align="right"><b>GST:</b></td>
                         <td><input type="text" name="sales[vat]" id="vat" class="right" value="{$sdata.vat}" readonly /></td>
-                    </tr>
-                    <tr>
-                        <td align="right"><b>CESS Amount:</b></td>
+                        <td align="right"><b>CESS:</b></td>
                         <td><input type="text" name="sales[totalcess]" id="totalcess" class="right" value="{$sdata.totalcess}" readonly /></td>
                     </tr>
                     <tr>
                         <td align="right"><b>Round off:</b></td>
                         <td><input type="text" name="sales[round]" id="roundof" class="right" value="{$sdata.round}" onblur="getValues()" /></td>
-                    </tr>
-                    <tr>
                         <td align="right">
                             <input type="button" onclick="findtcs()" value="Get TCS">
                             <b>TCS:<input type="text" name="sales[tcsper]" id="tcsper" class="right" value="{$sdata.tcsper}" size="3" onblur="getValues()" />%
                         </td>
                         <td><input type="text" name="sales[tcsamt]" id="tcsamt" class="right" value="{$sdata.tcsamt}" onblur="getValues()" tabindex="-1" readonly /></td>
-                    </tr>
-                    <tr>
                         <td align="right"><b>Total:</b></td>
                         <td>
                             <input type="text" name="sales[total]" id="total" class="right" value="{$sdata.total}" readonly />
                             <input type="text" id="prev_total" class="right" value="{$sdata.total}" style="display: none;" />
                         </td>
+                        <td align="right"><b>Remarks:</b></td>
+                        <td><textarea name="sales[memo]" cols="20" rows="2">{$sdata.memo}</textarea></td>
                     </tr>
                     <tr>
-                        <td align="right"><b>Description:</b></td>
-                        <td><textarea name="sales[memo]" cols="20" rows="4">{$sdata.memo}</textarea></td>
+                        <td colspan="15" align="center">
+                            <input type="button" class="btn btn-primary" value="Save" id="sub" name="save" />
+                            <input type="button" class="btn btn-primary" value="Save & Print" id="print" name="print" />
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -178,6 +160,4 @@
     </table>
     <div id="sales_till_now" style="color: red;font: 18px sans-serif;"></div>
     <input type="hidden" name="id" value="{$sdata.id_sale}" id="sale_id" />
-    <input type="button" value="Save" disabled id="sub" style="cursor: pointer" name="save" />
-    <input type="button" value="Save & Print" disabled id="print" style=" cursor: pointer" name="print" />
 </form>

@@ -16,19 +16,22 @@ class sales extends common {
         $data['id_modify'] = $_SESSION['id_user'];
         $data['create_date'] = date("Y-m-d h:i:s");
         $sql = $this->create_insert("{$this->prefix}partner_sale", $data);
-        $this->m->query($sql);
-        $_SESSION['msg'] = "Sales Added Successfully.";
-        $this->redirect("index.php?module=sales&func=listing");
+        ob_clean();
+        $this->pr($_REQUEST);
+        exit;
+        //$this->m->query($sql);
+        //$_SESSION['msg'] = "Sales Added Successfully.";
+        //$this->redirect("index.php?module=sales&func=listing");
     }
     function update() {
         $data = $_REQUEST['entry'];
         $data['id_head'] = $_SESSION['id_user'];
-        $data['opening_balance'] = $data['opening_balance'] ? $data['opening_balance'] : 0;
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
         $sql = $this->create_update("{$this->prefix}partner_sale", $data, "id_partner_sale='{$id}' AND id_head='$hid'");
-        $this->m->query($sql);
-        $_SESSION['msg'] = "Sales Updated Successfully.";
-        $this->redirect("index.php?module=sales&func=listing");
+        $this->pr($_REQUEST);
+        // $this->m->query($sql);
+        // $_SESSION['msg'] = "Sales Updated Successfully.";
+        // $this->redirect("index.php?module=sales&func=listing");
     }
     function edit() {
         $hid = $_SESSION['id_user'];
@@ -107,6 +110,40 @@ class sales extends common {
         echo ($invno=="") ? 1 : $num;
         exit;
     }
-
+    function checkbillno() {
+        ob_clean();
+        $hid = $_SESSION['id_user'];
+        $invno = $_REQUEST['invno'];
+        $sdate = $_SESSION['sdate'];
+        $edate = $_SESSION['edate'];
+        $sql = "SELECT COUNT(*) AS cnt FROM {$this->prefix}partner_sale WHERE invno='$invno' AND id_head='$hid' AND date>='$sdate' AND date<='$edate'";
+        $data = $this->m->fetch_assoc($sql);
+        if ($data['cnt']>0) {
+            $this->getsuffix();
+        } else {
+            echo "";
+        }
+        exit;
+    }
+    function showparty() {
+        $hid = $_SESSION['id_user'];
+        $filt = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
+        $sql = "SELECT name as `value`, id_party AS col0, address1 AS col1, address2 AS col2, gstin AS col3
+            FROM {$this->prefix}partner_party WHERE name LIKE '%{$filt}%' AND status=0 AND id_head='$hid' ORDER BY name"; 
+        $data = $this->m->sql_getall($sql);
+        echo json_encode($data);
+        exit;
+    }
+    function showproduct() {
+        $hid = $_SESSION['id_user'];
+        $filt = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
+        $sql = "SELECT p.name as `value`, p.id_product AS col0, p.distributor_price AS col1, t.tax_per AS col2, p.id_taxmaster_sale AS col3, p.cess AS col4
+            FROM {$this->prefix}product p, {$this->prefix}taxmaster t, {$this->prefix}saledetail s 
+            WHERE p.name LIKE '%$filt%' AND p.id_taxmaster_sale=t.id_taxmaster AND p.id_product=s.id_product AND s.id_head=$hid AND p.showtoparty='YES'
+        GROUP BY p.id_product ORDER BY p.name";
+        $data = $this->m->sql_getall($sql);
+        echo json_encode($data);
+        exit;
+    }
 }
 ?>
