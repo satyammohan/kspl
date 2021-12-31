@@ -11,13 +11,14 @@
     <table width="100%">
         <tr>
             <td colspan="2">
-                <table width="100%">
+                <table border="1">
                     <tr>
-                        <td width="20%"><b>Inv. No</b></td>
-                        <td width="15%"><b>Date</b></td>
+                        <td><b>Inv. No</b></td>
+                        <td><b>Date</b></td>
                         <td><b>Party Name</b></td>
-                        <td width="15%"><b>Ref. No</b></td>
-                        <td width="15%"><b>Ref. Date</b></td>
+                        <td><b>Ref. No</b></td>
+                        <td><b>Ref. Date</b></td>
+                        <td><b>Type</b></td>
                     </tr>
                     <tr>
                         <td>
@@ -41,23 +42,17 @@
                             {/if}
                             <input type="date" name='sales[date]' required id="date" value="{$date}" />
                         </td>
-                        <td><input type="text" name="sales[party_name]" required id="party" size="40" value="{$sdata.party_name}"/>
+                        <td><input type="text" name="sales[party_name]" required id="party" size="50" value="{$sdata.party_name}"/>
                             <input type="hidden" name="sales[id_head]" value="{$sdata.id_head}" id="id_head" />
                         </td>
                         <td><input type="text" name="sales[challan_no]" value="{$sdata.challan_no}" /></td>
                         <td><input type="date" name="sales[challan_date]" value="{$sdata.challan_date}" /></td>
-                    </tr>
-                    <tr>
-                        <td><b>&nbsp;</b></td>
-                        <td><b>Address1</b></td>
-                        <td><b>Address2</b></td>
-                        <td><b>GST No</b></td>
-                    </tr>
-                    <tr>
                         <td>
                             {if $sdata} {$select=$sdata.cash} {else} {$select=1} {/if}
                             {html_radios name='sales[cash]' options=$ini.tran_type selected=$select}
                         </td>
+                    </tr>
+                    <tr>
                         <td><input type="text" name="sales[party_address]" style="border:none;" tabindex="-1" id="address1" value="{$sdata.party_address}"></td>
                         <td><input type="text" name="sales[party_address1]" style="border:none;" tabindex="-1" id="address2" value="{$sdata.party_address1}"></td>
                         <td><input type="text" name="sales[party_vattype]" style="border:none;" tabindex="-1" id="gstin" value="{$sdata.party_vattype}" /></td>
