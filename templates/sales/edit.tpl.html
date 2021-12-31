@@ -124,30 +124,30 @@
                 <table>
                     <tr>
                         <td><b>Goods Value : </b></td>
-                        <td><input type="text" name="sales[totalamt]" id="totalamt" class="right" value="{$sdata.totalamt}" readonly /></td>
+                        <td><input type="text" name="sales[totalamt]" size="12" id="totalamt" class="right" value="{$sdata.totalamt}" readonly /></td>
                         <td><b>Discount : </b></td>
-                        <td><input type="text" name="sales[discount]" id="tdiscount" class="right" value="{$sdata.discount}" readonly /></td>
+                        <td><input type="text" name="sales[discount]" size="12" id="tdiscount" class="right" value="{$sdata.discount}" readonly /></td>
                         <td><b>GST : </b></td>
-                        <td><input type="text" name="sales[vat]" id="vat" class="right" value="{$sdata.vat}" readonly /></td>
+                        <td><input type="text" name="sales[vat]" size="12" id="vat" class="right" value="{$sdata.vat}" readonly /></td>
                         <td><b>CESS : </b></td>
-                        <td><input type="text" name="sales[totalcess]" id="totalcess" class="right" value="{$sdata.totalcess}" readonly /></td>
-                    </tr>
-                    <tr>
+                        <td><input type="text" name="sales[totalcess]" size="12" id="totalcess" class="right" value="{$sdata.totalcess}" readonly /></td>
                         <td><b>Round off : </b></td>
-                        <td><input type="text" name="sales[round]" id="roundof" class="right" value="{$sdata.round}" onblur="getValues()" /></td>
-                        <td>
-                            <input type="button" onclick="findtcs()" value="Get TCS">
-                            <b>TCS : <input type="text" name="sales[tcsper]" id="tcsper" class="right" value="{$sdata.tcsper}" size="3" onblur="getValues()" />%
-                        </td>
-                        <td><input type="text" name="sales[tcsamt]" id="tcsamt" class="right" value="{$sdata.tcsamt}" onblur="getValues()" tabindex="-1" readonly /></td>
+                        <td><input type="text" name="sales[round]" size="10" id="roundof" class="right" value="{$sdata.round}" onblur="getValues()" /></td>
                         <td><b>Total : </b></td>
                         <td>
                             <input type="text" name="sales[total]" id="total" class="right" value="{$sdata.total}" readonly />
                             <input type="text" id="prev_total" class="right" value="{$sdata.total}" style="display: none;" />
                         </td>
+                    </tr>
+                    <!-- <tr>
+                        <td>
+                            <input type="button" onclick="findtcs()" value="Get TCS">
+                            <b>TCS : <input type="text" name="sales[tcsper]" id="tcsper" class="right" value="{$sdata.tcsper}" size="3" onblur="getValues()" />%
+                        </td>
+                        <td><input type="text" name="sales[tcsamt]" id="tcsamt" class="right" value="{$sdata.tcsamt}" onblur="getValues()" tabindex="-1" readonly /></td>
                         <td><b>Remarks : </b></td>
                         <td><textarea name="sales[memo]" cols="20" rows="2">{$sdata.memo}</textarea></td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td colspan="20" align="center">
                             <input type="button" class="btn btn-primary" value="Save" id="sub" name="save" />
