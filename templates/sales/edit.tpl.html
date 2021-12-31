@@ -16,8 +16,7 @@
                         <td><b>Inv. No</b></td>
                         <td><b>Date</b></td>
                         <td><b>Party Name</b></td>
-                        <td><b>Ref. No</b></td>
-                        <td><b>Ref. Date</b></td>
+                        <td><b>Your Bill No</b></td>
                         <td><b>Type</b></td>
                     </tr>
                     <tr>
@@ -46,7 +45,6 @@
                             <input type="hidden" name="sales[id_head]" value="{$sdata.id_head}" id="id_head" />
                         </td>
                         <td><input type="text" name="sales[challan_no]" value="{$sdata.challan_no}" /></td>
-                        <td><input type="date" name="sales[challan_date]" value="{$sdata.challan_date}" /></td>
                         <td>
                             {if $sdata} {$select=$sdata.cash} {else} {$select=1} {/if}
                             {html_radios name='sales[cash]' options=$ini.tran_type selected=$select}
