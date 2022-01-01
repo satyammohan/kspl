@@ -95,12 +95,10 @@ class database {
         return $this->record;
     }
     function sql_getall($sql, $single = 0, $fld = "", $key = "", $second = "") {
-        echo 2;exit;
         $res = $this->query($sql);
         return $this->getall($res, $single, $fld, $key, $second);
     }
     function all_Tables($prefix) {
-        echo 1;exit;
         $sql = "SELECT table_name, table_rows FROM INFORMATION_SCHEMA.TABLES WHERE table_type!='VIEW' AND TABLE_SCHEMA = '".$this->dbName."' AND table_name LIKE '{$prefix}%'";
         $res = $this->query($sql);
         return $this->getall($res, 2, "table_rows", "table_name");

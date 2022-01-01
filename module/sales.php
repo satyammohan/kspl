@@ -176,9 +176,8 @@ class sales extends common {
         $hid = $_SESSION['id_user'];
         $filt = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
         $sql = "SELECT p.name as `value`, p.id_product AS col0, p.distributor_price AS col1, t.tax_per AS col2, p.id_taxmaster_sale AS col3, p.cess AS col4
-            FROM {$this->prefix}product p, {$this->prefix}taxmaster t, {$this->prefix}saledetail s 
-            WHERE p.name LIKE '%$filt%' AND p.id_taxmaster_sale=t.id_taxmaster AND p.id_product=s.id_product AND s.id_head=$hid AND p.showtoparty='YES'
-        GROUP BY p.id_product ORDER BY p.name";
+                FROM {$this->prefix}product p, {$this->prefix}taxmaster t, (SELECT DISTINCT id_product FROM {$this->prefix}saledetail WHERE id_head='$hid') s
+                WHERE p.name LIKE '%$filt%' AND p.id_taxmaster_sale=t.id_taxmaster AND p.id_product=s.id_product ORDER BY p.name";
         $data = $this->m->sql_getall($sql);
         echo json_encode($data);
         exit;
