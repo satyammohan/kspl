@@ -21,24 +21,26 @@ class party extends common {
     }
     function update() {
         $data = $_REQUEST['entry'];
-        $data['id_head'] = $_SESSION['id_user'];
+        $hid = $data['id_head'] = $_SESSION['id_user'];
         $data['opening_balance'] = $data['opening_balance'] ? $data['opening_balance'] : 0;
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $sql = $this->create_update("{$this->prefix}partner_party", $data, "id_party='{$id}'");
+        $sql = $this->create_update("{$this->prefix}partner_party", $data, "id_party='{$id}' AND id_head='$hid'");
         $this->m->query($sql);
         $_SESSION['msg'] = "Party Updated Successfully.";
         $this->redirect("index.php?module=party&func=listing");
     }
     function edit() {
+        $hid = $data['id_head'] = $_SESSION['id_user'];
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $sql = $this->create_select("{$this->prefix}partner_party", "id_party='{$id}'");
+        $sql = $this->create_select("{$this->prefix}partner_party", "id_party='{$id}' AND id_head='$hid'");
         $data = $this->m->fetch_assoc($sql);
         $this->sm->assign("data", $data);
     }
     function delete() {
+        $hid = $data['id_head'] = $_SESSION['id_user'];
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
         $data['status'] = 1;
-        $sql = $this->create_update("{$this->prefix}partner_party", $data, "id_party='{$id}'");
+        $sql = $this->create_update("{$this->prefix}partner_party", $data, "id_party='{$id}' AND id_head='$hid'");
         $this->m->query($sql);
         $_SESSION['msg'] = "Party Deleted Successfully.";
         $this->redirect("index.php?module=party&func=listing");

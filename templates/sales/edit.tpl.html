@@ -18,7 +18,7 @@
                         <td><b>Date</b></td>
                         <td><b>Party Name</b></td>
                         <td><b>Your Bill No</b></td>
-                        <td><b>Type</b></td>
+                        <!-- <td><b>Type</b></td> -->
                     </tr>
                     <tr>
                         <td>
@@ -42,14 +42,16 @@
                             {/if}
                             <input type="date" name='sales[date]' id="date" value="{$date}" />
                         </td>
-                        <td><input type="text" id="party" size="40" value="{$sdata.name}"/>
+                        <td><input type="text" id="party" size="55" value="{$sdata.name}"/>
                             <input type="hidden" name="sales[id_party]" value="{$sdata.id_party}" id="id_party" />
                         </td>
-                        <td><input type="text" name="sales[bill_no]" value="{$sdata.bill_no}" /></td>
-                        <td>
-                            {if $sdata} {$select=$sdata.cash} {else} {$select=1} {/if}
-                            {html_radios name='sales[cash]' options=$ini.tran_type selected=$select}
+                        <td><input type="text" name="sales[bill_no]" value="{$sdata.bill_no}" />
+                            <input type="hidden" name="sales[cash]" value="1" />
                         </td>
+                        <!-- <td>
+                            {if $sdata} {$select=$sdata.cash} {else} {$select=1} {/if}
+                            {html_radios name='sales[cash]' options=$ini.tran_type selected=$select}                            
+                        </td> -->
                     </tr>
                     <tr>
                         <td><input type="text" style="border:none;" tabindex="-1" id="address1" value="{$sdata.address1}"></td>
