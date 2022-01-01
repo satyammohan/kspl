@@ -72,14 +72,15 @@ class sales extends common {
         $this->sm->assign("taxrates", json_encode($this->m->sql_getall($sql, 2, "tax_per", "id_taxmaster")));
         $sql = "SELECT id, name FROM {$this->prefix}partner_sale_prefix WHERE id_head='$hid' ORDER BY name";
         $this->sm->assign("series", $this->m->sql_getall($sql, 2, "name", "id"));
-
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $sql = "SELECT s.*, p.name AS item FROM {$this->prefix}partner_stock s, {$this->prefix}product p WHERE s.id_product=p.id_product AND s.id_partner_sale='$id' ORDER BY id_partner_stock";
-        $this->sm->assign("data", $this->m->sql_getall($sql));
-
-        $sql = "SELECT s.*, p.name, p.address1, p.address2, p.gstin FROM {$this->prefix}partner_sale s, {$this->prefix}partner_party p WHERE s.id_party=p.id_party AND s.id_partner_sale='$id' AND s.id_head='$hid'";
-        $data = $this->m->fetch_assoc($sql);
-        $this->sm->assign("sdata", $data);
+        if ($id!=0) {
+            $sql = "SELECT s.*, p.name AS item FROM {$this->prefix}partner_stock s, {$this->prefix}product p WHERE s.id_product=p.id_product AND s.id_partner_sale='$id' ORDER BY id_partner_stock";
+            $detail = $this->m->sql_getall($sql);
+            $this->sm->assign("data", $detail);    
+            $sql = "SELECT s.*, p.name, p.address1, p.address2, p.gstin FROM {$this->prefix}partner_sale s, {$this->prefix}partner_party p WHERE s.id_party=p.id_party AND s.id_partner_sale='$id' AND s.id_head='$hid'";
+            $data = $this->m->fetch_assoc($sql);
+            $this->sm->assign("sdata", $data);
+        }
     }
     function delete() {
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";

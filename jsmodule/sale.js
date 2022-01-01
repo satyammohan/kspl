@@ -10,7 +10,7 @@ function getbatch(id) {
             callauto("batch_no__" + parts[2], "index.php?module=sales&func=getbatch&showall=1&ce=0&id=" + itemid, ["id_batch__" + parts[2], "exp_date__" + parts[2], "rate__" + parts[2]]);
         }
     } else {
-        $("#totalamt").focus();
+        $("#roundof").focus();
     }
 }
 function addRow(tableID) {
