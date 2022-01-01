@@ -49,5 +49,17 @@ class party extends common {
         $list = $this->m->getall($this->m->query($sql));
         $this->sm->assign("list", $list);
     }
+    function profile() {
+        $id = $_SESSION['id_user'];
+        $sql = "SELECT * FROM {$this->prefix}head WHERE id_head='$id'";
+        $list = $this->m->getall($this->m->query($sql));
+        $this->sm->assign("list", $list);
+    }
+    function activity() {
+        $id = $_SESSION['id_user'];
+        $sql = "SELECT * FROM {$this->prefix}partner_activity WHERE id_head='$id' ORDER BY date DESC";
+        $list = $this->m->getall($this->m->query($sql));
+        $this->sm->assign("list", $list);
+    }
 }
 ?>
