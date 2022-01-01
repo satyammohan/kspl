@@ -11323,3 +11323,9 @@ input[readonly] {
 .dataTables_length {
   float: right;
 }
+.dataTables_info {
+  float:left;
+}
+.dataTables_paginate {
+  float: right;
+}
