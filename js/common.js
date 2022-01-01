@@ -20,7 +20,10 @@ $(function() {
     });
 });
 function tbl_handler() {
-    $('#dataTable').DataTable();
+    $('#dataTable').DataTable({
+        "dom": '<"top"fl>rt<"bottom"ip><"clear">'
+    } );
+    /*l - Length changing, f - Filtering input, t - The Table!, i - Information, p - Pagination, r - pRocessing*/
 }
 function jumpnext(id, nextid) {
     var parts = id.match(/(\D+)(\d+)$/);

@@ -11317,3 +11317,9 @@ input[readonly] {
   background-color: lightgray;
   border: none;
 }
+.dataTables_filter {
+  float: left;
+}
+.dataTables_length {
+  float: right;
+}
