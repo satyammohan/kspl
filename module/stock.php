@@ -23,7 +23,7 @@ class stock extends common {
         $purc = $this->m->getall($this->m->query($sql), 2, "qty", "id_product");
         $sql = "SELECT id_product, SUM(qty) AS qty FROM {$this->prefix}partner_stock WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' GROUP BY 1";
         $sale = $this->m->getall($this->m->query($sql), 2, "qty", "id_product");
-        $sql = "SELECT p.*, c.name AS cname FROM {$this->prefix}product p, {$this->prefix}company c WHERE p.showtoparty='YES' AND p.id_company=c.id_company ORDER BY c.name, p.name";
+        $sql = "SELECT p.*, c.name AS cname FROM {$this->prefix}product p, {$this->prefix}company c WHERE p.id_company=c.id_company ORDER BY c.name, p.name";
         $items = $this->m->sql_getall($sql);
         foreach ($items as $ck => $cv) {
             $k = $cv['id_product'];
@@ -31,6 +31,9 @@ class stock extends common {
             $items[$ck]['s'] = @$sale[$k] ? $sale[$k] : 0;
             $items[$ck]['p'] = @$purc[$k] ? $purc[$k] : 0;
             $items[$ck]['c'] = $items[$ck]['o'] + $items[$ck]['p'] - $items[$ck]['s'];
+            if (@$open[$k]==0 && @$sale[$k]==0 && @$purc[$k]==0) {
+                unset($items[$ck]);
+            }
         }
         $this->sm->assign("list", $items);
     }
@@ -46,23 +49,21 @@ class stock extends common {
                 SELECT id_product, SUM(-qty) AS qty FROM {$this->prefix}partner_stock WHERE id_head='{$id}' AND date<'$sdate' GROUP BY 1) a GROUP BY 1";
         $open = $this->m->getall($this->m->query($sql), 2, "qty", "id_product");
         
-        $sql = "SELECT date, id_product, 'Purchase' AS particulars, 'Purchase' AS type, invno AS refno, qty+free AS purc, 0 AS sale FROM {$this->prefix}saledetail WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' UNION ALL SELECT date, id_product, concat('Sales ', bill_no) AS particulars, 'Sales' AS type, invno AS refno, 0 AS purc, qty AS sale FROM {$this->prefix}partner_stock WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' ORDER BY 1";
-
+        $sql = "SELECT date, id_product, 'Purchase' AS particulars, 'Purchase' AS type, invno AS refno, qty+free AS purc, 0 AS sale FROM {$this->prefix}saledetail WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' UNION ALL SELECT date, id_product, concat('Sales ', IF(bill_no IS NULL, '', bill_no)) AS particulars, 'Sales' AS type, invno AS refno, 0 AS purc, qty AS sale FROM {$this->prefix}partner_stock WHERE id_head='{$id}' AND date>='$sdate' AND date<='$edate' ORDER BY 1";
         $trans = array();
         $rs = $this->m->query($sql);
         while ($row = $this->m->movenexta($rs)) {
             $id = $row['id_product'];
             $trans[$id][] = $row;
         }
+        $this->sm->assign("trans", $trans);
         
-        $sql = "SELECT p.*, c.name AS cname FROM {$this->prefix}product p, {$this->prefix}company c WHERE p.showtoparty='YES' AND p.id_company=c.id_company ORDER BY c.name, p.name";
-        //$items = $this->m->getall($this->m->query($sql), 1, "", "cname", "id_product");
+        $sql = "SELECT p.*, c.name AS cname FROM {$this->prefix}product p, {$this->prefix}company c WHERE p.id_company=c.id_company ORDER BY c.name, p.name";
         $items = $this->m->getall($this->m->query($sql));
         foreach ($items as $ck => $cv) {
             $k = $cv['id_product'];
             $items[$ck]['open'] = @$open[$k] ? $open[$k] : 0;
         }
-        $this->sm->assign("trans", $trans);
         $this->sm->assign("list", $items);
     }
 }

@@ -89,7 +89,21 @@ class accounts extends common {
         $this->redirect("index.php?module=accounts&func=listing");
     }
     function pledger() {
+        $hid = $_SESSION['id_user'];
+        $id_party = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+        $sql = "SELECT id_party, name FROM {$this->prefix}partner_party WHERE id_head='$hid' ORDER BY name"; 
+        $party = $this->m->getall($this->m->query($sql), 2, "name", "id_party");
+        $this->sm->assign("party", $party);
 
+        $sql = "SELECT 'V' as type, date, no AS refno, id_party_debit AS dhead, id_party_credit AS chead, total, ref1, memo FROM {$this->prefix}partner_voucher 
+            WHERE (date >= '$sdate' AND date <= '$edate') AND id_head='$hid' AND (id_party_debit='$id_party' OR id_party_credit='$id_party') UNION ALL
+                SELECT 'S' as type, date, bill_no AS refno, id_party AS dhead, 1 AS chead, total, invno AS ref1, memo  FROM {$this->prefix}partner_sale
+            WHERE (date >= '$sdate' AND date <= '$edate') AND id_head='$hid' AND id_party='$id_party'";
+        $voucher = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $voucher);
+      
     }
     function outstanding() {
         

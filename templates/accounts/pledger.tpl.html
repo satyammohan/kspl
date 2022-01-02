@@ -1,19 +1,23 @@
 <h3>
-    Ledger of : <b>{$party.0.name}</b><br>
+    Party Ledger<br>
 </h3>
 <fieldset>
-    <form method="post" action="index.php?module=partner&func=ledger">
+    <form method="post">
         <table>
             <tr>
                 <td>Start</td>
                 <td><input type="date" id="start_date" name="start_date" value='{$smarty.request.start_date}' /></td>
                 <td>End</td>
                 <td><input type="date" id="end_date" name="end_date" value='{$smarty.request.end_date}' /></td>
+                <td>Party</td>
+                <td><select name="id">
+                    <option>- Select Party -</option>
+                    {html_options options=$party selected=$smarty.request.id}
+                </select></td>
                 <td>
-                    <input type="hidden" name="id"  value='{$smarty.request.id}' />
                     <input type="submit" value="Go" />
                     <input type="button" class="print" value="Print" />
-                    <input type="hidden" id="excelfile" value="Ledger" />
+                    <input type="hidden" id="excelfile" value="Party Ledger" />
                     <input type="button" class="excel" value="Download" title="Download as Excel" />
                 </td>
             </tr>
@@ -23,7 +27,7 @@
 <table border="1" id="report">
     <thead>
     <tr>
-       	<th>Sl.No.</th><th>Date</th><th>Party</th><th class="right">Debit</th><th class="right">Credit</th><th class="right">Balance</th>
+       	<th>Sl.No.</th><th>Date</th><th>Party</th><th>No.</th><th>Ref No.</th><th class="right">Debit</th><th class="right">Credit</th><th class="right">Balance</th>
     </tr>
     </thead>
     <tbody>
@@ -32,9 +36,10 @@
     <tr>
         <td>{$smarty.section.x.index_next}</td>
         <td>{$data[x].date|date_format:"%d-%m-%Y"}</td>
-        <td>{if $data[x].dhead==$smarty.request.id}{$partyname=$head[$data[x].chead]}{else}{$partyname=$head[$data[x].dhead]}{/if}
+        <td>
+        {if $data[x].dhead==$smarty.request.id}{$partyname=$party[$data[x].chead]}{else}{$partyname=$party[$data[x].dhead]}{/if}
         {if $data[x].date}
-            {$partyname} {$data[x].refno}
+            {$partyname}
         {else}
             Opening Balance
             {if $data[x].total<0}
@@ -44,6 +49,8 @@
             {/if}
         {/if}
         </td>
+        <td>{$data[x].ref1}</td>
+        <td>{$data[x].refno}</td>
         <td class="right">{if $data[x].dhead==$smarty.request.id}
             {$data[x].total|string_format:"%.2f"}
             {$debit=$debit+$data[x].total}
@@ -60,9 +67,8 @@
     </tbody>
     <tfoot>
     <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <th>Total</th>
+        <th>&nbsp;</th>
+        <th colspan="4">Total</th>
         <th class="right">{$debit|string_format:"%.2f"}</th>
         <th class="right">{$credit|string_format:"%.2f"}</th>
         <th class="right">{abs($total)|string_format:"%.2f"} {if $total<0}CR{else}DB{/if}</td>
