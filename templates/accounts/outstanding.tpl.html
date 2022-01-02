@@ -5,10 +5,8 @@
     <form method="post">
         <table>
             <tr>
-                <td>Start</td>
+                <td>As On</td>
                 <td><input type="date" id="start_date" name="start_date" value='{$smarty.request.start_date}' /></td>
-                <td>End</td>
-                <td><input type="date" id="end_date" name="end_date" value='{$smarty.request.end_date}' /></td>
                 <td>Party</td>
                 <td><select name="id">
                     <option value="0">- All -</option>
@@ -26,60 +24,33 @@
 </fieldset>
 <div class="print_content"
 {$smarty.session.cname} {$smarty.session.fyear}<br>
-<br>Party Outstanding of : <b>{if $smarty.request.id==0}All Parties{else}{$party[$smarty.request.id]}{/if}</b><br>
-Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+<br>Party Outstanding as on {$smarty.request.start_date|date_format:"%d-%m-%Y"} of : <b>{if $smarty.request.id==0}All Parties{else}{$party[$smarty.request.id]}{/if}</b><br>
 <table border="1" id="report">
     <thead>
     <tr>
-       	<th>Sl.No.</th><th>Date</th><th>Party</th><th>No.</th><th>Ref No.</th><th class="right">Debit</th><th class="right">Credit</th><th class="right">Balance</th>
+       	<th>Sl.No.</th><th>Party</th><th>Address</th><th>Date</th><th>Inv.No.</th><th>Bill No.</th><th class="right">Balance</th><th class="right">Days</th>
     </tr>
     </thead>
     <tbody>
-    {$debit=0} {$total=0} {$credit=0}
+    {$total=0}
     {section name=x loop=$data}
     <tr>
         <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].name}</td>
+        <td>{$data[x].address1}</td>
         <td>{$data[x].date|date_format:"%d-%m-%Y"}</td>
-        <td>
-        {if $data[x].dhead==$smarty.request.id}{$partyname=$party[$data[x].chead]}{else}{$partyname=$party[$data[x].dhead]}{/if}
-        {if $data[x].date}
-            {$partyname}
-        {else}
-            Opening Balance
-            {if $data[x].total>0}
-                {$data[x].dhead = 0}
-                {$data[x].chead = $smarty.request.id}
-                {$data[x].total = $data[x].total}
-            {else}
-                {$data[x].dhead = $smarty.request.id}
-                {$data[x].chead = 0}
-                {$data[x].total = -$data[x].total}
-            {/if}
-        {/if}
-        </td>
-        <td>{$data[x].ref1}</td>
-        <td>{$data[x].refno}</td>
-        <td class="right">{if $data[x].dhead==$smarty.request.id}
-            {$data[x].total|string_format:"%.2f"}
-            {$debit=$debit+$data[x].total}
-            {$total=$total+$data[x].total}
-            {else}&nbsp;{/if}</td>
-        <td class="right">{if $data[x].chead==$smarty.request.id}
-            {$data[x].total|string_format:"%.2f"}
-            {$credit=$credit+$data[x].total}
-            {$total=$total-$data[x].total}
-            {else}&nbsp;{/if}</td>
-        <td class="right">{abs($total)|string_format:"%.2f"} {if $total<0}CR{else}DB{/if}</td>
+        <td>{$data[x].invno}</td>
+        <td>{$data[x].bill_no}</td>
+        <td class="right">{($data[x].balance)|string_format:"%.2f"}</td>
+        <td class="right">{$data[x].days}</td>
+        {$total = $total + $data[x].balance}
     </tr>
     {/section}
     </tbody>
     <tfoot>
     <tr>
-        <th>&nbsp;</th>
-        <th colspan="4">Total</th>
-        <th class="right">{$debit|string_format:"%.2f"}</th>
-        <th class="right">{$credit|string_format:"%.2f"}</th>
-        <th class="right">{abs($total)|string_format:"%.2f"} {if $total<0}CR{else}DB{/if}</td>
+        <th colspan="6">Total</th>
+        <th class="right">{$total|string_format:"%.2f"}</th>
     </tr>
     </tfoot>
 </table>
