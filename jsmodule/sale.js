@@ -31,8 +31,10 @@ function removeRow(obj) {
     }
     getValues();
 }
-function rowadd(obj, tid) {
-    if ($(obj).closest('tr').is(':last-child')) {
+function rowadd(obj, tid, id) {
+    var parts = id.match(/(\D+)(\d+)$/);
+    itemid = $("#id_product__" + parts[2]).val();
+    if ($(obj).closest('tr').is(':last-child') && itemid!="") {
         addRow(tid);
     }
 }

@@ -1,5 +1,5 @@
 <h3>
-    Party Ledger<br>
+    Party Outstanding<br>
 </h3>
 <fieldset>
     <form method="post">
@@ -11,13 +11,13 @@
                 <td><input type="date" id="end_date" name="end_date" value='{$smarty.request.end_date}' /></td>
                 <td>Party</td>
                 <td><select name="id">
-                    <option>- Select Party -</option>
+                    <option value="0">- All -</option>
                     {html_options options=$party selected=$smarty.request.id}
                 </select></td>
                 <td>
                     <input type="submit" value="Go" />
                     <input type="button" class="print" value="Print" />
-                    <input type="hidden" id="excelfile" value="Party Ledger" />
+                    <input type="hidden" id="excelfile" value="Party Outstanding" />
                     <input type="button" class="excel" value="Download" title="Download as Excel" />
                 </td>
             </tr>
@@ -26,7 +26,7 @@
 </fieldset>
 <div class="print_content"
 {$smarty.session.cname} {$smarty.session.fyear}<br>
-<br>Party Ledger of : <b>{$party[$smarty.request.id]}</b><br>
+<br>Party Outstanding of : <b>{if $smarty.request.id==0}All Parties{else}{$party[$smarty.request.id]}{/if}</b><br>
 Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
 <table border="1" id="report">
     <thead>

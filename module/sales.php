@@ -22,12 +22,17 @@ class sales extends common {
         $id = $this->m->getinsertID($insert_id);
         for ($i = 0; $i < count($_REQUEST['items']); $i++) {
             if ($_REQUEST['id_product'][$i]) {
+                $rate = $_REQUEST['rate'][$i] ? $_REQUEST['rate'][$i] : 0;
+                $qty = $_REQUEST['quantity'][$i] ? $_REQUEST['quantity'][$i] : 0;
+                $free = $_REQUEST['free'][$i] ? $_REQUEST['free'][$i] : 0;
+                $cess = $_REQUEST['cess'][$i] ? $_REQUEST['cess'][$i] : 0;
+                $d3 = $_REQUEST['discount3'][$i] ? $_REQUEST['discount3'][$i] : 0;
                 $net_amount = $_REQUEST['goods_amount'][$i] + $_REQUEST['tax_amount'][$i] + $_REQUEST['cessamt'][$i];
                 $detail = array("invno" => "{$data['invno']}", "date" => "{$data['date']}", "id_product" => "{$_REQUEST['id_product'][$i]}",
-                    "rate" => "{$_REQUEST['rate'][$i]}", "qty" => "{$_REQUEST['quantity'][$i]}", "free" => "{$_REQUEST['free'][$i]}", "amount" => "{$_REQUEST['amount'][$i]}",
-                    "discount_type3" => "{$_REQUEST['discount_type3'][$i]}", "discount3" => "{$_REQUEST['discount3'][$i]}", "discount_amount3" => "{$_REQUEST['discount_amount3'][$i]}",
+                    "rate" => "{$rate}", "qty" => "{$qty}", "free" => "{$free}", "amount" => "{$_REQUEST['amount'][$i]}",
+                    "discount_type3" => "{$_REQUEST['discount_type3'][$i]}", "discount3" => "{$d3}", "discount_amount3" => "{$_REQUEST['discount_amount3'][$i]}",
                     "id_taxmaster" => "{$_REQUEST['id_taxmaster'][$i]}", "tax_per" => "{$_REQUEST['tax_per'][$i]}", "tax_amount" => "{$_REQUEST['tax_amount'][$i]}",
-                    "cess" => "{$_REQUEST['cess'][$i]}", "cessamt" => "{$_REQUEST['cessamt'][$i]}", "goods_amount" => "{$_REQUEST['goods_amount'][$i]}",
+                    "cess" => "{$cess}", "cessamt" => "{$_REQUEST['cessamt'][$i]}", "goods_amount" => "{$_REQUEST['goods_amount'][$i]}",
                     "bill_no"=>"{$data['bill_no']}", "id_partner_sale" => "{$id}", "id_head" => "{$data['id_head']}", 
                     "id_party" => "{$data['id_party']}", "net_amount" => $net_amount,
                     "id_batch" => "{$_REQUEST['id_batch'][$i]}", "batch_no" => "{$_REQUEST['batch_no'][$i]}", "exp_date" => "{$_REQUEST['exp_date'][$i]}");
@@ -48,12 +53,17 @@ class sales extends common {
         $this->m->query($this->create_delete("{$this->prefix}partner_stock", "id_partner_sale='$id' AND id_head='$hid'"));
         for ($i = 0; $i < count($_REQUEST['items']); $i++) {
             if ($_REQUEST['id_product'][$i]) {
+                $rate = $_REQUEST['rate'][$i] ? $_REQUEST['rate'][$i] : 0;
+                $qty = $_REQUEST['quantity'][$i] ? $_REQUEST['quantity'][$i] : 0;
+                $free = $_REQUEST['free'][$i] ? $_REQUEST['free'][$i] : 0;
+                $cess = $_REQUEST['cess'][$i] ? $_REQUEST['cess'][$i] : 0;
+                $d3 = $_REQUEST['discount3'][$i] ? $_REQUEST['discount3'][$i] : 0;
                 $net_amount = $_REQUEST['goods_amount'][$i] + $_REQUEST['tax_amount'][$i] + $_REQUEST['cessamt'][$i];
                 $detail = array("invno" => "{$data['invno']}", "date" => "{$data['date']}", "id_product" => "{$_REQUEST['id_product'][$i]}",
-                    "rate" => "{$_REQUEST['rate'][$i]}", "qty" => "{$_REQUEST['quantity'][$i]}", "free" => "{$_REQUEST['free'][$i]}", "amount" => "{$_REQUEST['amount'][$i]}",
-                    "discount_type3" => "{$_REQUEST['discount_type3'][$i]}", "discount3" => "{$_REQUEST['discount3'][$i]}", "discount_amount3" => "{$_REQUEST['discount_amount3'][$i]}",
+                    "rate" => "{$rate}", "qty" => "{$qty}", "free" => "{$free}", "amount" => "{$_REQUEST['amount'][$i]}",
+                    "discount_type3" => "{$_REQUEST['discount_type3'][$i]}", "discount3" => "{$d3}", "discount_amount3" => "{$_REQUEST['discount_amount3'][$i]}",
                     "id_taxmaster" => "{$_REQUEST['id_taxmaster'][$i]}", "tax_per" => "{$_REQUEST['tax_per'][$i]}", "tax_amount" => "{$_REQUEST['tax_amount'][$i]}",
-                    "cess" => "{$_REQUEST['cess'][$i]}", "cessamt" => "{$_REQUEST['cessamt'][$i]}", "goods_amount" => "{$_REQUEST['goods_amount'][$i]}",
+                    "cess" => "{$cess}", "cessamt" => "{$_REQUEST['cessamt'][$i]}", "goods_amount" => "{$_REQUEST['goods_amount'][$i]}",
                     "bill_no"=>"{$data['bill_no']}", "id_partner_sale" => "{$id}", "id_head" => "{$data['id_head']}", 
                     "id_party" => "{$data['id_party']}", "net_amount" => $net_amount,
                     "id_batch" => "{$_REQUEST['id_batch'][$i]}", "batch_no" => "{$_REQUEST['batch_no'][$i]}", "exp_date" => "{$_REQUEST['exp_date'][$i]}");
@@ -74,7 +84,8 @@ class sales extends common {
         $this->sm->assign("series", $this->m->sql_getall($sql, 2, "name", "id"));
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
         if ($id!=0) {
-            $sql = "SELECT s.*, p.name AS item FROM {$this->prefix}partner_stock s, {$this->prefix}product p WHERE s.id_product=p.id_product AND s.id_partner_sale='$id' ORDER BY id_partner_stock";
+            $sql = "SELECT s.*, p.name AS item FROM {$this->prefix}partner_stock s, {$this->prefix}product p 
+                WHERE s.id_product=p.id_product AND s.id_partner_sale='$id' AND id_head='$hid' ORDER BY id_partner_stock";
             $detail = $this->m->sql_getall($sql);
             $this->sm->assign("data", $detail);    
             $sql = "SELECT s.*, p.name, p.address1, p.address2, p.gstin FROM {$this->prefix}partner_sale s, {$this->prefix}partner_party p WHERE s.id_party=p.id_party AND s.id_partner_sale='$id' AND s.id_head='$hid'";
