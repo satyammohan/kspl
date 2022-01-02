@@ -193,5 +193,16 @@ class sales extends common {
         echo json_encode($data);
         exit;
     }
+    function getbatch() {
+        $hid = $_SESSION['id_user'];
+        $id = $_REQUEST['id'];
+        $filt = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
+        $sql = "SELECT b.batch_no as `value`, b.id_batch AS col0, b.expiry_date AS col1, b.seller_price AS col2  
+                FROM {$this->prefix}batch b, (SELECT DISTINCT id_batch FROM {$this->prefix}saledetail WHERE id_head='$hid' AND id_product='$id') s
+                WHERE b.id_batch=s.id_batch AND b.batch_no LIKE '%{$filt}%' AND b.id_product='$id' ORDER BY b.batch_no";
+        $data = $this->m->sql_getall($sql);
+        echo json_encode($data);
+        exit;
+    }
 }
 ?>
