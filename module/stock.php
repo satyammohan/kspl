@@ -11,6 +11,7 @@ class stock extends common {
 
     function statement() {
         $id = $_SESSION['id_user'];
+        $this->saveactivity("Stock Statement.");
         $wcond = " AND s.id_head = '$id' ";
         $_REQUEST['option'] = isset($_REQUEST['option']) ? $_REQUEST['option'] : '1';
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
@@ -40,6 +41,7 @@ class stock extends common {
 
     function register() {
         $id = $_SESSION['id_user'];
+        $this->saveactivity("Stock Register.");
         $wcond = " AND s.id_head = '$id' ";
         $_REQUEST['option'] = isset($_REQUEST['option']) ? $_REQUEST['option'] : '1';
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");

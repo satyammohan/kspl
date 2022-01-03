@@ -10,7 +10,7 @@
     <tbody>
         {foreach from=$list item=mod}
         <tr>
-            <td>{$mod.date|date_format:$ini.smarty_date}</td>
+            <td>{$mod.date|date_format:"%d-%m-%y %H:%M"}</td>
             <td>{$mod.ip}</td>
             <td>{$mod.description}</td>
         </tr>

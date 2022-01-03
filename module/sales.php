@@ -16,7 +16,7 @@ class sales extends common {
         $data['id_modify'] = $_SESSION['id_user'];
         $data['create_date'] = date("Y-m-d h:i:s");
         $_SESSION['current_sale_date'] = $data['date'];
-
+        $data['round'] = $data['round'] ? $data['round'] : 0;
         $sql = $this->create_insert("{$this->prefix}partner_sale", $data);
         $insert_id = $this->m->query($sql);
         $id = $this->m->getinsertID($insert_id);
@@ -48,6 +48,7 @@ class sales extends common {
         $hid = $data['id_head'] = $_SESSION['id_user'];
         $data['id_modify'] = $_SESSION['id_user'];
         $data['modify_date'] = date("Y-m-d h:i:s");
+        $data['round'] = $data['round'] ? $data['round'] : 0;
         $id = $_REQUEST['id'];
         $this->m->query($this->create_update("{$this->prefix}partner_sale", $data, "id_partner_sale='$id' AND id_head='$hid'"));
         $this->m->query($this->create_delete("{$this->prefix}partner_stock", "id_partner_sale='$id' AND id_head='$hid'"));
@@ -81,6 +82,7 @@ class sales extends common {
         $sql = "SELECT id_taxmaster, tax_per FROM {$this->prefix}taxmaster ORDER BY tax_per";
         $this->sm->assign("taxrates", json_encode($this->m->sql_getall($sql, 2, "tax_per", "id_taxmaster")));
         $sql = "SELECT id, name FROM {$this->prefix}partner_sale_prefix WHERE id_head='$hid' ORDER BY name";
+        $sql = "SELECT id, name FROM {$this->prefix}partner_sale_prefix WHERE name='ODI/' LIMIT 1";
         $this->sm->assign("series", $this->m->sql_getall($sql, 2, "name", "id"));
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
         if ($id!=0) {
@@ -135,15 +137,16 @@ class sales extends common {
         $this->sm->assign("tax", $this->m->sql_getall($sql, 2, "name", "id"));
     }
     function getsuffix() {
+        $hid = $_SESSION['id_user'];
         $sdate = $_SESSION['start_date'];
         $edate = $_SESSION['end_date'];
         $series = @$_REQUEST['series'];
         if ($series) {
             $pos = strlen($series) + 1;
-            $sql = "SELECT MAX(CAST(substring(invno, {$pos}) as decimal(11))) AS maxid FROM {$this->prefix}partner_sale WHERE invno LIKE '$series%' AND date>='$sdate' AND date<='$edate'";
+            $sql = "SELECT MAX(CAST(substring(invno, {$pos}) as decimal(11))) AS maxid FROM {$this->prefix}partner_sale WHERE id_head='$hid' AND  invno LIKE '$series%' AND date>='$sdate' AND date<='$edate'";
             $pstr = $series;
         } else {
-            $sql = "SELECT MAX(CAST(SUBSTRING(invno, 2) AS UNSIGNED)) AS maxid FROM {$this->prefix}partner_sale WHERE date>='$sdate' AND date<='$edate'";
+            $sql = "SELECT MAX(CAST(SUBSTRING(invno, 2) AS UNSIGNED)) AS maxid FROM {$this->prefix}partner_sale WHERE id_head='$hid' AND date>='$sdate' AND date<='$edate'";
             $pstr = "T";
         }
         $data = $this->m->fetch_assoc($sql);

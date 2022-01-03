@@ -25,7 +25,7 @@
                     <tr>
                         <td>
                             {if !$sdata.id_partner_sale}<select name="series" id="series">{html_options options=$series selected=$sdata.id_series}</select>{/if}
-                            <input type="text" name="sales[invno]" required size="12" value="{$sdata.invno}" {if !$sdata.id_partner_sale} id="inv" {/if} />
+                            <input type="text" readonly tabindex="-1" name="sales[invno]" required size="12" value="{$sdata.invno}" {if !$sdata.id_partner_sale} id="inv" {/if} />
                             <br><span id="msgbox"></span>
                         </td>
                         <td>

@@ -386,6 +386,16 @@ class common {
             $sql = $this->create_insert("accesslog", $acc);
             $this->m->query($sql);
         }
+    }    
+    function saveactivity($desc) {
+        $a['id_user'] = $_SESSION['id_user'];
+        $a['module'] = @$_REQUEST['module'];
+        $a['func'] = @$_REQUEST['func'];
+        $a['date'] = date("Y-m-d H:i");
+        $a['ip'] = $_SERVER['REMOTE_ADDR'];
+        $a['description'] = $desc;
+        $sql = $this->create_insert($this->prefix."partner_activity", $a);
+        $this->m->query($sql);
     }
 }
 ?>

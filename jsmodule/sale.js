@@ -192,7 +192,8 @@ $(document).ready(function () {
             }
         })
     })
-    $("#series").focus();
+    $("#series").trigger("blur");
+    $("#date").focus();
 });
 function getTaxRates(id) {
     curid = $("#" + id).val();

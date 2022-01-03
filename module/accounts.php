@@ -11,6 +11,7 @@ class accounts extends common {
         $hid = $_SESSION['id_user'];
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+        $this->saveactivity("Voucher Listing for $sdate to $edate.");
         $wcond = " id_head='$hid' ";
         if (isset($_REQUEST['id_party']) && $_REQUEST['id_party'] != "") {
             $head = $_REQUEST['id_party'];
@@ -27,12 +28,15 @@ class accounts extends common {
         $hid = $_SESSION['id_user'];
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
         if ($id) {
+            $this->saveactivity("Voucher Edited for id : $id.");
             $sql = "SELECT * FROM {$this->prefix}partner_voucher WHERE id_voucher='$id' AND id_head='$hid'";
             $data = $this->m->fetch_assoc($sql);
             $this->sm->assign("data", $data);
             $sql = "SELECT CONCAT(name, ' ', address1, ' ',address2) AS name, id_party AS id FROM {$this->prefix}partner_party WHERE id_party=" . $data['id_party_debit'] . " OR id_party=" . $data['id_party_credit'];
             $head = $this->m->sql_getall($sql, 2, "name", "id");
             $this->sm->assign("head", $head);
+        } else {
+            $this->saveactivity("Voucher Add.");
         }
         $sql = "SELECT MAX(CAST(no as decimal(11))) AS lastno FROM {$this->prefix}partner_voucher WHERE id_head='$hid'";
         $nextno = $this->m->fetch_assoc($sql);
@@ -41,6 +45,7 @@ class accounts extends common {
     function delete() {
         $hid = $_SESSION['id_user'];
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
+        $this->saveactivity("Voucher Delete for id : $id.");
         $sql = "DELETE FROM {$this->prefix}partner_voucher WHERE id_head='$hid' AND id_voucher='$id'";
         $this->m->query($sql);
         $_SESSION['msg'] = "Voucher Deleted Successfully.";
@@ -67,6 +72,7 @@ class accounts extends common {
         exit;
     }
     function insert() {
+        $this->saveactivity("New Voucher Saved.");
         $data = $_REQUEST['voucher'];
         $data['id_head'] = $_SESSION['id_user'];
         $data['ip'] = $_SERVER['REMOTE_ADDR'];
@@ -83,6 +89,7 @@ class accounts extends common {
         $data['modify_date'] = date("Y-m-d h:i:s");
         $hid = $data['id_head'] = $_SESSION['id_user'];
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
+        $this->saveactivity("Edit Voucher Saved for id : $id.");
         $sql = $this->create_update("{$this->prefix}partner_voucher", $data, "id_voucher='{$id}' AND id_head='$hid'");
         $this->m->query($sql);
         $_SESSION['msg'] = "Voucher Updated Successfully.";
@@ -91,6 +98,7 @@ class accounts extends common {
     function pledger() {
         $hid = $_SESSION['id_user'];
         $id_party = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
+        $this->saveactivity("Party Ledger.");
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $sql = "SELECT id_party, name FROM {$this->prefix}partner_party WHERE id_head='$hid' ORDER BY name"; 
@@ -112,6 +120,7 @@ class accounts extends common {
     }
     function outstanding() {
         $hid = $_SESSION['id_user'];
+        $this->saveactivity("Party Outstanding.");
         $id_party = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
         $wcond = $id_party ? " AND s.id_party = '$id_party'" : "";
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
@@ -139,7 +148,6 @@ class accounts extends common {
                 $result[] = $row;
             }
         }
-        //$this->pr($result);
         $this->sm->assign("data", $result);
     }
 }

@@ -9,7 +9,7 @@ class sreport extends common {
     function _default() {
     }
     function register() {
-        //od22__partner_stock
+        $this->saveactivity("Sales Register.");
         $id = $_SESSION['id_user'];
         $wcond = " AND s.id_head = '$id' ";
         $_REQUEST['option'] = isset($_REQUEST['option']) ? $_REQUEST['option'] : '1';
@@ -42,6 +42,7 @@ class sreport extends common {
         $this->sm->assign("data", $res);
     }
     function item() {
+        $this->saveactivity("Itemwise Sales.");
         $id = $_SESSION['id_user'];
         $wcond = " AND sd.id_head = '$id' ";
         $_REQUEST['option'] = isset($_REQUEST['option']) ? $_REQUEST['option'] : '1';
@@ -59,6 +60,7 @@ class sreport extends common {
         $this->sm->assign("data", $res);
     }
     function hsn() {
+        $this->saveactivity("HSN-wise Sales.");
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $_REQUEST['option'] = isset($_REQUEST['option']) ? $_REQUEST['option'] : '1';

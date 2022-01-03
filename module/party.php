@@ -6,6 +6,7 @@ class party extends common {
         parent:: __construct();
     }
     function insert() {
+        $this->saveactivity("New Party Added.");
         $data = $_REQUEST['entry'];
         $data['id_head'] = $_SESSION['id_user'];
         $data['status'] = 0;
@@ -24,6 +25,7 @@ class party extends common {
         $hid = $data['id_head'] = $_SESSION['id_user'];
         $data['opening_balance'] = $data['opening_balance'] ? $data['opening_balance'] : 0;
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
+        $this->saveactivity("Party updated for id : $id.");
         $sql = $this->create_update("{$this->prefix}partner_party", $data, "id_party='{$id}' AND id_head='$hid'");
         $this->m->query($sql);
         $_SESSION['msg'] = "Party Updated Successfully.";
@@ -39,6 +41,7 @@ class party extends common {
     function delete() {
         $hid = $data['id_head'] = $_SESSION['id_user'];
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
+        $this->saveactivity("Delete Party for id : $id.");
         $data['status'] = 1;
         $sql = $this->create_update("{$this->prefix}partner_party", $data, "id_party='{$id}' AND id_head='$hid'");
         $this->m->query($sql);
@@ -46,12 +49,14 @@ class party extends common {
         $this->redirect("index.php?module=party&func=listing");
     }
     function listing() {
+        $this->saveactivity("Party Listing.");
         $id = $_SESSION['id_user'];
         $sql = "SELECT * FROM {$this->prefix}partner_party WHERE id_head='$id' AND status=0 ORDER BY name";
         $list = $this->m->getall($this->m->query($sql));
         $this->sm->assign("list", $list);
     }
     function profile() {
+        $this->saveactivity("Profile.");
         $id = $_SESSION['id_user'];
         $sql = "SELECT * FROM {$this->prefix}head WHERE id_head='$id'";
         $list = $this->m->getall($this->m->query($sql));
@@ -59,7 +64,7 @@ class party extends common {
     }
     function activity() {
         $id = $_SESSION['id_user'];
-        $sql = "SELECT * FROM {$this->prefix}partner_activity WHERE id_head='$id' ORDER BY date DESC";
+        $sql = "SELECT * FROM {$this->prefix}partner_activity WHERE id_user='$id' ORDER BY date DESC";
         $list = $this->m->getall($this->m->query($sql));
         $this->sm->assign("list", $list);
     }
