@@ -22,7 +22,6 @@ class partner extends common {
     function logout() {
         $ip = $_SERVER['REMOTE_ADDR'];
         $id = $_SESSION['id_user'];
-        $this->savelogininfo($_SESSION['type'], $ip, $id, "Logout");
         session_destroy();
         foreach ($_SESSION as $k => $v) {
             $_SESSION[$k] = '';
@@ -46,7 +45,6 @@ class partner extends common {
             $this->set_session($this->data1);
             $this->set_permission();
             $this->config();
-            $this->savelogininfo($_SESSION['type'], $ip, $this->data1['id_user'], "Login");
             $_SESSION['msg'] = "Successfully Logged as Partner.";
             $this->redirect("index.php?module=partner&func=home");
         } else {
@@ -58,7 +56,6 @@ class partner extends common {
                 $this->set_session($this->data1);
                 $this->set_permission();
                 $this->config();
-                $this->savelogininfo($_SESSION['type'], $ip, $this->data1['id_user'], "Login");
                 $_SESSION['msg'] = "Successfully Logged as RSM/ASM.";
                 $this->redirect("index.php?module=partner&func=home");
             } else {
@@ -66,10 +63,6 @@ class partner extends common {
                 $this->redirect("index.php");        
             }
         }
-    }
-    function savelogininfo($type, $ip, $id_user, $logintype) {
-        $sql = "INSERT INTO login_details (type, ip, id_user, logintype, date) values ('$type', '$ip', '$id_user', '$logintype', NOW())";
-        $this->m->query($sql);
     }
     function set_session($arr) {
         foreach ($arr as $k => $v) {

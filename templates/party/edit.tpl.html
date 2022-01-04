@@ -15,6 +15,9 @@
         <tr>
             <td><b>Address1:</b></td>
             <td><input class="form-control"  type="text" name="entry[address2]" required value="{$data.address2}"/></td>
+        </tr>                            <tr>
+            <td><b>Group:</b></td>
+            <td><select name="entry[id_group]" id="group">{html_options options=$group selected=$data.id_group}</select></td>
         </tr>
         <tr>
             <td><b>Opening Balance:</b></td>

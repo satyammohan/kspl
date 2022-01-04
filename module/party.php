@@ -34,6 +34,8 @@ class party extends common {
     function edit() {
         $hid = $data['id_head'] = $_SESSION['id_user'];
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
+        $res = $this->m->query("SELECT * FROM `{$this->prefix}partner_group` WHERE status=0  ORDER BY name");
+        $this->sm->assign("group", $this->m->getall($res, 2, "name", "id_group"));
         $sql = $this->create_select("{$this->prefix}partner_party", "id_party='{$id}' AND id_head='$hid'");
         $data = $this->m->fetch_assoc($sql);
         $this->sm->assign("data", $data);
