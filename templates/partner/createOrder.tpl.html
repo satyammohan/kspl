@@ -17,7 +17,7 @@
     }
     var preq=0; prea=0;
 </script>
-<b><div class="float-left"><h3>Add Sales Order</h3></div><div class="float-right">Ledger Balance : {abs($balance)} {if $balance<0}DB{else}CR{/if}</div></b><br><br>
+<b><div class="float-left"><h3>Add Purchase Order</h3></div><div class="float-right">Ledger Balance : {abs($balance)} {if $balance<0}DB{else}CR{/if}</div></b><br><br>
 {$sl = 1}
 <form method="post" action="index.php?module=partner&func=saveOrder">
     {foreach from=$items item=mod key=k}

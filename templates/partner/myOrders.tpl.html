@@ -8,7 +8,7 @@
         $(location).attr('href', url+cond);
     }
 </script>
-<h3>My Order History</h3> Show : <select data-inline="true" onchange="reload(this.value)">
+<h3>My Purchase Order History</h3> Show : <select data-inline="true" onchange="reload(this.value)">
     <option value="" {if !isset($smarty.request.approve)}selected=selected{/if}>All</option>
     <option value="1" {if $smarty.request.approve=="1"}selected=selected{/if}>Approved</option>
     <option value="0" {if $smarty.request.approve=="0"}selected=selected{/if}>Pending</option>
