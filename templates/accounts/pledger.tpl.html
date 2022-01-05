@@ -43,7 +43,7 @@ Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.en
         <td>
         {if $data[x].dhead==$smarty.request.id}{$partyname=$party[$data[x].chead]}{else}{$partyname=$party[$data[x].dhead]}{/if}
         {if $data[x].date}
-            {$partyname}
+            {if $partyname}{$partyname}{else}Sales{/if}
         {else}
             Opening Balance
             {if $data[x].total>0}
