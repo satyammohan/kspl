@@ -181,7 +181,7 @@ class sales extends common {
         $hid = $_SESSION['id_user'];
         $filt = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
         $sql = "SELECT name as `value`, id_party AS col0, address1 AS col1, address2 AS col2, gstin AS col3
-            FROM {$this->prefix}partner_party WHERE name LIKE '%{$filt}%' AND status=0 AND id_head='$hid' ORDER BY name"; 
+            FROM {$this->prefix}partner_party WHERE name LIKE '%{$filt}%' AND status=0 AND id_head='$hid' AND id_group=18 ORDER BY name"; 
         $data = $this->m->sql_getall($sql);
         echo json_encode($data);
         exit;

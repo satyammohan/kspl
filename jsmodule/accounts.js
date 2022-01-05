@@ -2,7 +2,7 @@ $(document).ready(function () {
     callauto("debit", "index.php?module=accounts&func=showparty&ce=0", ["id_party_debit"]);
     callauto("credit", "index.php?module=accounts&func=showparty&ce=0", ["id_party_credit"]);
     $("#amt").priceField();
-    $("#no").focus();
+    $("#debit").focus();
     $("#no").blur(function () {
         myno = $("#no").val();
         id_voucher = $("#id_voucher").val()
