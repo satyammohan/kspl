@@ -110,10 +110,10 @@ class accounts extends common {
             SELECT SUM(-total) AS total FROM {$this->prefix}partner_sale WHERE date<'$sdate' AND id_head='$hid' AND id_party='$id_party') a";
         $open = $this->m->sql_getall($sql);
 
-        $sql = "SELECT 'V' as type, date, no AS refno, id_party_debit AS dhead, id_party_credit AS chead, total, ref1, memo FROM {$this->prefix}partner_voucher 
+        $sql = "SELECT u.* FROM (SELECT 'V' as type, date, no AS refno, id_party_debit AS dhead, id_party_credit AS chead, total, ref1, memo FROM {$this->prefix}partner_voucher 
                 WHERE (date >= '$sdate' AND date <= '$edate') AND id_head='$hid' AND (id_party_debit='$id_party' OR id_party_credit='$id_party') UNION ALL
             SELECT 'S' as type, date, bill_no AS refno, id_party AS dhead, 1 AS chead, total, invno AS ref1, memo  FROM {$this->prefix}partner_sale
-                WHERE (date >= '$sdate' AND date <= '$edate') AND id_head='$hid' AND id_party='$id_party'";
+                WHERE (date >= '$sdate' AND date <= '$edate') AND id_head='$hid' AND id_party='$id_party') u ORDER BY date";
         $voucher = $this->m->sql_getall($sql);
         array_unshift($voucher, ["type" => "O", "total" => $open[0]['total']]);
         $this->sm->assign("data", $voucher);
