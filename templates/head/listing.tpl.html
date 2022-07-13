@@ -1,0 +1,28 @@
+<h3>Head Master</h3>
+<table id="dataTable" class="table table-striped table-bordered" width="100%">
+    <thead>
+        <tr> 
+            <th colspan="7">
+                <select onchange="update_listing('head', this.value);">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+            </th>
+            <th><a title="Add Head" href="index.php?module=head&func=edit"><i class="fa fa-plus fa-2x"></i></a></th>
+        </tr>
+        <tr><th>Name</th><th>Town</th><th>Zone</th><th>Mobile</th><th>Phone</th><th>Action</th></tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.town}</td>
+        <td>{$mod.zone}</td>
+        <td>{$mod.mobile}</td>
+        <td>{$mod.phone}</td>
+        <td>
+            <a title="Edit Head" href="index.php?module=head&func=edit&id={$mod.id_head}"><i class="fa fa-edit fa-2x"></i></a>
+            <a title="Delete Head" href="index.php?module=head&func=delete&id={$mod.id_head}&ce=0" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+

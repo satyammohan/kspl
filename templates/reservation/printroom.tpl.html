@@ -1,0 +1,222 @@
+<div style="float:right;"><button class="print">Print</button></div>
+<div class="print_content">
+    <br><br>
+    <style>
+        .btable { width:90%; border:1px solid black !important; }
+        .btable th { background-color: #cbcbcb; border:1px solid black; text-align:center; }
+        .tdborder { border-top:1px solid black }
+        @media print {
+            body { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+    <table align="center" class="btable">
+        <tr>
+            <th colspan="6"><h3>Guest Booking Bill</h3></th>
+        </tr>
+        <tr>
+            <td colspan="3"><b>{$smarty.session.cname}</b>
+                <br><b>{$smarty.session.address}</b>
+                <br>GSTIN:<b>{$smarty.session.gstin}</b>
+                <br>Email:<b>{$smarty.session.email}</b>
+                <br>Phone:<b>{$smarty.session.phone}</b>
+            </td>
+            <td colspan="3">
+                <b>Bill No. : </b>{$data.billno}<br>
+                <b>Date : </b>{$data.depature_date|date_format:"%d-%m-%Y"}<br>
+                <b>GRC No. : </b>{$data.grcno}<br>
+                <b>Ref.No. : </b>{$data.no}
+            </td>
+        </tr>
+        <tr><td class="tdborder" colspan="6"></td></tr>
+        <tr>
+            <td colspan="1"><b>Billed to : </b>{$data.name}<br>
+                <b>Address : </b>{$data.address}<br>
+                <b>GSTIN : </b>{if $data.gstin}{$data.gstin}{else}Not applicable{/if}<br>
+                <b>Phone/Email : </b>{$data.mobile} {$data.email}<br>
+                <b>City : </b>{$data.city}  <b>District : </b>{$data.district} <b>State : </b>{$data.state}<br>
+                <b>Country : </b>{$data.country}
+            </td>
+            <td colspan="3">
+                <b>Booking Type : </b>{$data.type}<br>
+                <b>Booking No : </b>{$data.booking_no}<br>
+                <b>Refer : </b>{$data.refer}<br>
+                <b>Arrived from : </b>{$data.arrivedfrom}<br>
+                <b>ID Proof : </b>{$data.id_proof}
+            </td>
+            <td colspan="2">
+                <b>Purpose : </b>{$data.purpose}<br>
+                <b>Others : </b>{$data.oname}<br>
+                <b>Destination : </b>{$data.destination}<br>
+                <b>Persons : </b>{$data.person}<br>
+                <b>Adult : </b>{$data.adult}<br>
+                <b>Childen : </b>{$data.child}
+            </td>
+        </tr>
+        <tr>
+            <th width="52%"><b>Description</b></th>
+            <th width="10%"><b>GST %</b></td>
+            <th width="10%"><b>Amount</b></td>
+            <th width="10%"><b>SGST Amt</b></td>
+            <th width="10%"><b>CGST Amt</b></td>
+            <th width="10%"><b>Net Amount</b></td>
+        </tr>
+        <tr>
+            <td valign="top" colspan="6" >
+                Rooms alloted : {$data.roomnumber}   Rent Per day : {$data.rentday} for {$data.daysstay} days.<br>
+                Check-in Date : {$data.date|date_format:"%d-%m-%Y"} {$data.time} Check-out Date : {$data.depature_date|date_format:"%d-%m-%Y"} {$data.depature_time}
+                <br><br>
+            </td>
+        </tr>
+        {if $data.json.0.total!=0}
+        <tr>
+            <td valign="top">
+                Room rent No GST 
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                0.00
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.json.0.withtax|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                0.00
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                0.00
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.json.0.total|string_format:"%.2f"}
+            </td>
+        </tr>
+        {else}
+            <tr><td colspan=6>&nbsp;</td></tr>
+        {/if}
+        {if $data.json.12.total!=0}
+        <tr>
+            <td valign="top">
+                Room rent 12% GST 
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                12.00
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.json.12.withtax|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($data.json.12.gstamt/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($data.json.12.gstamt/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.json.12.total|string_format:"%.2f"}
+            </td>
+        </tr>
+        {else}
+            <tr><td colspan=6>&nbsp;</td></tr>
+        {/if}
+	{if $data.json.18.total!=0}
+        <tr>
+            <td valign="top">
+                Room rent 18% GST
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                18.00
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.json.18.withtax|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($data.json.18.gstamt/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($data.json.18.gstamt/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.json.18.total|string_format:"%.2f"}
+            </td>
+        </tr>
+        {else}
+            <tr><td colspan=6>&nbsp;</td></tr>
+        {/if}
+
+        {if $food.famount!=0}
+        <tr>
+            <td valign="top">
+                Food Bill
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$food.fgstpep|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$food.fgoodsvalue|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($food.fgstamount/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($food.fgstamount/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$food.famount|string_format:"%.2f"}
+            </td>
+        </tr>
+        {else}
+            <tr><td colspan=6>&nbsp;</td></tr>
+        {/if}
+        {if $other.oamount!=0}
+        <tr>
+            <td valign="top">
+                Other Bills<br>
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$other.ogstpep|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$other.ogoodsvalue|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($other.ogstamount/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($other.ogstamount/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$other.oamount|string_format:"%.2f"}
+            </td>
+        </tr>
+        {else}
+            <tr><td colspan=6>&nbsp;</td></tr>
+        {/if}
+        <tr height="100px"><td class="tdborder" colspan="6" ></td></tr>
+        <tr class="tdborder">
+            <th>Total</th>
+            <th>&nbsp;</th>
+            <th>{($data.json.0.withtax+$data.json.12.withtax+$data.json.18.withtax+$other.ogoodsvalue+$food.fgoodsvalue)|string_format:"%.2f"}</th>
+            <th>{(($data.json.12.gstamt/2)+($data.json.18.gstamt/2)+($food.fgstamount/2)+($other.ogstamount/2))|string_format:"%.2f"}</th>
+            <th>{(($data.json.12.gstamt/2)+($data.json.18.gstamt/2)+($food.fgstamount/2)+($other.ogstamount/2))|string_format:"%.2f"}</th>
+            <th>{($data.total+$other.oamount+$food.famount)|string_format:"%.2f"}</th>
+        </tr>
+<!---
+        <tr>
+            <td colspan="6" class="tdborder"><b>Rupees : </b>{$data.w}</td>
+        </tr>-->
+        <tr>
+            <td class="tdborder" colspan="6">
+                {if $mr.total}
+                    Total Amount Paid (<b>MR No. : {$mr.nos}</b>) : <b>{$mr.total|string_format:"%.2f"}</b>
+                {else}
+                    No Payment received.
+                {/if}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><h5><b>Total Due Amount : {($data.total+$other.oamount+$food.famount-$mr.total)|string_format:"%.2f"}</b></h5></td>
+            <td colspan="4" align="right"><b>Signature : </b>____________________________</td>
+        </tr>
+        <tr>
+            <td colspan="2"><font size="-2"><b>Created by : </b>{$data.username} <b></b>Generated on : </b>{$data.date_added|date_format:"%d-%m-%Y %H:%M"} <b>Printed on :</b> {$smarty.now|date_format:"%d-%m-%Y %H:%M"}</font></td>
+            <td colspan="4" align="right"><b>{$smarty.session.name}</b></td>
+        </tr>
+    </table>
+</div>

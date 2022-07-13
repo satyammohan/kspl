@@ -1,0 +1,41 @@
+<h3>
+Guest Checkout<hr>
+</h3>
+{if $data}
+<form method="post" action="index.php?module=reservation&func=savecheckout">
+ <table class="table">
+    <tr>
+        <td><b>Date:</b></td>
+        <td><input type="text" disable="disable" value="{$data.date}"/>
+            <input type="text" size="3" disable="disable" value="{$data.time}"/></td>
+        <td><b>Name:</b></td>
+        <td><input type="text" disable="disable" value="{$data.name}"/></td>
+        <td><b>Person:</b></td>
+        <td><input type="text" disable="disable" required value="{$data.person}"/></td>
+    </tr>
+    <tr>
+        <td><b>Days Stay:</b></td>
+        <td><input type="text" disable="disable" value="{$data.daysstay}"/></td>
+        <td><b>Rooms:</b></td>
+        <td><input type="text" disable="disable" value="{$data.roomnumber}"/></td>
+    </tr>
+    <tr>
+        <td><b>Depature Date:</b></td>
+        <td><input type="date" id="date" name="t[depature_date]" required /></td>
+        <td><b>Time:</b></td>
+        <td><input type="time" name="t[depature_time]" required /></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="hidden" id="hide" name="id" value="{$data.id_reservation}">
+            <input class="btn btn-primary" type="submit" value="Save" />
+        </td>
+    </tr>
+ </table>
+</form>
+<script>
+    $( document ).ready(function() {
+        $("#date").focus();
+    });
+</script>
+{/if}

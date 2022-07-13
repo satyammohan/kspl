@@ -1,154 +1,221 @@
 <?php
+
 class accounts extends common {
+
     function __construct() {
         $this->checklogin();
+        //        $this->get_permission( 'accounts', 'REPORT' );
         $this->table_prefix();
         parent:: __construct();
     }
+
     function _default() {
+        $this->sm->assign( 'page', 'common/comming.tpl.html' );
     }
-    function listing() {
-        $hid = $_SESSION['id_user'];
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
-        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
-        $this->saveactivity("Voucher Listing for $sdate to $edate.");
-        $wcond = " id_head='$hid' ";
-        if (isset($_REQUEST['id_party']) && $_REQUEST['id_party'] != "") {
-            $head = $_REQUEST['id_party'];
-            $wcond .= " AND ( id_party_debit = $head  OR id_party_credit = $head ) ";
-        }
-        $sql = "SELECT * FROM {$this->prefix}partner_voucher WHERE (date >= '$sdate' AND date <= '$edate') AND $wcond ORDER BY date DESC ";
-        $voucher = $this->m->sql_getall($sql);
-        $this->sm->assign("voucher", $voucher);
-        $sql="SELECT concat(name,' ',address1) AS name, id_party AS id FROM {$this->prefix}partner_party WHERE $wcond ORDER BY name";
-        $head = $this->m->getall($this->m->query($sql), 2, "name", "id");
-        $this->sm->assign("head", $head);
+
+    function profit() {
+        $startdate = $_SESSION[ 'start_date' ];
+        $sdate = $_REQUEST[ 'start_date' ] = isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'Y-m-d' );
+        $edate = $_REQUEST[ 'end_date' ] = isset( $_REQUEST[ 'end_date' ] ) ? $_REQUEST[ 'end_date' ] : date( 'Y-m-d' );
+        $sql = "SELECT g.name AS gname,h.id_head, h.name, h.address1, SUM(l.opening) AS opening, SUM(l.debit) AS debit, SUM(l.credit) AS credit, SUM(l.cbal) AS closing
+          FROM `{$this->prefix}group` g, `{$this->prefix}head` h, (
+          SELECT dhead AS id_head, SUM(IF(date<'$startdate', -1, 0)*total) AS opening, SUM(IF(date>='$startdate' AND date<='$sdate', 1, 0)*total) AS debit, 
+            0.00 AS credit, SUM(IF(date<='$sdate', -1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$sdate' GROUP BY 1
+          UNION ALL 
+          SELECT chead AS id_head, SUM(IF(date<'$startdate', 1, 0)*total) AS opening, 0.00 AS debit, SUM(IF(date>='$startdate' AND date<='$sdate', 1, 0)*total) AS credit, 
+            SUM(IF(date<='$sdate', 1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$sdate' GROUP BY 1) l
+          WHERE l.id_head=h.id_head AND h.id_group=g.id_group GROUP BY h.id_head ORDER BY h.name";
+        $res = $this->m->sql_getall( $sql );
+        $this->sm->assign( 'data', $res );
     }
-    function edit() {
-        $hid = $_SESSION['id_user'];
-        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        if ($id) {
-            $this->saveactivity("Voucher Edited for id : $id.");
-            $sql = "SELECT * FROM {$this->prefix}partner_voucher WHERE id_voucher='$id' AND id_head='$hid'";
-            $data = $this->m->fetch_assoc($sql);
-            $this->sm->assign("data", $data);
-            $sql = "SELECT CONCAT(name, ' ', address1, ' ',address2) AS name, id_party AS id FROM {$this->prefix}partner_party WHERE id_party=" . $data['id_party_debit'] . " OR id_party=" . $data['id_party_credit'];
-            $head = $this->m->sql_getall($sql, 2, "name", "id");
-            $this->sm->assign("head", $head);
-        } else {
-            $this->saveactivity("Voucher Add.");
-        }
-        $sql = "SELECT MAX(CAST(no as decimal(11))) AS lastno FROM {$this->prefix}partner_voucher WHERE id_head='$hid'";
-        $nextno = $this->m->fetch_assoc($sql);
-        $this->sm->assign("nextno", $nextno['lastno']);
+    function balance() {
+        $startdate = $_SESSION[ 'start_date' ];
+        $sdate = $_REQUEST[ 'start_date' ] = isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'Y-m-d' );
+        $edate = $_REQUEST[ 'end_date' ] = isset( $_REQUEST[ 'end_date' ] ) ? $_REQUEST[ 'end_date' ] : date( 'Y-m-d' );
+        $sql = "SELECT g.name AS gname,h.id_head, h.name, h.address1, SUM(l.opening) AS opening, SUM(l.debit) AS debit, SUM(l.credit) AS credit, SUM(l.cbal) AS closing
+          FROM `{$this->prefix}group` g, `{$this->prefix}head` h, (
+          SELECT dhead AS id_head, SUM(IF(date<'$startdate', -1, 0)*total) AS opening, SUM(IF(date>='$startdate' AND date<='$sdate', 1, 0)*total) AS debit, 
+            0.00 AS credit, SUM(IF(date<='$sdate', -1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$sdate' GROUP BY 1
+          UNION ALL 
+          SELECT chead AS id_head, SUM(IF(date<'$startdate', 1, 0)*total) AS opening, 0.00 AS debit, SUM(IF(date>='$startdate' AND date<='$sdate', 1, 0)*total) AS credit, 
+            SUM(IF(date<='$sdate', 1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$sdate' GROUP BY 1) l
+          WHERE l.id_head=h.id_head AND h.id_group=g.id_group GROUP BY h.id_head ORDER BY h.name";
+        $res = $this->m->sql_getall( $sql );
+        $this->sm->assign( 'data', $res );
     }
-    function delete() {
-        $hid = $_SESSION['id_user'];
-        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $this->saveactivity("Voucher Delete for id : $id.");
-        $sql = "DELETE FROM {$this->prefix}partner_voucher WHERE id_head='$hid' AND id_voucher='$id'";
-        $this->m->query($sql);
-        $_SESSION['msg'] = "Voucher Deleted Successfully.";
-        $this->redirect("index.php?module=accounts&func=listing");
+
+    function cashbook() {
+        $_REQUEST[ 'option' ] = isset( $_REQUEST[ 'option' ] ) ? $_REQUEST[ 'option' ] : '1';
+        $sdate = $_REQUEST[ 'start_date' ] = isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'Y-m-d' );
+        $edate = $_REQUEST[ 'end_date' ] = isset( $_REQUEST[ 'end_date' ] ) ? $_REQUEST[ 'end_date' ] : date( 'Y-m-d' );
+        $_REQUEST[ 'id' ] = $cash = 3;
+        $this->fetchdata( $cash, $sdate, $edate );
+        $this->sm->assign( 'page', 'accounts/cashbook.tpl.html' );
     }
-    function check() {
-        $no = trim($_REQUEST['no']);
-        $id_voucher = $_REQUEST['id_voucher'] ? $_REQUEST['id_voucher'] : 0;
-        $sdate = $_SESSION['start_date'];
-        $edate = $_SESSION['end_date'];
-        $sql = $this->create_select("{$this->prefix}partner_voucher", "id_voucher!='$id_voucher' AND no='$no' AND date>='$sdate' AND date<='$edate'");
-        $num = $this->m->num_rows($this->m->query($sql));
-        ob_clean();
-        echo $num;
+
+    function gethead() {
+        $search = isset( $_REQUEST[ 'search' ] ) ? $_REQUEST[ 'search' ] : '';
+        $sql = "SELECT id_head AS value, concat(name,' ',address1, ' ', IF(debtor, '(DB)', ''), ' ', IF(creditor, '(CR)', '')) AS text FROM {$this->prefix}head WHERE name LIKE '%{$search}%' ORDER BY name LIMIT 100";
+        $data = $this->m->sql_getall( $sql );
+        echo json_encode( $data );
         exit;
     }
-    function showparty() {
-        $hid = $_SESSION['id_user'];
-        $filt = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
-        $sql = "SELECT name as `value`, id_party AS col0
-            FROM {$this->prefix}partner_party WHERE name LIKE '%{$filt}%' AND status=0 AND id_head='$hid' ORDER BY name"; 
-        $data = $this->m->sql_getall($sql);
-        echo json_encode($data);
-        exit;
-    }
-    function insert() {
-        $this->saveactivity("New Voucher Saved.");
-        $data = $_REQUEST['voucher'];
-        $data['id_head'] = $_SESSION['id_user'];
-        $data['ip'] = $_SERVER['REMOTE_ADDR'];
-        $data['id_create'] = $_SESSION['id_user'];
-        $data['id_modify'] = $_SESSION['id_user'];
-        $data['create_date'] = date("Y-m-d h:i:s");
-        $sql = $this->create_insert("{$this->prefix}partner_voucher", $data);
-        $this->m->query($sql);
-        $_SESSION['msg'] = "Voucher Added Successfully.";
-        $this->redirect("index.php?module=accounts&func=listing");
-    }
-    function update() {
-        $data = $_REQUEST['voucher'];
-        $data['modify_date'] = date("Y-m-d h:i:s");
-        $hid = $data['id_head'] = $_SESSION['id_user'];
-        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
-        $this->saveactivity("Edit Voucher Saved for id : $id.");
-        $sql = $this->create_update("{$this->prefix}partner_voucher", $data, "id_voucher='{$id}' AND id_head='$hid'");
-        $this->m->query($sql);
-        $_SESSION['msg'] = "Voucher Updated Successfully.";
-        $this->redirect("index.php?module=accounts&func=listing");
-    }
-    function pledger() {
-        $hid = $_SESSION['id_user'];
-        $id_party = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
-        $this->saveactivity("Party Ledger.");
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
-        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
-        $sql = "SELECT id_party, name FROM {$this->prefix}partner_party WHERE id_head='$hid' ORDER BY name"; 
-        $party = $this->m->getall($this->m->query($sql), 2, "name", "id_party");
-        $this->sm->assign("party", $party);
 
-        $sql = "SELECT SUM(total) AS total FROM (SELECT IF(otype=1,1,-1)*opening_balance AS total FROM {$this->prefix}partner_party WHERE id_party='$id_party' UNION ALL
-            SELECT SUM(IF(id_party_debit='$id_party',-1,1)*total) AS total FROM {$this->prefix}partner_voucher WHERE date < '$sdate' AND id_head='$hid' AND (id_party_debit='$id_party' OR id_party_credit='$id_party') UNION ALL
-            SELECT SUM(-total) AS total FROM {$this->prefix}partner_sale WHERE date<'$sdate' AND id_head='$hid' AND id_party='$id_party') a";
-        $open = $this->m->sql_getall($sql);
-
-        $sql = "SELECT u.* FROM (SELECT 'V' as type, date, no AS refno, id_party_debit AS dhead, id_party_credit AS chead, total, ref1, memo FROM {$this->prefix}partner_voucher 
-                WHERE (date >= '$sdate' AND date <= '$edate') AND id_head='$hid' AND (id_party_debit='$id_party' OR id_party_credit='$id_party') UNION ALL
-            SELECT 'S' as type, date, bill_no AS refno, id_party AS dhead, 1 AS chead, total, invno AS ref1, memo  FROM {$this->prefix}partner_sale
-                WHERE (date >= '$sdate' AND date <= '$edate') AND id_head='$hid' AND id_party='$id_party') u ORDER BY date";
-        $voucher = $this->m->sql_getall($sql);
-        array_unshift($voucher, ["type" => "O", "total" => $open[0]['total']]);
-        $this->sm->assign("data", $voucher);
+    function ledger() {
+        $_REQUEST[ 'option' ] = isset( $_REQUEST[ 'option' ] ) ? $_REQUEST[ 'option' ] : '1';
+        $sdate = $_REQUEST[ 'start_date' ] = isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'Y-m-d' );
+        $edate = $_REQUEST[ 'end_date' ] = isset( $_REQUEST[ 'end_date' ] ) ? $_REQUEST[ 'end_date' ] : date( 'Y-m-d' );
+        $this->fetchdata( @$_REQUEST[ 'id' ], $sdate, $edate );
+        $this->sm->assign( 'page', 'accounts/ledger.tpl.html' );
     }
-    function outstanding() {
-        $hid = $_SESSION['id_user'];
-        $this->saveactivity("Party Outstanding.");
-        $id_party = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
-        $wcond = $id_party ? " AND s.id_party = '$id_party'" : "";
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
-        $sql = "SELECT id_party, name FROM {$this->prefix}partner_party WHERE id_head='$hid' ORDER BY name"; 
-        $party = $this->m->getall($this->m->query($sql), 2, "name", "id_party");
-        $this->sm->assign("party", $party);
 
-        $sql = "SELECT id_party, SUM(total) AS total FROM (
-            SELECT id_party, IF(otype=1,1,-1)*opening_balance AS total FROM {$this->prefix}partner_party WHERE id_head='$hid' GROUP BY 1 UNION ALL
-            SELECT id_party_debit AS id_party, SUM(-total) AS total FROM {$this->prefix}partner_voucher WHERE date < '$sdate' AND id_head='$hid' GROUP BY 1 UNION ALL
-            SELECT id_party_credit AS id_party, SUM(total) AS total FROM {$this->prefix}partner_voucher WHERE date < '$sdate' AND id_head='$hid' GROUP BY 1) a GROUP BY 1";
-        $res = $this->m->getall($this->m->query($sql), 2, "total", "id_party");
-        $dt = date('m/d/Y', time());
-        $os = $result = array();
-    	$sql = "SELECT s.invno, s.bill_no, s.date, s.id_head, s.id_party, s.total, s.total AS balance, h.name, h.address1
-	 	        FROM `{$this->prefix}partner_sale` s, `{$this->prefix}partner_party` h WHERE s.id_party=h.id_party {$wcond} ORDER BY h.name, s.date, s.invno";
-        $rs = $this->m->query($sql);
-	    while ($row = mysqli_fetch_assoc($rs)) {
-            $hid = $row['id_party'];
-            $res[$hid] = isset($res[$hid]) ? $res[$hid] : 0;
-            $row['balance'] = max(0, $row['balance'] - $res[$hid]);
-            $res[$hid] = max(0, $res[$hid] - $row['total']);
-            $row['days'] = (int) ((strtotime($dt) - strtotime($row['date'])) / 60 / 60 / 24) + 1;
-	        if ($row['balance'] != 0) {
-                $result[] = $row;
+    function fetchdata( $id="", $sdate, $edate ) {
+        $sql = "SELECT id_head AS id, concat(name,' ',address1) AS name FROM {$this->prefix}head ORDER BY name";
+        $this->sm->assign( 'head', $this->m->sql_getall( $sql, 2, 'name', 'id' ) );
+        $sql = "SELECT * FROM {$this->prefix}head WHERE id_head='$id'";
+        $head = $this->m->sql_getall( $sql );
+        $this->sm->assign( 'head1', $head );
+        $res = "";
+        if ( $id ) {
+            $id = $_REQUEST[ 'id' ];
+            switch ( $_REQUEST[ 'option' ] ) {
+                case 1:
+                $sql = "SELECT 'H' AS type, '' AS id, '' AS refno, '' AS date, '' AS chead, '$id' AS dhead, SUM(IF(dhead='$id', 1, -1)*total) AS total, '' AS memo 
+                            FROM `{$this->prefix}ledger` WHERE (dhead='$id' or chead='$id') AND `date`<'$sdate' GROUP BY 1 UNION ALL
+                            SELECT * FROM `{$this->prefix}ledger` WHERE (dhead='$id' or chead='$id') AND `date`>='$sdate' AND `date`<='$edate' ORDER BY date";
+                break;
+                case 2:
+                $sql = "SELECT date, SUM(IF(dhead=$id,1,0)*total) AS debit, SUM(IF(dhead=$id,0,1)*total) AS credit, SUM(IF(dhead=$id,-1,1)*total) AS total FROM `{$this->prefix}ledger` WHERE dhead=$id or chead=$id GROUP BY 1 ORDER BY 1";
+                break;
+                case 3:
+                $sql = "SELECT MONTHNAME(`date`) AS month, YEAR(`date`) AS year, SUM(IF(dhead=$id,1,0)*total) AS debit, SUM(IF(dhead=$id,0,1)*total) AS credit, SUM(IF(dhead=$id,-1,1)*total) AS total FROM `{$this->prefix}ledger` WHERE dhead=$id or chead=$id GROUP BY MONTH(`date`), YEAR(`date`) ORDER BY date";
+                break;
             }
+            $res = $this->m->sql_getall( $sql );
         }
-        $this->sm->assign("data", $result);
+        $this->sm->assign( 'data', $res );
+        return $res;
+    }
+
+    function gledger() {
+        $sdate = $_REQUEST[ 'start_date' ] = isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'Y-m-d' );
+        $edate = $_REQUEST[ 'end_date' ] = isset( $_REQUEST[ 'end_date' ] ) ? $_REQUEST[ 'end_date' ] : date( 'Y-m-d' );
+        $option = isset( $_REQUEST[ 'option' ] ) ? $_REQUEST[ 'option' ] : '0';
+        $id = isset( $_REQUEST[ 'id' ] ) ? $_REQUEST[ 'id' ] : '';
+        if ( $id ) {
+            $sql = "SELECT h.id_head, h.name, h.address1, SUM(l.opening) AS opening, SUM(l.debit) AS debit, SUM(l.credit) AS credit, SUM(l.cbal) AS closing
+              FROM `{$this->prefix}head` h, (
+              SELECT dhead AS id_head, SUM(IF(date<'$sdate', -1, 0)*total) AS opening, SUM(IF(date>='$sdate' AND date<='$edate', 1, 0)*total) AS debit, 
+                0.00 AS credit, SUM(IF(date<='$edate', -1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$edate' GROUP BY 1
+              UNION ALL 
+              SELECT chead AS id_head, SUM(IF(date<'$sdate', 1, 0)*total) AS opening, 0.00 AS debit, SUM(IF(date>='$sdate' AND date<='$edate', 1, 0)*total) AS credit, 
+                SUM(IF(date<='$edate', 1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$edate' GROUP BY 1) l
+              WHERE l.id_head=h.id_head AND h.id_group = {$id}
+              GROUP BY h.id_head ORDER BY h.name";
+        } else {
+            $sql = "SELECT g.id_group, g.name, '' AS address, SUM(t.opening) AS opening, SUM(t.debit) AS debit, SUM(t.credit) AS credit, SUM(t.closing) AS closing
+              FROM `{$this->prefix}group` g,
+                (SELECT h.id_head, id_group, SUM(l.opening) AS opening, SUM(l.debit) AS debit, SUM(l.credit) AS credit, SUM(l.cbal) AS closing
+              FROM `{$this->prefix}head` h, (
+              SELECT dhead AS id_head, SUM(IF(date<'$sdate', -1, 0)*total) AS opening, SUM(IF(date>='$sdate' AND date<='$edate', 1, 0)*total) AS debit, 
+                0.00 AS credit, SUM(IF(date<='$edate', -1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$edate' GROUP BY 1
+              UNION ALL 
+              SELECT chead AS id_head, SUM(IF(date<'$sdate', 1, 0)*total) AS opening, 0.00 AS debit, SUM(IF(date>='$sdate' AND date<='$edate', 1, 0)*total) AS credit, 
+                SUM(IF(date<='$edate', 1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$edate' GROUP BY 1) l
+              WHERE l.id_head=h.id_head
+              GROUP BY h.id_head) t WHERE g.id_group=t.id_group GROUP BY g.id_group ORDER BY g.name";
+        }
+        $res = $this->m->sql_getall( $sql );
+        $this->sm->assign( 'group', $this->m->sql_getall( "SELECT id_group AS id, name FROM {$this->prefix}group ORDER BY name", 2, 'name', 'id' ) );
+        $this->sm->assign( 'data', $res );
+    }
+
+    function trial() {
+        $_REQUEST[ 'option' ] = isset( $_REQUEST[ 'option' ] ) ? $_REQUEST[ 'option' ] : '2';
+        $startdate = $_SESSION[ 'start_date' ];
+        $sdate = $_REQUEST[ 'start_date' ] = isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'Y-m-d' );
+        $wcond = " date<='$sdate' ";
+        if ( isset( $_REQUEST[ 'opening' ] ) ) {
+            $wcond .= " AND type = 'H' ";
+        }
+        $transact = isset( $_REQUEST[ 'transact' ] ) ? 1 : 0;
+        $ocond = ( $_REQUEST[ 'option' ] == 1 ) ? ' h.name, h.address1 ' : ' g.name, h.name, h.address1 ';
+        if ( $transact != 1 ) {
+            $sql = "SELECT g.name AS gname, h.*, t.id_head, SUM(t.debit) AS debit, SUM(t.credit) AS credit 
+           FROM (SELECT dhead AS id_head, ROUND(SUM(total),2) AS debit, 0 AS credit  FROM `{$this->prefix}ledger` WHERE $wcond GROUP BY 1
+           UNION ALL 
+           SELECT chead AS id_head, 0 AS debit, ROUND(SUM(total),2) AS credit FROM `{$this->prefix}ledger` WHERE $wcond GROUP BY 1
+           ) t, `{$this->prefix}head` h, `{$this->prefix}group` g
+            WHERE h.id_head=t.id_head AND h.id_group=g.id_group GROUP BY h.id_head ORDER BY $ocond";
+        } else {
+            $sql = "SELECT g.name AS gname,h.id_head, h.name, h.address1, SUM(l.opening) AS opening, SUM(l.debit) AS debit, SUM(l.credit) AS credit, SUM(l.cbal) AS closing
+              FROM `{$this->prefix}group` g, `{$this->prefix}head` h, (
+              SELECT dhead AS id_head, SUM(IF(date<'$startdate', -1, 0)*total) AS opening, SUM(IF(date>='$startdate' AND date<='$sdate', 1, 0)*total) AS debit, 
+                0.00 AS credit, SUM(IF(date<='$sdate', -1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$sdate' GROUP BY 1
+              UNION ALL 
+              SELECT chead AS id_head, SUM(IF(date<'$startdate', 1, 0)*total) AS opening, 0.00 AS debit, SUM(IF(date>='$startdate' AND date<='$sdate', 1, 0)*total) AS credit, 
+                SUM(IF(date<='$sdate', 1, 0)*total) AS cbal FROM `{$this->prefix}ledger` WHERE date<='$sdate' GROUP BY 1) l
+              WHERE l.id_head=h.id_head AND h.id_group=g.id_group GROUP BY h.id_head ORDER BY $ocond";
+        }
+        $res = $this->m->sql_getall( $sql );
+        $this->sm->assign( 'data', $res );
+    }
+
+    function repparty() {
+        $startdate = $_SESSION[ 'start_date' ];
+        $sdate = $this->format_date( isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'd/m/Y' ) );
+        $wcond = " date<='$sdate' ";
+        $ocond = ( $_REQUEST[ 'option' ] == 1 ) ? ' h.name, h.address1 ' : ' g.name ';
+        $sql = "SELECT r.name AS rname, h.*, t.id_head, SUM(t.debit) AS debit, SUM(t.credit) AS credit, SUM(t.debit-t.credit) AS balance
+           FROM (SELECT dhead AS id_head, ROUND(SUM(total),2) AS debit, 0 AS credit  FROM `{$this->prefix}ledger` WHERE $wcond GROUP BY 1
+           UNION ALL 
+           SELECT chead AS id_head, 0 AS debit, ROUND(SUM(total),2) AS credit FROM `{$this->prefix}ledger` WHERE $wcond GROUP BY 1
+           ) t, `{$this->prefix}head` h, `{$this->prefix}area` a, `{$this->prefix}represent` r
+            WHERE h.id_head=t.id_head AND h.debtor AND h.id_area=a.id_area AND a.id_represent=r.id_represent GROUP BY h.id_head  HAVING balance<>0 ORDER BY r.name, h.name, h.address1";
+        $res = $this->m->sql_getall( $sql );
+        $this->sm->assign( 'data', $res );
+    }
+    function oneac( $ac, $sdate, $edate ) {
+        $sql = "SELECT $ac AS id_head, h.name, concat(h.address2, ' ', IFNULL(address3, '')) as address, l.* FROM {$this->prefix}ledger l, {$this->prefix}head  h 
+            WHERE `date`>='$sdate' AND `date`<='$edate' AND (dhead='$ac' OR chead='$ac') AND h.id_head=IF(dhead='$ac', chead, dhead) ORDER BY date";
+        $data = $this->m->sql_getall( $sql );
+        return $data;
+    }
+    function confirmation() {
+        $sdate = $_REQUEST[ 'start_date' ] = isset( $_REQUEST[ 'start_date' ] ) ? $_REQUEST[ 'start_date' ] : date( 'Y-m-d' );
+        $edate = $_REQUEST[ 'end_date' ] = isset( $_REQUEST[ 'end_date' ] ) ? $_REQUEST[ 'end_date' ] : date( 'Y-m-d' );
+        $printdate = $_REQUEST[ 'printdate' ] = isset( $_REQUEST[ 'printdate' ] ) ? $_REQUEST[ 'printdate' ] : date( 'Y-m-d' );
+
+        $id = isset( $_REQUEST[ 'id' ] ) ? $_REQUEST[ 'id' ] : '';
+        if ( $id ) {
+            $_REQUEST[ 'option' ] = 1;
+            $result = $this->fetchdata( $id, $sdate, $edate );
+            $sql = "SELECT id_head, concat(name,' ',address1) AS name FROM {$this->prefix}head ORDER BY name";
+            $head = $this->m->sql_getall( $sql, 2, 'name', 'id_head' );
+            $this->sm->assign( 'head', $head );
+            $db = $cr = 0;
+            foreach ( $result as $k => $v ) {
+                $d = date_format( date_create( $v[ 'date' ] ), 'd-m-Y' );
+                $r = $v[ 'refno' ].' '.$v[ 'memo' ];
+                $t = abs( $v[ 'total' ] );
+                if ( $v[ 'date' ] )
+                $p = ( $v[ 'id' ] == $v[ 'dhead' ] ) ? $head[ $v[ 'chead' ] ] : $head[ $v[ 'dhead' ] ];
+                else
+                $p = 'Opening Balance';
+                if ( $id != $v[ 'chead' ] AND $v[ 'total' ]>0 ) {
+                    $all[ $db ][ 'dd' ] = $d;
+                    $all[ $db ][ 'dr' ] = $r;
+                    $all[ $db ][ 'dp' ] = $p;
+                    $all[ $db++ ][ 'dt' ] = $t;
+                } else {
+                    $all[ $cr ][ 'cd' ] = $d;
+                    $all[ $cr ][ 'cr' ] = $r;
+                    $all[ $cr ][ 'cp' ] = $p;
+                    $all[ $cr++ ][ 'ct' ] = $t;
+                }
+            }
+            $this->sm->assign( 'data', $all );
+        }
     }
 }
 ?>

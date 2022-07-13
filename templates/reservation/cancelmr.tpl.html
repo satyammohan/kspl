@@ -1,0 +1,13 @@
+<h4>Reason for Money Receipt Cancellation</h4>
+<form method="post" action="index.php?module=reservation&func=cancelmr">
+    <input type="hidden" name="id" value="{$smarty.request.id}">
+    <input type="hidden" name="save" value="1">
+    <table>
+        <tr>
+            <td>Reason :</td><td><textarea name="reason" required rows="6" cols="60"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center"><input type="submit" value="Save" class="btn btn-primary"></td>
+        </tr>
+    </table>
+</form>

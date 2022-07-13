@@ -1,0 +1,35 @@
+<h3>
+    Money Receipt List<hr>
+</h3>
+<table id="dataTable" class="table" width="100%">
+    <thead>    
+        <tr>
+            <th>#</th><th>Date</th><th>No.</th><th>Type</th><th>Room</th><th>Name</th>
+            <th>Type</th><th>Amount</th><th>Remarks</th><th width="120px">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {$s=1}
+        {foreach from=$mr item=mod}
+        <tr>
+            <td>{$s}{$s=$s+1}</td>
+            <td>{$mod.date|date_format:"%d-%m-%Y"}</td>
+            <td>{if $mod.mrtype=="B"}Banquet{else}Room{/if}</td>
+            <td>{$mod.no}</td>
+            <td>{$mod.roomnumber}</td>
+            <td>{$mod.name}<br>{$mod.email}<br>{$mod.phone}</td>
+            <td>{$ini.mr_type[$mod.type]}</td>
+            <td>{$mod.amount}</td>
+            <td>{$mod.remark}{if $mod.cancel_date}<font color='red'><br>Cancel Reason:{$mod.cancel_reason}{/if}</font></td>
+            <td>
+                {if $mod.cancel_date}
+                    {$mod.cancel_date|date_format:"%d-%m-%Y"}
+                {else}
+                    <a class="btn btn-primary" href="index.php?module={if $mod.mrtype=='B'}banquet{else}reservation{/if}&func=printmr&id={$mod.id}" title="Print Money Receipt"><i class="fa fa-print"></i></a>
+                    <a class="btn btn-danger" href="#" onclick="cancelthis('Do you want to Cancel this Money Receipt?', 'index.php?module=reservation&func=cancelmr', '{$mod.id}')" title="Cancel MR"><i class="fa fa-times"></i></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

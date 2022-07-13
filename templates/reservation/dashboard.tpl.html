@@ -1,0 +1,73 @@
+<div class="col-7 card">
+    <!---<form method="post">
+        <h4>Show Rooms Available for Date : <input type="date" name="date" value="{$smarty.request.date}">
+        <input type="submit" value="Show"></h4>
+    </form>-->
+    <div class="remark">Room Status for :: {$smarty.now|date_format:"%d-%m-%Y %H:%M %p"}</div>
+    <div class="card-body w-10">
+        {$booked=0}{$vacant=0}{$all=0}{$res=0}{$block=0}{$dty=0}
+        {foreach from=$rooms item=mod}
+	{$flag=0}
+                    {if $mod.status==1}{$bc = "dirty"}{$dty=$dty+1}{/if}
+                    {if $mod.status==2}{$bc = "block"}{$block=$block+1}{/if}
+                    {if $mod.status==0}{$bc = "vacant"}{$vacant=$vacant+1}{/if}
+                    {if $mod.status==4}{$bc = "reserve"}{$res=$res+1}{/if}
+                    {if $mod.status==3}{$bc = "occupy"}{$flag=1}{$booked=$booked+1}{/if}
+            {$all=$all+1}
+            <a style="width: 60px;" href="#" class="btn {$bc} m-3 p-4" {if $flag}onclick="showdetails('{$mod.name}', '{$smarty.request.date}')"{/if}>{$mod.name}</a>
+        {/foreach}
+    </div>
+    <div class="remark">Total Rooms : {$all},  Booked : {$booked}, Vacant : {$vacant}, Reserved : {$res}, Blocked : {$block}, Dirty : {$dty}</div>
+</div>
+<script>
+function showdetails(room, date) {
+    $.post("index.php?module=reservation&func=showguest", { room:room, date:date }, function(resp) {
+        if (resp=="null") {
+            json_data = "Some issue, while getting data from Server.";
+        } else {
+            data = JSON.parse(resp);
+            json_data = "<table class='table table-bordered table-striped'>";
+            for (i in data) {
+                json_data = json_data + "<tr><th>"+ i.toUpperCase() + "</th><td>" + data[i] + "</td></tr>";
+            }
+            json_data = json_data + "</table>";
+        }
+        $(".modal-body").html(json_data);
+        $('#myModal').modal('show');
+    });
+}
+</script>
+<style>
+    .dirty {
+        background-color: yellow;
+        color : black;
+        font-weight:bolder;
+    }
+    .occupy {
+        background-color: red;
+        color : white;
+        font-weight: bolder;
+    }
+    .vacant {
+        background-color: green;
+        color : white;
+        font-weight: bolder;
+    }
+    .block {
+        background-color: grey;
+        color : white;
+        font-weight: bolder;
+    }
+    .reserve {
+        background-color: blue;
+        color : white;
+        font-weight: bolder;
+    }
+    .remark {
+        background-color:lightgrey;
+        vertical-align: middle;
+        vertical-align: center;
+        font-size: x-large;
+        text-align: center;
+    }
+</style>

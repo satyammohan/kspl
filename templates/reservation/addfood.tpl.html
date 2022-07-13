@@ -1,0 +1,64 @@
+<h4>Add Food Bill</h4>
+<form method="post" action="index.php?module=reservation&func=savefood">
+    <input type="hidden" name="food[id_reservation]" value="{$smarty.request.id}">
+    <table>
+        <tr>
+            <td>Date :</td><td><input type="date" name="food[date]" required class="form-control" value="{$smarty.now|date_format:'%Y-%m-%d'}" ></td>
+        </tr>
+        <tr>
+            <td>No :</td>
+            <td><input type="text" name="food[no]" id="no" required class="form-control" onblur="checkno();"/>
+                <div id="nomsg"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>Amount Before GST :</td><td><input type="text" id="goodsvalue" name="food[goodsvalue]" required class="form-control" onblur="getall()"></td>
+        </tr>
+        <tr>
+            <td>GST % :</td><td><select id="id_taxmaster" name="food[id_taxmaster]" class="form-control" onblur="getall()">
+                {html_options options=$tax selected=2}
+            </select>
+            <div class="d-none">
+                <input type="text" id="gstper" name="food[gstper]" required class="form-control">
+            </div>
+        </td>
+        </tr>
+        <tr>
+            <td>GST Amount :</td><td><input type="text" id="gstamount" readonly="readonly" name="food[gstamount]" required class="form-control"></td>
+        </tr>
+        <tr>
+            <td>Net Amount :</td><td><input type="text" id="amount" readonly="readonly" name="food[amount]" required class="form-control"></td>
+        </tr>
+        <tr>
+            <td>Remarks :</td><td><textarea name="food[remark]" class="form-control" cols=60 rows=6></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center"><input type="submit" value="Save" class="btn btn-primary"></td>
+        </tr>
+    </table>
+</form>
+<script>
+    $(document).ready(function() {
+        $("#no").focus();
+    });
+    function getall() {
+        let bg = parseFloat($("#goodsvalue").val());
+        let gstp = parseFloat($("#id_taxmaster option:selected").text());
+        $("#gstper").val(gstp);
+
+        let gstamt = (bg * gstp / 100).toFixed(2);
+        $("#gstamount").val(gstamt);
+        let amount = (bg*1 + gstamt*1).toFixed(2);
+        $("#amount").val(amount);
+    }
+    function checkno() {
+        var gno = $("#no").val();
+        $("#nomsg").html('');
+        $.post("index.php?module=reservation&func=checkno&type=food", { no:gno }, function(data) {
+            if (data==1) {
+                $("#no").focus();
+                $("#nomsg").html("Duplicate No.");
+            }
+        });
+    }
+</script>

@@ -10,7 +10,7 @@ class common {
             $this->{func_get_arg($i)} = func_get_arg($i + 1);
         }
         $this->m = new database();
-        $this->ini = @parse_ini_file("config/site.ini", true);
+        $this->ini = parse_ini_file("config/site.ini", true);
         $smarty->assign("ini", $this->ini);
         //echo "<b>common default</b></br>";
         $module = isset($_REQUEST['module']) ? $_REQUEST['module'] : "";
@@ -81,7 +81,6 @@ class common {
             return;
         }
         $_SESSION['msg'] = "Please Login to access this Page.";
-        $_SESSION['redirect_page'] = $_SERVER[QUERY_STRING];
         $this->redirect("index.php");
     }
 
@@ -120,11 +119,7 @@ class common {
         } else {
             $status = 2;
         }
-        if (isset($_REQUEST['ce'])) {
-            $this->redirect("index.php?module={$_REQUEST['table']}&func=listing&status=$status");
-        } else {
-            $this->redirect($_SERVER['HTTP_REFERER']);
-        }
+        $this->redirect($_SERVER['HTTP_REFERER']);
     }
 
     function convert_number($number) {
@@ -372,30 +367,10 @@ class common {
 		// Process your response here
 		return $response;
 	}
-    function savelog() {
-        if (isset($_SESSION['id_user']) && isset($_SESSION['companyname']) && !isset($_REQUEST['ce'])) {
-            $acc['id_user'] = $_SESSION['id_user'];
-            $acc['company'] = addslashes($_SESSION['companyname']);
-            $acc['sdate'] = $_SESSION['sdate'];
-            $acc['edate'] = $_SESSION['edate'];
-            $acc['module'] = @$_REQUEST['module'];
-            $acc['func'] = @$_REQUEST['func'];
-            $acc['cid'] = @$_REQUEST['id'];
-            $acc['ip'] = $_SERVER['REMOTE_ADDR'];
-            $acc['date'] = date("Y-m-d H:i");
-            $sql = $this->create_insert("accesslog", $acc);
-            $this->m->query($sql);
-        }
-    }    
-    function saveactivity($desc) {
-        $a['id_user'] = $_SESSION['id_user'];
-        $a['module'] = @$_REQUEST['module'];
-        $a['func'] = @$_REQUEST['func'];
-        $a['date'] = date("Y-m-d H:i");
-        $a['ip'] = $_SERVER['REMOTE_ADDR'];
-        $a['description'] = $desc;
-        $sql = $this->create_insert($this->prefix."partner_activity", $a);
-        $this->m->query($sql);
-    }
+}
+function pr($data) {
+    print "<pre>";
+    print_r($data);
+    print "</pre>";
 }
 ?>

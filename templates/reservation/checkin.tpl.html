@@ -1,0 +1,244 @@
+<h3>
+    {if $data.id_reservation}Edit{else}Add{/if} Registration<hr>
+</h3>
+<form method="post" enctype="multipart/form-data" onsubmit="return checkform();" action="index.php?module=reservation&func={if $data.id_reservation}checkinupdate{else}checkinupdateinsert{/if}">
+    <table class="table">
+        <tr>
+            <td><b>Ref No: *</b><br><b>GRC No:</b></td>
+            {if $data.id_reservation}
+                <td>{$data.no}</td>
+            {else}
+                <td><input type="text" name="t[no]" id="no" readonly="readonly" required onblur="checkno();" value="{$data.no}"/>
+                    <div id="nomsg"></div>
+                    <input type="text" id="grcno" name="t[grcno]" required value="{$data.grcno}"/>
+                </td>
+            {/if}
+            <td><b>Booking Date: *</b></td>
+            <td><input type="date" name="t[date]" required value="{if $data.date}{$data.date}{else}{$smarty.now|date_format:'%Y-%m-%d'}{/if}"/><br>
+            <td><b>Function Date: *</b></td>
+            <td><input type="date" name="t[est_depature_date]" required value="{$data.est_depature_date}"/><br>
+                <input type="time" name="t[time]" value="{$data.time}"/>
+                <input type="time" name="t[est_depature_time]" value="{$data.est_depature_time}"/>
+            </td>                
+        </tr>
+        <tr>
+            <td><b>Mobile: *</b></td>
+            <td>
+                <input type="number" max="9999999999" min="1000000000" minlength="10" required id="mobile" name="t[mobile]" value="{$data.mobile}" onblur="checkmobile()" title="Please enter valid Mobile number"> 
+            </td>
+            <td><b>Customer Name: *</b></td>
+            <td><input type="text" id="name" name="t[name]" required size="30" value="{$data.name}"/></td>
+            <td><b>No. of Persons: *</b></td>
+            <td><input type="text" name="t[person]" required value="{$data.person}"/><br></td>
+        </tr>
+        <tr>
+            <td><b>Address:</b></td>
+            <td><input type="text" id="address" name="t[address]" size="30" value="{$data.address}"/></td>
+            <td><b>City:</b></td>
+            <td><input type="text" id="city" name="t[city]" value="{$data.city}"/></td>
+            <td><b>Email:</b></td>
+            <td><input type="email" id="email" name="t[email]" value="{$data.email}"/></td>
+        </tr>
+        <tr>
+            <td><b>District:</b></td>
+            <td><input type="text" id="district" name="t[district]" value="{$data.district}"/></td>
+            <td><b>State:</b></td>
+            <td><input type="text" id="state" name="t[state]" value="{$data.state}"/></td>
+            <td><b>Country:</b></td>
+            <td><input type="text" id="country" name="t[country]" value="{$data.country}"/></td>
+        </tr>
+        <tr>
+            <td><b>Company:</b></td>
+            <td><input type="text" id="company" name="t[company]" value="{$data.company}"/></td>
+            <td><b>Gstin:</b></td>
+            <td><input type="text" id="gstin" name="t[gstin]" value="{$data.gstin}"/></td></td>
+            <td><b>ID :</b><br><b>Upload ID proof:</b></td>
+            <td><input type="text" id="id_proof" name="t[id_proof]" value="{$data.id_proof}"/><br>
+            <input type="file" name="t[id_proof_upload]" value="{$data.id_proof_upload}" accept="application/pdf, image/*"/></td>
+        </tr>
+        <tr>
+            <td><b>Purpose of Booking:</b></td>
+            <td><input type="text" name="t[purpose]" value="{$data.purpose}"/></td>
+            <td><b>Booking Type:</b></td>
+            <td><select name="t[type]">{html_options options=$ini.res_type selected=$data.type}</select></td>
+        </tr>
+        <tr>
+            <td><b>Actual Amount :</b></td>
+            <td><input type="text" name="t[actual_amount]" value="{$data.actual_amount}"/></td>
+            <td><b>Advance Amount :</b></td>
+            <td><input type="text" name="t[advance_amount]" value="{$data.advance_amount}"/></td>
+        </tr>
+        <tr>
+            <td><b>No. of Days: *</b></td>
+            <td><input type="text" id="days" name="t[daysstay]" required value="{$data.daysstay}" /></td>
+            <td><b>Remarks:</b></td>
+            <td><input type="text" name="t[remarks]" value="{$data.remarks}"/></td>
+            {if $data.id_reservation}
+            <tr>
+                <td colspan="6">
+                    <b>Rooms:</b>{$data.roomnumber}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>Total Discount:</b>{$data.discount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>Total GST:</b>{$data.gstamt}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>Total Amount:</b>{$data.total}
+                </td>
+            </tr>
+            {else}
+                <td><b>Rooms:</b></td>
+                <td><input type="text" id="rooms" value="{$data.roomnumber}" name="t[roomnumber]" onblur="getdetails();"/></td>
+                <tr><td colspan="20"><div id="details"></div></td></tr>
+                <tr>
+                    <td><b>Total Discount:</b></td>
+                    <td><input type="text" name="t[discount]" id="discount" readonly="readonly"/></td>
+
+                    <td><b>Total GST:</b></td>
+                    <td><input type="text" name="t[gstamt]" id="gstamt" readonly="readonly"/></td>
+
+                    <td><b>Total Amount: *</b></td>
+                    <td><input type="text" name="t[total]" id="total" required readonly="readonly"/></td>
+                </tr>
+            {/if}
+        <tr>
+        <td colspan="2">
+            <input type="hidden" id="hide" name="id" value="{$data.id_reservation}">
+            <input class="btn btn-primary" type="submit" value="Save" />
+        </td>
+        </tr>
+    </table>
+</form>
+<script>
+var totalrooms = 0;
+$( document ).ready(function() {
+    $("#grcno").focus();
+});
+function checkno() {
+    var gno = $("#no").val();
+    $("#nomsg").html('');
+    $.post("index.php?module=reservation&func=checkno", { no:gno }, function(data) {
+        if (data==1) {
+            $("#no").focus();
+            $("#nomsg").html("Duplicate No.");
+        }
+    });
+}
+function getdetails() {
+    let days = retvalue("days");
+    if (days==0) {
+        alert("Please fill up Days Stay:");
+        $("#days").focus();
+        return;
+    }
+    let rooms = $("#rooms").val();
+    $.post("index.php?module=reservation&func=getroomprice", { rooms:rooms }, function(data1, status) {
+        data = JSON.parse(data1);
+        totalrooms = data.length;
+        availrooms = "";
+        console.log(data);
+        text = "<table class='room' width='100%'><tr><th>Room</th><th>Tax %</th><th>GST %</th><th>Base Price</th><th>Price in Rs.</th><th>GST</th><th>Total</th>";
+        for (x in data) {
+            console.log(x);
+            text += "<tr>";
+            text += "<td><input name='room["+x+"][name]'     tabindex='-1' size='5' id='name"+x+"' type='text' readonly='readonly'  value='"+data[x].name+"' ></td>";
+            text += "<td><input name='room["+x+"][tax_per]'  tabindex='-1' size='5' id='tax_per"+x+"' type='text' readonly='readonly'  value='"+data[x].tax_per+"' ></td>";
+            text += "<td><input name='room["+x+"][gst_per]'  tabindex='-1' size='5' id='gst_per"+x+"' type='text' readonly='readonly'  value='"+data[x].tax_per+"' ></td>";
+            text += "<td><input name='room["+x+"][price]'    tabindex='-1' size='5' id='price"+x+"' type='text' readonly='readonly'  value='"+data[x].price+"' ></td>";
+            text += "<td><input name='room["+x+"][discount]' size='5' id='discount"+x+"' onblur='gettotal("+x+");' type='text' ></td>";
+            text += "<td><input name='room["+x+"][gstamt]'   tabindex='-1' size='5' id='gstamt"+x+"' readonly='readonly' type='text' value='' ></td>";
+            text += "<td><input name='room["+x+"][total]'    tabindex='-1' size='5' id='total"+x+"' readonly='readonly' type='text' value='' ></td>";
+            text += "<tr>";
+            availrooms = availrooms+data[x].name+",";
+        }
+        availrooms = availrooms.replace(/,\s*$/, "");
+        console.log(availrooms);
+        $("#rooms").val(availrooms);
+        text += "</table>";
+        $("#details").html(text);
+        for (iloop=0; iloop<totalrooms; iloop++) {
+            gettotal(iloop);
+        }
+    });        
+}
+function gettotal(id) {
+    let days = retvalue("days");
+    let tax_per = retvalue("tax_per"+id);
+    let price = retvalue("price"+id);
+    let discount = retvalue("discount"+id);
+    let netprice = price - discount;
+    if (netprice < 0) {
+        discount = price;
+        $("#discount"+id).val(discount);
+        netprice = 0;
+    }
+    let gstamt = 0;
+    if (netprice > 1000) {
+        gstamt = parseFloat(netprice * tax_per * days / 100).toFixed(2);
+        $("#gst_per"+id).val(tax_per);
+    } else {
+        $("#gst_per"+id).val(0);
+    }
+    let totalprice = parseFloat((netprice*days) + (gstamt*1)).toFixed(2);
+    $("#gstamt"+id).val(gstamt);
+    $("#total"+id).val(totalprice);
+    completethis();
+}
+function completethis() {
+    let days = retvalue("days");
+    let mygstamt = 0;
+    let mydiscount = 0;
+    let mytotal = 0;
+    for (i=0; i<totalrooms; i++) {
+        let gstamt = retvalue("gstamt"+i);
+        let disc = retvalue("discount"+i);
+        let totalprice = retvalue("total"+i);
+        mygstamt = mygstamt + gstamt*1;
+        mydiscount = mydiscount+ disc*days;
+        mytotal = mytotal + totalprice*1;
+    }
+    $("#discount").val(mydiscount);
+    $("#gstamt").val(mygstamt);
+    $("#total").val(mytotal);
+}
+function retvalue(id) {
+    retdata = $("#"+id).val() ? $("#"+id).val() : 0;
+    retdata = parseFloat(retdata).toFixed(2);
+    return retdata;
+}
+function checkmobile() {
+    let mobile=$("#mobile").val();
+    $.post("index.php?module=reservation&func=getguestdetails", { mobile:mobile }, function(data1, status) {
+        data = JSON.parse(data1);
+        if (data) {
+            console.log(data);
+            if (confirm("Data exists for this "+mobile+" number. Want to Prefill")) {
+                $("#name").val(data.name);
+                $("#company").val(data.company);
+                $("#gstin").val(data.gstin);
+                $("#address").val(data.address);
+                $("#dob").val(data.dob);
+                $("#city").val(data.city);
+                $("#arrivedfrom").val(data.arrivedfrom);
+                $("#district").val(data.district);
+                $("#state").val(data.state);
+                $("#country").val(data.country);
+                $("#email").val(data.email);
+                $("#id_proof").val(data.id_proof);
+            }
+        }
+    });
+}
+function checkform() {
+    let total = retvalue("total");
+    if (total==0) {
+        alert("Total amount can't be zero");
+        return false;
+    }
+    return true;
+}
+</script>
+<style>
+    .room {
+        background-color: lightgrey ;
+    }
+    input[text]:read-only {
+        background-color: #ccc;
+    }
+</style>

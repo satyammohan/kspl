@@ -1,0 +1,28 @@
+<fieldset>
+    <legend>Balance Sheet</legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
+                <td>End Date :</td>
+                <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+                <td align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname}<br>
+    Balance Sheet Period {$smarty.request.start_date|date_format:"%d/%m/%Y"} - {$smarty.request.end_date|date_format:"%d/%m/%Y"}
+    <br /><br />
+    {if $data}
+    {include file="accounts/balance1.tpl.html"}
+    {else}
+    <b>No Record Found!</b>
+    {/if}
+</div>

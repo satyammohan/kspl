@@ -1,0 +1,48 @@
+<script type="text/javascript" src="jsmodule/account.js?a=1"></script>
+<script type="text/javascript" src="jsmodule/price.js"></script>
+<form name="add_voucher" id="add_voucher" method="post" action="index.php?module=voucher&func={if $data.id_voucher}update{else}insert{/if}">
+    <legend>{if $data.id_voucher}Edit{else}Add{/if} Voucher</legend>
+    <table>
+        <tr>
+            <td><b>Date :</b></td>
+            <td><input type="date" name="voucher[date]" value="{$data.date}" /></td>
+        </tr>
+        <tr>
+            <td><b>Voucher No :</b></td>
+            <td><input type="text" name="vno" id="no" value='{$data.no}' /><span id="msgbox"></span></td>
+        </tr>
+        <tr>
+            <td><b>Debit Account :</b></td>
+            <td>
+                <input type="text" name="debit" value='{if $data}{$head[$data.id_head_debit]}{/if}' id="debit" size="70" />
+                <input type="hidden" name="voucher[id_head_debit]" id="id_head_debit"  value='{if $data}{$data.id_head_debit}{/if}'>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Credit Account :</b></td>
+            <td>
+                <input type="text" name="credit" value='{if $data}{$head[$data.id_head_credit]}{/if}' id="credit" size="70" />
+                <input type="hidden" name="voucher[id_head_credit]" id="id_head_credit" value='{if $data}{$data.id_head_credit}{/if}'>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Amount :</b></td>
+            <td><input type="text" name="voucher[total]" id="amt" value='{$data.total|string_format:"%.2f"}'></td>
+        </tr>
+        <tr>
+            <td><b>CHQ/DD/MR :</b></td>
+            <td><input type="text" name="voucher[ref1]" value="{$data.ref1}"></td>
+        </tr>
+        <tr>
+            <td><b>Remark :</b></td>
+            <td><textarea name="voucher[memo]" cols="100" rows="5">{$data.memo}</textarea></td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <input type="hidden" id="hide" name="id" value="{$data.id_voucher}" />
+                <input type="button" value="Save" id="save" />
+                <input type="reset" value="Reset" />
+            </td>
+        </tr>
+    </table>
+</form>

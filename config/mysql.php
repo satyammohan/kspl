@@ -23,12 +23,16 @@ class database {
         $this->password = $ini['password'];
         $this->dbName = $ini['dbName'];
         $this->conn = mysqli_connect($this->hostName, $this->userName, $this->password, $this->dbName) or die("Connection to the server failed");
-        $sql = "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));";
+        $sql = "SET SESSION sql_mode = ''";
         $this->query($sql);
     }
 
     function query($sql) {
         $this->rs = $rs = mysqli_query($this->conn, $sql);
+        if (!$rs) {
+            echo("Error in query: " . mysqli_error($this->conn)."---".$sql."<br><br>");
+            exit;
+        }
         return $rs;
     }
     function num_rows($rs) {
@@ -113,8 +117,5 @@ class database {
     function mysql_select_db($d) {
         return mysqli_select_db($this->conn, $d)  or die("No such database exist");
     }
-    function mysql_fetch_assoc($res) {
-        return mysqli_fetch_assoc($this->$conn, $res);
-    }
 }
-?>
+?> 

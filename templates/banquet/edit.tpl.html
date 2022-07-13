@@ -1,0 +1,91 @@
+<h3>
+  {if $data.id_reservation}Edit{else}Add{/if} Banquet Bill<hr>
+</h3>
+<form method="post" action="index.php?module=banquet&func={if $data.id_banquet}update{else}insert{/if}">
+  <table class="table">
+      <tr><td>Ref. No.:</td><td><input type="text" readonly name="t[no]" required value="{$data.no}"/></td>
+          <td>Bill No:</td><td><input type="text" {if $data.id_banquet} readonly {/if} id="bill" name="t[bill]" onblur="checkno();" value="{$data.bill}"/>
+              <div id="nomsg"></div>
+          </td>
+          <td>Date:</td><td><input type="date" id="date" name="t[date]" value="{if $data.date}{$data.date}{else}{$smarty.now|date_format:'%Y-%m-%d'}{/if}"/></td></tr>
+      <tr><td>Hall Detail:</td><td><input type="text" name="t[roomnumber]" value="{$data.roomnumber}"/></td>
+          <td>KOT:</td><td><input type="text" name="t[kot]" value="{$data.kot}"/></td>
+          
+      <tr><td>Guest:</td><td><input name="t[name]" value="{$data.name}"></td>
+          <td>Address:</td><td><textarea name="t[address]" rows="4" cols="40">{$data.address}</textarea></td>
+          <td>ID Proof:<br>GSTIN:</td><td><input type="text" name="t[proof]" value="{$data.proof}"/>
+          <br><input type="text" name="t[gstin]" value="{$data.gstin}"/></td></tr>
+
+      <tr><td>Persons:</td><td><input type="number" id="persons" name="t[persons]" onblur="calamount()" value="{$data.persons}"/></td>
+          <td>Rate:</td><td><input type="number" id="rate" name="t[rate]" onblur="calamount()" value="{$data.rate}"/></td>
+          <td>Amount:</td><td><input type="text" readonly tabindex="-1" id="amount" name="t[amount]" value="{$data.amount}"/></td></tr>
+
+      <tr><td>Discount %:</td><td><input type="number" id="disc" name="t[disc]" value="{$data.disc}" onblur="calamount()"/></td>
+          <td>Discount Amount:</td><td><input type="number" id="discamt" name="t[discamt]" value="{$data.discamt}" onblur="calamount()"/></td>
+          <td>Net Amount:</td><td><input type="text" readonly tabindex="-1" id="net" name="t[goodsvalue]" value="{$data.goodsvalue}"/></td>
+      </tr>
+
+      <tr><td>GST %:</td><td>
+            <select id="id_taxmaster" name="t[id_taxmaster]" onchange="calamount()">
+                {html_options options=$tax selected=$data.id_taxmaster}
+            </select><br>
+            <input type="hidden" id="tax_per" name="t[tax_per]" value="{$data.tax_per}"/>
+          </td>
+          <td>GST Amount:</td><td><input type="text" readonly id="gstamount" name="t[gstamount]" value="{$data.gstamount}"/></td>
+          <td>Total Payable :</td><td><input type="text" readonly tabindex="-1" id="total" name="t[total]" value="{$data.total}"/></td>
+      </tr>
+      <tr><td>Remark:</td><td colspan="4"><textarea name="t[remark]" rows="4" cols="40">{$data.remark}</textarea></td></tr>
+      <tr>
+          <td colspan="2">
+              <input type="hidden" id="hide" name="id" value="{$data.id_banquet}">
+              <input class="btn btn-primary" type="submit" value="Save" />
+          </td>
+      </tr>
+  </table>
+</form>
+<script>
+$("#date").focus();
+function calamount() {
+    var per = $("#persons").val();
+    var rate = $("#rate").val();
+    var amount = (per*rate).toFixed(2);
+    $("#amount").val(amount);
+
+    var amount = $("#amount").val();
+    var disc = $("#disc").val() ? $("#disc").val() : 0;
+    if (disc!=0) {
+        var discamt = (amount * disc / 100).toFixed(2);
+        $("#discamt").val(discamt);
+    }
+    var discamt = $("#discamt").val();
+    var net = (amount*1 - discamt*1).toFixed(2);
+    $("#net").val(net);
+
+    var tp = $("#id_taxmaster :selected").text();
+    $("#tax_per").val(tp);
+
+    var net = $("#net").val() ? $("#net").val() : 0;
+    var gstamount = (net * tp / 100).toFixed(2);
+    $("#gstamount").val(gstamount);
+
+    var total = (net*1 + gstamount*1).toFixed(2);
+    $("#total").val(total);
+}
+function checkno() {
+    var no = $("#bill").val();
+    $("#nomsg").html('');
+    $.post("index.php?module=banquet&func=checkno", { no:no }, function(data) {
+        if (data==1) {
+            $("#bill").focus();
+            $("#nomsg").html("Duplicate No.");
+        }
+    });
+}
+</script>
+<style>
+input[type="text"]:read-only {
+    cursor: normal;
+    background-color:lightgrey;
+    font-weight: 800;
+}
+</style>

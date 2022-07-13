@@ -1,0 +1,38 @@
+<h3>
+    Banquet Listing<hr>
+</h3>
+<table id="dataTable" class="table" width="100%">
+    <thead>    
+        <tr>
+            <th>#</th></th><th>No.</th><th>Date</th><th>Guest</th><th>Amount</th><th>Discount</th>
+            <th>GST %</th><th>GST Amount</th><th>Total</th><th>Balance</th><th>Remark</th>
+            <th><a class="btn btn-primary" href="index.php?module=banquet&func=edit" title="Add Banquet Bill"><i class="fa fa-plus"></i></a></th>
+        </tr>
+    </thead>
+    <tbody>
+        {$s=1}
+        {foreach from=$rooms item=mod}
+        <tr>
+            <td>{$s}{$s=$s+1}</td>			
+            <td>{$mod.roomnumber}</td>
+            <td>{$mod.date|date_format:"%d-%m-%y"}</td>
+            <td>{$mod.name}<br>{$mod.proof}<br>{$mod.gstin}<br>{$mod.address}</td>
+            <td>{$mod.amount}</td>
+            <td>{$mod.discamt}</td>
+            <td>{$mod.tax_per}</td>
+            <td>{$mod.gstamount}</td>
+            <td>{$mod.total}</td>
+            <td>{($mod.total-$mod.received)|string_format:"%.2f"}</td>
+            <td>{$mod.remark}</td>
+            <td>
+                {if $smarty.session.is_admin}
+                    <a class="btn btn-primary" href="index.php?module=banquet&func=edit&id={$mod.id_banquet}" title="Edit Banquet Booking"><i class="fa fa-edit"></i></a>
+                {/if}
+                <a class="btn btn-primary" href="index.php?module=banquet&func=addmr&id={$mod.id_banquet}&type=B" title="Add Money Receipt"><i class="fa fa-id-card"></i></a>
+                <a class="btn btn-primary" href="index.php?module=banquet&func=printbanquet&id={$mod.id_banquet}" title="Print Banquet Booking"><i class="fa fa-print"></i></a>
+                <a class="btn btn-danger" href="#" onclick="cancelthis('Do you want to Cancel this Banquet Booking?', 'index.php?module=banquet&func=cancel', '{$mod.id_banquet}')" title="Cancel Banquet Booking"><i class="fa fa-times"></i></a>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

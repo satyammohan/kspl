@@ -1,0 +1,128 @@
+<h3>
+    {if $data.id_reservation}Edit{else}Add{/if} Reservation<hr>
+</h3>
+<form method="post" action="index.php?module=reservation&func={if $data.id_reservation}update{else}insert{/if}">
+    <table class="table">
+        <tr>
+            <td><b>No:</b></td>
+            <td><input type="text" name="t[no]" required value="{$data.no}"/></td>
+            <td><b>Date:</b></td>
+            <td><input type="date" name="t[date]" value="{$data.date}"/></td>
+            <td><b>Time:</b></td>
+            <td><input type="time" name="t[time]" value="{$data.time}"/></td>
+        </tr>
+        <tr>
+            <td><b>Adv. Booking No:</b></td>
+            <td><input type="text" name="t[ano]" required value="{$data.ano}"/></td>
+            <td><b>Mobile:</b></td>
+            <td><input type="text" name="t[mobile]" value="{$data.mobile}"/></td>
+            <td><b>Name:</b></td>
+            <td><input type="text" name="t[name]" value="{$data.name}"/></td>
+            <td><b>DOB:</b></td>
+            <td><input type="date" name="t[dob]" value="{$data.dob}"/></td>
+        </tr>
+        <tr>
+            <td><b>Other Person:</b></td>
+            <td><input type="text" name="t[oname]" required value="{$data.oname}"/></td>
+            <td><b>Address:</b></td>
+            <td><input type="text" name="t[address]" value="{$data.address}"/></td>
+            <td><b>City:</b></td>
+            <td><input type="text" name="t[city]" value="{$data.city}"/></td>
+        </tr>
+        <tr>
+            <td><b>District:</b></td>
+            <td><input type="text" name="t[district]" value="{$data.district}"/></td>
+            <td><b>State:</b></td>
+            <td><input type="text" name="t[state]" value="{$data.state}"/></td>
+            <td><b>Country:</b></td>
+            <td><input type="text" name="t[country]" value="{$data.country}"/></td>
+        </tr>
+        <tr>
+            <td><b>Fax:</b></td>
+            <td><input type="text" name="t[fax]" value="{$data.fax}"/></td>
+            <td><b>Email:</b></td>
+            <td><input type="email" name="t[email]" value="{$data.email}"/></td>
+            <td><b>ID proof:</b></td>
+            <td><input type="text" name="t[id_proof]" value="{$data.id_proof}"/></td>
+        </tr>
+        <tr>
+            <td><b>Purpose of visit:</b></td>
+            <td><input type="text" name="t[purpose]" value="{$data.purpose}"/></td>
+            <td><b>Probable Destination:</b></td>
+            <td><input type="text" name="t[destination]" value="{$data.destination}"/></td>
+            <td><b>Forwarding Address:</b></td>
+            <td><input type="text" name="t[faddress]" value="{$data.faddress}"/></td>
+        </tr>
+        <tr>
+            <td><b>Room Type:</b></td>
+            <td>
+                <select name="t[id_roomtype]">
+                    {html_options options=$rt selected=$data.id_roomtype}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Booking Type:</b></td>
+            <td>
+                <select name="t[type]">
+                    {html_options options=$ini.res_type selected=$data.type}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Person:</b></td>
+            <td><td><input type="text" name="t[person]" value="{$data.person}"/></td></td>
+            <td><b>Adult:</b></td>
+            <td><td><input type="text" name="t[adult]" value="{$data.adult}"/></td></td>
+            <td><b>Child:</b></td>
+            <td><td><input type="text" name="t[child]" value="{$data.child}"/></td></td>
+        </tr>
+        <tr>
+            <td><b>Days Stay:</b></td>
+            <td><td><input type="text" name="t[daysstay]" value="{$data.daysstay}"/></td></td>
+            <td><b>Depature Date:</b></td>
+            <td><td><input type="date" name="t[depature_date]" value="{$data.depature_date}"/></td></td>
+            <td><b>Refered By:</b></td>
+            <td><td><input type="text" name="t[refer]" value="{$data.refer}"/></td></td>
+            <td><b>Booking No:</b></td>
+            <td><td><input type="text" name="t[booking_no]" value="{$data.booking_no}"/></td></td>
+        </tr>
+       
+        Room number, rent, extra, food, food persons, total, room category, discount %, amount, less, rent/day, with tax
+        company, gstin, address of company
+        Advance cash, card, Online Bank Transfer, Bank A/C Name, MR No. Remark
+        Food plan (EP, CP, MAP, AP)
+        
+        <tr>
+            <td><b>Corporate:</b></td>
+            <td>
+                <select name="t[id_corporate]">
+                    <option value="">Select</option>
+                    {html_options options=$cor selected=$data.id_corporate}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Meal Type:</b></td>
+            <td>
+                <select name="t[meal]">
+                    {html_options options=$ini.meal_type selected=$data.meal}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Verification:</b></td>
+            <td><input type="text" name="t[verification]" value="{$data.verification}"/></td>
+        </tr>
+        <tr>
+            <td><b>CheckIn Date:</b></td>
+            <td><input type="date" name="t[cin]" value="{$data.cin}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="hidden" id="hide" name="id" value="{$data.id_reservation}">
+                <input class="btn btn-primary" type="submit" value="Save" />
+            </td>
+        </tr>
+    </table>
+</form>

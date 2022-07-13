@@ -1,0 +1,27 @@
+<h3>
+    Partner Master<hr>
+</h3>
+<table id="dataTable" class="table" width="100%">
+    <thead>    
+        <tr>
+            <th>#</th></th><th>Name</th><th>Address</th><th>GSTIN</th><th>Contact</th><th>Create On</th><th><a class="btn btn-primary" href="index.php?module=partner&func=edit" title="Add Partner"><i class="fa fa-plus"></i></a></th>
+        </tr>
+    </thead>
+    <tbody>
+        {$s=1}
+        {foreach from=$partner item=mod}
+        <tr>
+            <td>{$s}{$s=$s+1}</td>			
+            <td>{$mod.name}</td>
+            <td>{$mod.address}</td>
+            <td>{$mod.gstin}</td>
+            <td>{$mod.contact}</td>
+            <td>{$mod.create_date|date_format:"%d-%m-%y"}</td>
+            <td>
+                <a class="btn btn-primary" href="index.php?module=partner&func=edit&id={$mod.id_partner}" title="Edit Partner"><i class="fa fa-edit"></i></a>
+                <a class="btn btn-primary" href="index.php?module=partner&func=delete&id={$mod.id_partner}" onclick="return confirm('Do you want to delete this Room?');" title="Delete Partner"><i class="fa fa-trash"></i></a>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

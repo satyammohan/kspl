@@ -54,7 +54,7 @@
     '.dd-option-selected { background:#f6f6f6; }' +
     '.dd-option-image, .dd-selected-image { vertical-align:middle; float:left; margin-right:5px; max-width:64px;}' +
     '.dd-image-right { float:right; margin-right:15px; margin-left:5px;}' +
-    '.dd-container{ position:relative;}â€‹ .dd-selected-text { font-weight:bold}â€‹</style>';
+    '.dd-container{ position:relative;}​ .dd-selected-text { font-weight:bold}​</style>';
 
     //CSS styles are only added once.
     if ($('#css-ddslick').length <= 0) {
@@ -344,3 +344,4 @@
     }
 
 })(jQuery);
+

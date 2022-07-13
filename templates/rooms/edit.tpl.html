@@ -1,0 +1,25 @@
+<h3>
+    {if $data.id_rooms}Edit{else}Add{/if} Room Type<hr>
+</h3>
+<form method="post" action="index.php?module=rooms&func={if $data.id_rooms}update{else}insert{/if}">
+    <table >
+        <tr>
+            <td><b>Room Type:</b></td>
+            <td>
+                <select name="room[id_roomtype]">
+                    {html_options options=$rt selected=$data.id_roomtype}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Name:</b></td>
+            <td><input type="text" name="room[name]" required value="{$data.name}"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="hidden" id="hide" name="id" value="{$data.id_rooms}">
+                <input type="submit" value="Save" />
+            </td>
+        </tr>
+    </table>
+</form>

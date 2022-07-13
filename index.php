@@ -20,7 +20,7 @@ unset($_SESSION['error']);
 function getSmarty() {
     require '../Smarty-3/libs/Smarty.class.php';
     $smarty = new Smarty;
-    $smarty->template_dir = array("templates");
+    $smarty->template_dir = array("templates_local" ,"templates");
     $smarty->compile_dir = "templates_c";
     $smarty->error_reporting = true;
     $smarty->force_compile = true;

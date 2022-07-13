@@ -1,0 +1,27 @@
+<h3>
+    Room Cancellation List<hr>
+</h3>
+<table id="dataTable" class="table" width="100%">
+    <thead>    
+        <tr>
+            <th>#</th></th><th>Cancel</th><th>Reason</th><th>Type</th><th>Check In Date</th><th>Room</th><th>Name</th>
+            <th>Days</th><th>Corporate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {$s=1}
+        {foreach from=$rooms item=mod}
+        <tr>
+            <td>{$s}{$s=$s+1}</td>			
+            <td>{$mod.cancel_date|date_format:"%d-%m-%y"}<br><b>{$mod.uname}</b></td>
+            <td>{$mod.cancel_reason}</td>
+            <td>{$mod.type}</td>
+            <td>{$mod.date|date_format:"%d-%m-%y"} {$mod.time}</td>
+            <td>{$mod.roomnumber}</td>
+            <td>{$mod.name}<br>{$mod.email}<br>{$mod.phone}</td>
+            <td>{$mod.daysstay}</td>
+            <td>{$mod.cname}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

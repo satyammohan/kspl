@@ -1,5 +1,4 @@
 <?php
-
 class user extends common {
 
     function __construct() {
@@ -17,76 +16,48 @@ class user extends common {
         }
     }
 
+    function selectfy() {
+        unset($_SESSION['id_info']);
+        unset($_SESSION['prefix']);
+        $sql = "SELECT DISTINCT name FROM info WHERE !status ORDER BY name";
+        $info = $this->m->getall($this->m->query($sql));
+        $this->sm->assign("info", $info);
+        $this->sm->assign("page", "user/activate.tpl.html");
+    }
+
     function checkinfo() {
         if (isset($_SESSION['id_info']) && isset($_SESSION['prefix'])) {
             $this->sm->assign("page", "info/welcome.tpl.html");
         } else {
-            $sql = "SELECT DISTINCT name FROM info WHERE showtoparty=1 ORDER BY name";
+            $sql = "SELECT DISTINCT name FROM info WHERE !status ORDER BY name";
             $info = $this->m->getall($this->m->query($sql));
             $this->sm->assign("info", $info);
             $this->sm->assign("page", "user/activate.tpl.html");
         }
     }
+
     function login() {
-        $this->selectcompany();
-        $sql = "SELECT id_head AS id_user, partyuser AS user, name, email AS pemail, 0 AS is_admin, address1 AS paddress, address2 AS paddress1, phone AS pphone, 'party' AS type
-                FROM {$this->prefix}head WHERE partyuser='".$_REQUEST['user']['uname']."' AND partyuser!='' AND partypass='".$_REQUEST['user']['pass']."'";
-        $user = $this->m->fetch_assoc($sql);
-        if ($user) {
-            $this->set_session($user);
-            $_SESSION['type'] = "party";
+        $sql = "SELECT id_user, user, name, email, is_admin FROM user WHERE user='" . $this->data['uname'] . "' AND pass='" . md5($this->data['pass']) . "' AND status!=1";
+        $this->data1 = $this->m->fetch_assoc($sql);
+        if ($this->data1) {
+            $sql1 = "UPDATE `user` SET login_status='1' WHERE id_user='" . $this->data1["id_user"] . "';";
+            $this->m->query($sql1);
+            $this->set_session($this->data1);
             $this->set_permission();
             $this->config();
-            $this->savelogininfo($_SESSION['type'], $_SERVER['REMOTE_ADDR'], $user['id_user'], "Login");
-            $_SESSION['msg'] = "Successfully Logged as Partner.";
+            $_SESSION['msg'] = "Successfully Logged In.";
         } else {
             $_SESSION['msg'] = "Invalid Username or Password.";
         }
         $this->redirect("index.php");
-    }    
-    function savelogininfo($type, $ip, $id_user, $logintype) {
-        $sql = "INSERT INTO login_details (type, ip, id_user, logintype, date) values ('$type', '$ip', '$id_user', '$logintype', NOW())";
-        $this->m->query($sql);
     }
-    function selectcompany() {
-        $sql = "SELECT value FROM configuration WHERE name='PARTNERLOGIN' LIMIT 1";
-        $con = $this->m->fetch_assoc($sql);
-        $pre = @$con['value'];
-        if ($pre) {
-            $sql = "SELECT * FROM info WHERE prefix='{$pre}' LIMIT 1";
-            $info = $this->m->fetch_assoc($sql);
-            foreach ($info as $k =>$v) {
-                $_SESSION[$k] = $v;
-            }
-            $this->table_prefix();
-        }
+
+    function logout() {
+        $this->destroy_session();
+        $_SESSION['msg'] = "Successfully logout.";
+        $this->redirect("index.php");
     }
-    function checklogindate($id) {
-        $sql = "SELECT password_date AS date FROM user WHERE id_user='$id'";
-        $d = $this->m->fetch_assoc($sql);
-        $md = date('Y-m-d');
-        $md = date('Y-m-d', strtotime($md. ' - 45 days'));
-        if ($md > $d['date']) {
-            $_SESSION['msg'] = "Password should be changed in every 45 days.";
-            $this->redirect("index.php?module=user&func=changepass");
-        }
-    }
-    function changepass() {
-        $this->sm->assign("page", "user/changepass.tpl.html");
-    }
-    function updatepass() {
-        $old = $_REQUEST['user']['pass'];
-        $new = $_REQUEST['user']['npass'];
-        $sql = "SELECT * FROM user WHERE id_user='" . $_SESSION["id_user"] . "'AND pass='" . md5($old) . "'";
-        $d = $this->m->fetch_assoc($sql);
-        if (!$d) {
-            $_SESSION['msg'] = "Old Password does not match.";
-            $this->redirect("index.php?module=user&func=changepass");
-        }
-        $sql = "UPDATE user SET pass='".md5($new)."', password_date=NOW() WHERE id_user='" . $_SESSION["id_user"] . "'AND pass='" . md5($old) . "'";
-        $this->m->query($sql);
-        $this->redirect("index.php?module=user&func=logout");
-    }
+
     function config() {
         $sql = "SELECT * FROM `configuration`";
         $data = array();
@@ -169,10 +140,14 @@ class user extends common {
         $this->sm->assign("page", "user/welcome.tpl.html");
     }
 
-    function logout() {
-        $this->destroy_session();
-        $_SESSION['msg'] = "Successfully logout.";
-        $this->redirect("index.php");
+    function changepass() {
+        $this->sm->assign("page", "user/changepass.tpl.html");
+    }
+
+    function updatepass() {
+        $sql = "update `user` SET pass='" . md5($this->data['npass']) . "' where id_user='" . $_SESSION["id_user"] . "'and pass='" . md5($this->data['pass']) . "';";
+        $this->m->query($sql);
+        $this->sm->assign("page", "user/welcome.tpl.html");
     }
 
     function destroy_session() {

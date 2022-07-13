@@ -1,0 +1,101 @@
+<div style="float:right;"><button class="print">Print</button></div>
+<div class="print_content">
+    <br><br>
+    <style>
+        .btable { width:90%; border:1px solid black !important; }
+        .btable th { background-color: #cbcbcb; border:1px solid black; text-align:center; }
+        .tdborder { border-top:1px solid black }
+        @media print {
+            body { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+    <table align="center" class="btable">
+        <tr>
+            <th colspan="6"><h3>Banquet Booking Bill</h3></th>
+        </tr>
+        <tr><td colspan="6">&nbsp;</td></tr>
+        <tr>
+            <td><b>{$smarty.session.cname}</b>
+                <br><b>{$smarty.session.address}</b>
+                <br>GSTIN:<b>{$smarty.session.gstin}</b>
+                <br>Email:<b>{$smarty.session.email}</b>
+                <br>Phone:<b>{$smarty.session.phone}</b>
+            </td>
+            <td colspan="2">
+                <b>Bill No. : </b>BAN/{$data.bill}<br>
+                <b>Date : </b>{$data.date|date_format:"%d-%m-%Y"}<br>
+                <b>Ref No. : </b>{$data.no}<br>
+            </td>
+            <td colspan="3"><b>Billed to : </b>{$data.name}<br>
+                <b>Address : </b>{$data.address}<br>
+                <b>ID Proof : </b>{$data.proof}<br>
+                <b>GSTIN : </b>{if $data.gstin}{$data.gstin}{else}Not applicable{/if}<br>
+            </td>
+        </tr>
+        <tr><td colspan="6">&nbsp;</td></tr>
+        <tr>
+            <th width="52%"><b>Description</b></th>
+            <th width="10%"><b>GST %</b></td>
+            <th width="10%"><b>Amount</b></td>
+            <th width="10%"><b>SGST Amt</b></td>
+            <th width="10%"><b>CGST Amt</b></td>
+            <th width="10%"><b>Net Amount</b></td>
+        </tr>
+        <tr><td colspan="6">&nbsp;</td></tr>
+        <tr>
+            <td><h4>{$data.roomnumber} {if $data.kot} KOT : {$data.kot}{/if}</h4>
+                <h5>Persons : {$data.persons} Rate : {$data.rate} Total : {$data.amount}<br></h5>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top">
+                Banquet Charges
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.tax_per}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.netamt|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($data.gstamt/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {($data.gstamt/2)|string_format:"%.2f"}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;">
+                {$data.total|string_format:"%.2f"}
+            </td>
+        </tr>
+        <tr><td colspan="6">&nbsp;</td></tr>
+        <tr height="100px"><td class="tdborder" colspan="6" ></td></tr>
+        <tr class="tdborder">
+            <th>Total</th>
+            <th>&nbsp;</th>
+            <th>{$data.netamt|string_format:"%.2f"}</th>
+            <th>{($data.gstamt/2)|string_format:"%.2f"}</th>
+            <th>{($data.gstamt/2)|string_format:"%.2f"}</th>
+            <th>{$data.total|string_format:"%.2f"}</th>
+        </tr>
+        <tr>
+            <td colspan="6" class="tdborder"><br><b>Rupees : </b>{$data.w}<br><br></td>
+        </tr>
+        <tr>
+            <td class="tdborder" colspan="6"><br>
+                {if $mr.total}
+                    Total Amount Paid (<b>MR No. : {$mr.nos}</b>) : <b>{$mr.total|string_format:"%.2f"}</b>
+                {else}
+                    No Payment received.
+                {/if}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><h5><b>Total Due Amount : {($data.total-$mr.total)|string_format:"%.2f"}</b></h5></td>
+            <td colspan="4" align="right"><b>Signature : </b>____________________________</td>
+        </tr>
+        <tr>
+            <td colspan="2"><font size="-2"><b>Created by : </b>{$data.username} <b></b>Generated on : </b>{$data.date_added|date_format:"%d-%m-%Y %H:%M"} <b>Printed on :</b> {$smarty.now|date_format:"%d-%m-%Y %H:%M"}</font></td>
+            <td colspan="4" align="right"><b>{$smarty.session.name}</b></td>
+        </tr>
+    </table>
+</div>

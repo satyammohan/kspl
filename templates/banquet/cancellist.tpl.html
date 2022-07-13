@@ -1,0 +1,28 @@
+<h3>
+    Banquet Cancel Listing<hr>
+</h3>
+<table id="dataTable" class="table" width="100%">
+    <thead>    
+        <tr>
+            <th>#</th></th><th>No.</th><th>Date</th><th>Guest</th><th>Amount</th><th>Discount</th>
+            <th>GST %</th><th>GST Amount</th><th>Total</th><th>Remark</th>
+        </tr>
+    </thead>
+    <tbody>
+        {$s=1}
+        {foreach from=$rooms item=mod}
+        <tr>
+            <td>{$s}{$s=$s+1}</td>			
+            <td>{$mod.roomnumber}</td>
+            <td>{$mod.date|date_format:"%d-%m-%y"}</td>
+            <td>{$mod.name}<br>{$mod.proof}<br>{$mod.gstin}<br>{$mod.address}</td>
+            <td>{$mod.amount}</td>
+            <td>{$mod.discamt}</td>
+            <td>{$mod.tax_per}</td>
+            <td>{$mod.gstamount}</td>
+            <td>{$mod.total}</td>
+            <td>{$mod.remark}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

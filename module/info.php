@@ -16,7 +16,7 @@ class info extends common {
 
     function ddslick() {
         $name = $_REQUEST['name'];
-        $sql = "SELECT * FROM info WHERE name='$name' AND showtoparty=1 ORDER BY name, start_date DESC";
+        $sql = "SELECT * FROM info WHERE name='$name' AND !status ORDER BY name, start_date DESC";
         $res = $this->m->sql_getall($sql);
         $ddata = array();
         foreach ($res as $v) {

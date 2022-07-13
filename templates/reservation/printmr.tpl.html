@@ -1,0 +1,62 @@
+<div style="float:right;"><button class="print">Print</button></div>
+<div class="print_content">
+    <br><br>
+    <style>
+        .btable { width:90%; border:1px solid black !important; }
+        .btable th { background-color: #cbcbcb; border:1px solid black; text-align:center; }
+        .tdborder { border-top:1px solid black }
+        @media print {
+            body { -webkit-print-color-adjust: exact; }
+        }
+    </style>
+    <table align="center" class="btable">
+        <tr>
+            <th colspan="2"><h3>Money Receipt</h3></th>
+        </tr>
+        <tr>
+            <td><b>{$smarty.session.cname}</b>
+                <br><b>{$smarty.session.address}</b>
+                <br>GSTIN:<b>{$smarty.session.gstin}</b>
+                <br>Email:<b>{$smarty.session.email}</b>
+                <br>Phone:<b>{$smarty.session.phone}</b>
+            </td>
+            <td><b>MR No. : </b>{$data.no}
+                <br><b>Date : </b>{$data.date|date_format:"%d-%m-%Y"}                
+            </td>
+        </tr>
+        <tr><td class="tdborder" colspan="2"></td></tr>
+        <tr>
+            <td colspan="2"><b>Received from : </b>{$data.name}
+                <br><b>Address : </b>{$data.address}
+                <br><b>Phone/Email : </b>{$data.phone} {$data.email}
+            </td>
+        </tr>
+        <tr>
+            <th width="70%" ><b>Description</b></th>
+            <th><b>Amount</b></td>
+        </tr>
+        <tr style="height:300px">
+            <td valign="top">
+                <br>{$data.remark}<br> for room number {$data.roomnumber}.<br>
+                Mode : {if $data.type==1}Cash Received{/if}
+                {if $data.type==2}Credit Card Payment{/if}
+                {if $data.type==3}Cheque Payment{/if}
+                {if $data.type==4}Wallet Payment <br>
+                    <b>UPI :</b> {$data.upitype}<br>
+                    <b>Paid to :</b> {$data.paidto}</b>
+                {/if}
+            </td>
+            <td valign="top" align="right" style=" padding-right: 20px;"><br>{$data.amount}</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="tdborder"><b>Rupees : </b>{$data.w}</td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right"><b>Signature : </b>_______________________</td>
+        </tr>
+        <tr>
+            <td><font size="-2"><b>Created by : </b>{$data.username} <b></b>Generated on : </b>{$data.date_added|date_format:"%d-%m-%Y %H:%M"} <b>Printed on :</b> {$smarty.now|date_format:"%d-%m-%Y %H:%M"}</font></td>
+            <td align="right"><b>{$smarty.session.name}</b></td>
+        </tr>
+    </table>
+</div>

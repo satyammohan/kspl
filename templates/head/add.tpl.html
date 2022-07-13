@@ -1,0 +1,34 @@
+<fieldset>
+    <legend>{if $data.id_head}Edit{else}Add{/if} Head</legend>
+    <form name="head" id="add_head" method="post" action="index.php?module=head&func={if $data.id_head}update{else}insert{/if}">
+        <table  border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" class="form-control" required name="head[name]" value="{$data.name}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Town:</b></td>
+                <td><input type="text" class="form-control" required name="head[town]"  value="{$data.town}"/></td>
+            </tr>
+            <tr>
+                <td><b>Zone:</b></td>
+                <td><input type="text" class="form-control" required name="head[zone]"  value="{$data.zone}"/></td>
+            </tr>
+            <tr>
+                <td><b>Phone:</b></td>
+                <td><input type="text" class="form-control" required name="head[phone]"  value="{$data.phone}"/></td>
+            </tr>
+            <tr>
+                <td><b>Mobile:</b></td>
+                <td><input type="text" class="form-control" required name="head[mobile]"  value="{$data.mobile}"/></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_head}">
+                    <input type="submit" class="btn btn-success" value="Submit" />
+                    <input type="reset"  class="btn btn-danger" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>

@@ -1,0 +1,59 @@
+<h4>Money Receipt</h4>
+<form method="post" action="index.php?module=reservation&func=savemr">
+    <input type="hidden" name="mr[id_reservation]" value="{$smarty.request.id}">
+    <table>
+        <tr>
+            <td>Date :</td><td><input type="date" name="mr[date]" required class="form-control" value="{$smarty.now|date_format:'%Y-%m-%d'}"  ></td>
+        </tr>
+        <tr>
+            <td>Mr No :</td>
+            <td><input type="text" name="mr[no]" required class="form-control" id="no" onblur="checkno();" value="{$data.no}"/>
+                <div id="nomsg"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>Type :</td><td>
+                <select name="mr[type]" required class="form-control" onchange="showdiv(this.value)">
+                    {html_options options=$ini.mr_type selected=$data.type}
+                </select>
+                <div id="showdiv" style="display:none">
+                    <input placeholder="Mention Google Pay/Amazon Pay/BHIM" type=text id="upitype" name="mr[upitype]" class="form-control">
+                    <input placeholder="Mention Paid to" type=text id="paidto" name="mr[paidto]" class="form-control">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Amount :</td><td><input type="text" name="mr[amount]" required class="form-control"></td>
+        </tr>
+        <tr>
+            <td>Remarks :</td><td><textarea name="mr[remark]" class="form-control" cols=60 rows=6></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center"><input type="submit" value="Save" class="btn btn-primary"></td>
+        </tr>
+    </table>
+</form>
+<script>
+    function showdiv(e) {
+        if (e==4) {
+            $("#showdiv").show();
+        } else {
+            $("#upitype").val('');
+            $("#paidto").val('');
+            $("#showdiv").hide();
+        }
+    }
+    $(document).ready(function() {
+        $("#no").focus();
+    });
+    function checkno() {
+        var gno = $("#no").val();
+        $("#nomsg").html('');
+        $.post("index.php?module=reservation&func=checkno&type=mr", { no:gno }, function(data) {
+            if (data==1) {
+                $("#no").focus();
+                $("#nomsg").html("Duplicate No.");
+            }
+        });
+    }
+</script>

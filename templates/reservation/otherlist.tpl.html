@@ -1,0 +1,27 @@
+<h3>
+    Laundry/Other Bill List<hr>
+</h3>
+<table id="dataTable" class="table" width="100%">
+    <thead>
+        <tr>
+            <th>#</th><th>Date</th><th>Room</th><th>Name</th><th>No.</th><th>Amount</th><th>GST %</th><th>GST Amount</th><th>Net Amount</th><th>Remark</th>
+        </tr>
+    </thead>
+    <tbody>
+        {$s=1}
+        {foreach from=$other item=mod}
+        <tr>
+            <td>{$s}{$s=$s+1}</td>			
+            <td>{$mod.date|date_format:"%d-%m-%Y"}</td>
+            <td>{$mod.roomnumber}</td>
+            <td>{$mod.name}<br>{$mod.email}<br>{$mod.phone}</td>
+            <td>{$mod.no}</td>
+            <td>{$mod.goodsvalue}</td>
+            <td>{$mod.gstper}</td>
+            <td>{$mod.gstamount}</td>
+            <td>{$mod.amount}</td>
+            <td>{$mod.remark}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

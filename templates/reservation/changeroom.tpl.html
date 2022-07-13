@@ -1,0 +1,55 @@
+
+<h4>Change Rooms</h4>
+
+<div>Name : {$guest.name}</div>
+<div>Address : {$guest.address}</div>
+<div>Days Stay : {$guest.daysstay}</div>
+<div>Rooms Alloted : {$guest.roomnumber}</div>
+
+<div class="row">
+    <div class="col-6 card">
+        <div class="card-body w-10">
+            {foreach from=$rooms item=mod}
+                {if isset($data[$mod.name])}
+                    {$bc = "btn-secondary"}
+                {else}
+                    {$bc = "btn-primary"}
+                {/if}
+                <a href="#" style="width: 60px;" onclick="selectthis(this, '{$mod.name}');" class="btn {$bc} m-3 p-4">{$mod.name}</a>
+            {/foreach}
+        </div>
+    </div>
+</div>
+<form method="post" id="saverooms" action="index.php?module=reservation&func=savechangedroom">
+    <input type="hidden" name="id" id="id" value="{$smarty.request.id}">
+    <input type="hidden" id="newid" name="newid" value="{$roomnumber}">
+    <input class="btn btn-primary" type="text" onclick="saverooms();" value="Save">
+</form>
+<script>
+    var sl = max = {$data|count};
+    function selectthis(e, v) {
+        if ($(e).hasClass('btn-secondary')) {
+            nid = $("#newid").val();
+            nid = nid.replace(v+",", "");
+            $(e).addClass("btn-primary").removeClass('btn-secondary');
+            sl -= 1;
+            $("#newid").val(nid);
+        } else {
+            if (sl<max) {
+                $(e).addClass('btn-secondary').removeClass("btn-primary");
+                nid = $("#newid").val()+v+",";
+                sl += 1;
+                $("#newid").val(nid);
+            } else {
+                alert("You can select maximum "+max+" rooms.");
+            }
+        }
+    }
+    function saverooms() {
+        if (sl==max) {
+            $("#saverooms").submit();
+        } else {
+            alert("Please select "+max+" rooms.");
+        }
+    }
+</script>

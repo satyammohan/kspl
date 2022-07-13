@@ -1,0 +1,30 @@
+<h3>
+    Guest Room Checkout<hr>
+</h3>
+<table id="dataTable" class="table" width="100%">
+    <thead>    
+        <tr>
+            <th>#</th><th>No.</th><th>Type</th><th>Res.Date</th><th>Room</th><th>Days</th><th>Name</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {$s=1}
+        {foreach from=$rooms item=mod}
+        <tr>
+            <td>{$s}{$s=$s+1}</td>			
+            <td>{$mod.no}</td>
+            <td>{$mod.type}</td>
+            <td>{$mod.date|date_format:"%d-%m-%y"} {$mod.time}</td>
+            <td>{$mod.roomnumber}</td>
+            <td>{$mod.daysstay}</td>
+            <td>{$mod.name}<br>{$mod.mobile}<br>{$mod.city}</td>
+            <td>{$mod.total}</td>
+            <td>
+                <a class="btn btn-primary" href="index.php?module=reservation&func=checkoute&id={$mod.id_reservation}" title="Guest Check Out"><i class="fa fa-edit"></i></a>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

@@ -1,0 +1,106 @@
+{if $data.id_reservation}
+<h3>
+    Admin Edit Guest Registration<hr>
+</h3>
+<form method="post" action="index.php?module=reservation&func=checkinupdate">
+    <table class="table">
+        <tr>
+            <td><b>Ref No: *</b><br><b>GRC No:</b><br><b>Bill No:</b></td>
+            <td>{$data.no}<br>{$data.grcno}<br>{$data.billno}
+            </td>
+            <td><b>Arr.Date: *</b></td>
+            <td>
+                <input type="date" name="t[date]" required value="{$data.date}"/><br>
+                <input type="time" name="t[time]" value="{$data.time}"/></td>
+            <td><b>Dep.Date: *</b></td>
+            <td><input type="date" name="t[depature_date]" required value="{$data.depature_date}"/><br>
+                <input type="time" name="t[depature_time]" value="{$data.depature_time}"/>
+            </td>                
+        </tr>
+        <tr>
+            <td><b>Mobile:</b></td>
+            <td><input type="text" id="mobile" name="t[mobile]" value="{$data.mobile}"/></td>
+            <td><b>Name: *</b><br><b>Other Person:</b></td>
+            <td><input type="text" id="name" name="t[name]" required size="30" value="{$data.name}"/>
+                <br><input type="text" name="t[oname]" size="30" value="{$data.oname}"/>
+            </td>
+            <td><b>Person: *</b><br><b>Adult:</b></td>
+            <td>
+		<input type="text" name="t[person]" required value="{$data.person}"/><br>
+		<input type="text" name="t[adult]" size="3" value="{$data.adult}"/>
+                <b>Child:</b><input type="text" name="t[child]" size="3" value="{$data.child}"/></td>
+        </tr>
+        <tr>
+            <td><b>Company:</b></td>
+            <td><input type="text" id="company" name="t[company]" value="{$data.company}"/></td>
+            <td><b>Gstin:</b></td>
+            <td><input type="text" id="gstin" name="t[gstin]" value="{$data.gstin}"/></td></td>
+        </tr>
+        <tr>
+            <td><b>Adv. Booking No:</b></td>
+            <td><input type="text" name="t[ano]" value="{$data.ano}"/></td>
+            <td><b>DOB:</b></td>
+            <td><input type="text" id="dob" name="t[dob]" value="{$data.dob}"/></td>
+        </tr>
+        <tr>
+            <td><b>Address:</b></td>
+            <td><input type="text" id="address" name="t[address]" value="{$data.address}"/></td>
+            <td><b>City:</b></td>
+            <td><input type="text" id="city" name="t[city]" value="{$data.city}"/></td>
+            <td><b>Arrived From:</b></td>
+            <td><input type="text" id="arrivedfrom" name="t[arrivedfrom]" value="{$data.arrivedfrom}"/></td>
+        </tr>
+        <tr>
+            <td><b>District:</b></td>
+            <td><input type="text" id="district" name="t[district]" value="{$data.district}"/></td>
+            <td><b>State:</b></td>
+            <td><input type="text" id="state" name="t[state]" value="{$data.state}"/></td>
+            <td><b>Country:</b></td>
+            <td><input type="text" id="country" name="t[country]" value="{$data.country}"/></td>
+        </tr>
+        <tr>
+            <td><b>Email:</b></td>
+            <td><input type="email" id="email" name="t[email]" value="{$data.email}"/></td>
+            <td><b>ID proof:</b></td>
+            <td><input type="text" id="id_proof" name="t[id_proof]" value="{$data.id_proof}"/></td>
+        </tr>
+        <tr>
+            <td><b>Purpose of Visit:</b></td>
+            <td><input type="text" name="t[purpose]" value="{$data.purpose}"/></td>
+            <td><b>Probable Destination:</b></td>
+            <td><input type="text" name="t[destination]" value="{$data.destination}"/></td>
+            <td><b>Forwarding Address:</b></td>
+            <td><input type="text" name="t[faddress]" value="{$data.faddress}"/></td>
+        </tr>
+        <tr>
+            <td><b>Booking Type:</b></td>
+            <td><select name="t[type]">{html_options options=$ini.res_type selected=$data.type}</select></td>
+            <td><b>Booking No:</b></td>
+            <td><input type="text" name="t[booking_no]" value="{$data.booking_no}"/></td>
+            <td><b>Refered By:</b></td>
+            <td><input type="text" name="t[refer]" value="{$data.refer}"/></td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <b>Stay: </b>{$data.daysstay}&nbsp;&nbsp;&nbsp;
+                <b>Rooms: </b>{$data.roomnumber}&nbsp;&nbsp;&nbsp;
+                <b>Rent: </b>{$data.total+$data.discount-$data.gstamt}&nbsp;&nbsp;&nbsp;
+                <b>Discount: </b>{$data.discount}&nbsp;&nbsp;&nbsp;
+                <b>Net: </b>{$data.total-$data.gstamt}&nbsp;&nbsp;&nbsp;
+                <b>GST: </b>{$data.gstamt}&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>Amount: </b>{$data.total}
+            </td>
+            <td><b>Remarks:</b></td>
+            <td><input type="text" name="t[remarks]" value="{$data.remarks}"/></td>
+        </tr>
+        <tr>
+        <td colspan="2">
+            <input type="hidden" id="hide" name="id" value="{$data.id_reservation}">
+            <input class="btn btn-primary" type="submit" value="Save" />
+        </td>
+        </tr>
+    </table>
+</form>
+{else}
+    <h4>No Data to Edit</h4>
+{/if}
