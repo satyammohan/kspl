@@ -13,7 +13,6 @@ class brand extends common {
         $data['id_modify'] = $_SESSION['id_user'];
         $data['create_date'] = date("Y-m-d h:i:s");
         $data['ip'] = $_SERVER['REMOTE_ADDR'];
-        $data['name'] = addslashes($data['name']);
         $sql = $this->create_insert("{$this->prefix}brand", $data);
         $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Inserted";
@@ -32,7 +31,6 @@ class brand extends common {
     function update() {
         $this->get_permission("brand", "UPDATE");
         $data = $_REQUEST['brand'];
-        $data['name'] =  addslashes($data['name']);
         $sql = $this->create_update("{$this->prefix}brand", $data, "id_brand='{$_REQUEST['id']}'");
         $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Updated";
@@ -47,7 +45,7 @@ class brand extends common {
     }
     function listing() {
         $this->get_permission("brand", "REPORT");
-        $sql = "SELECT * FROM {$this->prefix}brand ORDER BY name";
+        $sql = "SELECT * FROM {$this->prefix}brand ORDER BY company, brand, category";
         $profile = $this->m->getall($this->m->query($sql));
         $this->sm->assign("brand", $profile);
     }

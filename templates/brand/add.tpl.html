@@ -1,14 +1,22 @@
 <fieldset>
     <legend>{if $data.id_brand}Edit{else}Add{/if} Brand</legend>
-    <form name="brand" id="add_brand" method="post" action="index.php?module=brand&func={if $data.id_brand}update{else}insert{/if}">
+    <form method="post" action="index.php?module=brand&func={if $data.id_brand}update{else}insert{/if}">
         <table  border="0" cellspacing="2" cellpadding="2">
             <tr>
-                <td><b>Name:</b></td>
-                <td><input type="text" class="form-control" required name="brand[name]" value="{$data.name}" size="30"/></td>
+                <td><b>Company:</b></td>
+                <td><input type="text" class="form-control" required name="brand[company]" value="{$data.company}" size="30"/></td>
             </tr>
             <tr>
-                <td><b>Description:</b></td>
-                <td><input type="text" class="form-control" required name="brand[description]"  value="{$data.description}"/></td>
+                <td><b>Brand:</b></td>
+                <td><input type="text" class="form-control" required name="brand[brand]" value="{$data.brand}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Category:</b></td>
+                <td><input type="text" class="form-control" required name="brand[category]" value="{$data.category}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Size:</b></td>
+                <td><input type="text" class="form-control" required name="brand[size]" value="{$data.size}" size="100"/></td>
             </tr>
             <tr>
                 <td align="center" colspan="2">
