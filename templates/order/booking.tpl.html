@@ -1,0 +1,48 @@
+<script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
+
+<fieldset>
+    <legend>Scan Product</legend>
+    <form method="post" action="index.php?module=order&func=booking">
+        <table  border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>QR Code:</b></td>
+                <td><input type="text" class="form-control" required name="product[name]" value="{$data.name}" size="30"/></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_product}">
+                    <input type="submit" class="btn btn-success" value="Submit" />
+                    <input type="reset"  class="btn btn-danger" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+
+
+<div id="qr-reader" style="width: 600px"></div>
+<div id="qr-reader-results"></div>
+<script>
+function docReady(fn) {
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        setTimeout(fn, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+}
+
+docReady(function () {
+    var resultContainer = document.getElementById('qr-reader-results');
+    var lastResult, countResults = 0;
+    function onScanSuccess(decodedText, decodedResult) {
+        if (decodedText !== lastResult) {
+            ++countResults;
+            lastResult = decodedText;
+        }
+    }
+
+    var html5QrcodeScanner = new Html5QrcodeScanner(
+        "qr-reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
+});
+</script>

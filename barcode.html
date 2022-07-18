@@ -2,15 +2,14 @@
 <head>
     <title>Html-Qrcode Demo</title>
 <body>
-    <div id="qr-reader" style="width:500px"></div>
+    https://blog.minhazav.dev/QR-and-barcode-scanner-using-html-and-javascript/#scan-using-file
+    <div id="qr-reader" style="width: 600px"></div>
     <div id="qr-reader-results"></div>
 </body>
-<script src="https://unpkg.com/html5-qrcode"></script>
 <script>
     function docReady(fn) {
         // see if DOM is already available
-        if (document.readyState === "complete"
-            || document.readyState === "interactive") {
+        if (document.readyState === "complete" || document.readyState === "interactive") {
             // call on next available tick
             setTimeout(fn, 1);
         } else {
