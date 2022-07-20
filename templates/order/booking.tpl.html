@@ -2,40 +2,51 @@
 
 <fieldset>
     <legend>Scan Product</legend>
-    <form method="post" action="index.php?module=order&func=booking">
-        <table  border="0" cellspacing="2" cellpadding="2">
-            <tr>
-                <td><b>QR Code:</b></td>
-                <td><input type="text" class="form-control" required name="barcode" value="{$smarty.request.barcode}" size="30"/></td>
-            </tr>
-            <tr>
-                <td align="center" colspan="2">
-                    <input type="submit" class="btn btn-success" value="Submit" />
-                    <input type="reset"  class="btn btn-danger" value="Reset"/>
-                </td>
-            </tr>
-        </table>
+    <form method="post">
+    <table border="0" cellspacing="2" cellpadding="2">
+        <tr>
+            <td><b>Party:</b></td>
+            <td><input type="text" class="form-control" required name="party" id="party" value="{$smarty.request.party}" size="30"/></td>
+        </tr>
+        <tr>
+            <td><b>QR Code:</b></td>
+            <td><input type="text" class="form-control" required name="barcode" value="{$smarty.request.barcode}" size="30"/></td>
+                <td><input onclick="getdetails();" class="btn btn-primary" value="Search">
+            </td>
+        </tr>
+        <tr>
+            <Td colspan="10">
+                {if $smarty.request.barcode}
+                    Name : {$product.name}<br>
+                    barcode : {$product.barcode}<br>
+                    code : {$product.code}<br>
+                    category : {$product.category}<br>
+                    type : {$product.type}<br>
+                    make : {$product.make}<br>
+                    mrp : {$product.mrp}<br>
+                    <!-- size : {$product.size} -->
+
+                    {foreach from=$size item=mod}
+                        <input placeholder="{$mod}" size=4>
+                    {/foreach}
+                    Copy <input type="checkbox">
+                    <input class="btn btn-primary" value="Save">
+
+                {else}
+                    <div id="qr-reader" style="width: 600px"></div>
+                    <div id="qr-reader-results"></div>
+                {/if}
+            </Td>
+        </tr>
+        <!-- <tr>
+            <td align="center" colspan="2">
+                <input type="submit" class="btn btn-success" value="Submit" />
+                <input type="reset"  class="btn btn-danger" value="Reset"/>
+            </td>
+        </tr> -->
+    </table>
     </form>
 </fieldset>
-
-{if $smarty.request.barcode}
-    Name : {$product.name}<br>
-    barcode : {$product.barcode}<br>
-    code : {$product.code}<br>
-    category : {$product.category}<br>
-    type : {$product.type}<br>
-    make : {$product.make}<br>
-    mrp : {$product.mrp}<br>
-    <!-- size : {$product.size} -->
-
-    {foreach from=$size item=mod}
-        <input placeholder="{$mod}" size=4>
-    {/foreach}
-    Copy <input type="checkbox">
-{else}
-    <div id="qr-reader" style="width: 600px"></div>
-    <div id="qr-reader-results"></div>
-{/if}
 
 
 
@@ -47,7 +58,6 @@ function docReady(fn) {
         document.addEventListener("DOMContentLoaded", fn);
     }
 }
-
 docReady(function () {
     var resultContainer = document.getElementById('qr-reader-results');
     var lastResult, countResults = 0;
@@ -62,4 +72,8 @@ docReady(function () {
         "qr-reader", { fps: 10, qrbox: 250 });
     html5QrcodeScanner.render(onScanSuccess);
 });
+callauto("party", "index.php?module=head&func=getparty&ce=0");
+function getdetails() {
+
+}
 </script>

@@ -51,5 +51,13 @@ class head extends common {
         $profile = $this->m->getall($this->m->query($sql));
         $this->sm->assign("head", $profile);
     }
+    function getparty() {
+        $f = $_REQUEST['filter'];
+        $sql = "SELECT id_head AS id, name AS value, zone, town  FROM {$this->prefix}head WHERE NAME like '%$f%' ORDER BY name";
+        $head = $this->m->getall($this->m->query($sql));
+        ob_clean();
+        echo json_encode($head, true);
+        exit;
+    }
 }
 ?>
