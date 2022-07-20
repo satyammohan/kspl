@@ -6,7 +6,7 @@ class order extends common {
         parent:: __construct();
     }
     function booking() {
-        $bar = $_REQUEST['barcode'];
+        $bar = @$_REQUEST['barcode'];
         if ($bar) {
             $sql = $this->create_select("{$this->prefix}product", "code='$bar'");
             $res =  $this->m->getall($this->m->query($sql));
