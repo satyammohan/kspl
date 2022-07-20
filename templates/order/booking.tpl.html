@@ -10,27 +10,27 @@
         </tr>
         <tr>
             <td><b>QR Code:</b></td>
-            <td><input type="text" class="form-control" required name="barcode" value="{$smarty.request.barcode}" size="30"/></td>
-                <td><input onclick="getdetails();" class="btn btn-primary" value="Search">
+            <td><input type="text" id="barcode" class="form-control" required name="barcode" value="{$smarty.request.barcode}" size="30"/></td>
+                <!-- <td><input onclick="getdetails();" class="btn btn-primary" value="Search"> -->
             </td>
         </tr>
         <tr>
             <Td colspan="10">
                 {if $smarty.request.barcode}
                     Name : {$product.name}<br>
-                    barcode : {$product.barcode}<br>
-                    code : {$product.code}<br>
-                    category : {$product.category}<br>
-                    type : {$product.type}<br>
-                    make : {$product.make}<br>
-                    mrp : {$product.mrp}<br>
+                    <!-- barcode : {$product.barcode}<br>
+                    code : {$product.code}<br> -->
+                    Category : {$product.category}<br>
+                    Type : {$product.type}<br>
+                    Make : {$product.make}<br>
+                    MRP : {$product.mrp}<br>
                     <!-- size : {$product.size} -->
 
                     {foreach from=$size item=mod}
                         <input placeholder="{$mod}" size=4>
                     {/foreach}
                     Copy <input type="checkbox">
-                    <input class="btn btn-primary" value="Save">
+                    <input class="btn btn-primary" onclick="save();" value="Save">
 
                 {else}
                     <div id="qr-reader" style="width: 600px"></div>
@@ -38,19 +38,32 @@
                 {/if}
             </Td>
         </tr>
-        <!-- <tr>
+        <tr>
             <td align="center" colspan="2">
                 <input type="submit" class="btn btn-success" value="Submit" />
                 <input type="reset"  class="btn btn-danger" value="Reset"/>
             </td>
-        </tr> -->
+        </tr>
     </table>
     </form>
 </fieldset>
 
+<div id="saved">
 
-
+</div>
+<style>
+    .bdr {
+        border: 2px solid black;
+    }
+</style>
 <script>
+function save() {
+    cid = "<span class='bdr'>"+$("#barcode").val()+"</span>";
+    pid = $("#saved").html();
+    $("#saved").html(pid+" "+cid);
+    $("#barcode").val('');
+    $("#barcode").focus();
+}
 function docReady(fn) {
     if (document.readyState === "complete" || document.readyState === "interactive") {
         setTimeout(fn, 1);
@@ -73,6 +86,7 @@ docReady(function () {
     html5QrcodeScanner.render(onScanSuccess);
 });
 callauto("party", "index.php?module=head&func=getparty&ce=0");
+callauto("barcode", "index.php?module=order&func=barcode&ce=0");
 function getdetails() {
 
 }

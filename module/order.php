@@ -28,5 +28,13 @@ class order extends common {
         $_SESSION['msg'] = "Record Successfully Updated";
         $this->redirect("index.php?module=partner&func=listing");
     }
+    function barcode() {
+        $f = $_REQUEST['filter'];
+        $sql = "SELECT id_product AS id, code AS value FROM {$this->prefix}product WHERE code like '%$f%' ORDER BY code LIMIT 10";
+        $head = $this->m->getall($this->m->query($sql));
+        ob_clean();
+        echo json_encode($head, true);
+        exit;
+    }
 }
 ?>
