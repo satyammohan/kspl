@@ -58,11 +58,15 @@
 </style>
 <script>
 function save() {
-    cid = "<span class='bdr'>"+$("#barcode").val()+"</span>";
+    bcode = $("#barcode").val();
+    cid = "<span class='bdr' onclick='loadme(\""+bcode+"\")'>"+bcode+"</span>";
     pid = $("#saved").html();
     $("#saved").html(pid+" "+cid);
     $("#barcode").val('');
     $("#barcode").focus();
+}
+function loadme(bcode) {
+    alert("Loading "+bcode);
 }
 function docReady(fn) {
     if (document.readyState === "complete" || document.readyState === "interactive") {
