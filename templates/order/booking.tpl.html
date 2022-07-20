@@ -59,10 +59,14 @@
 <script>
 function save() {
     bcode = $("#barcode").val();
-    cid = "<span class='bdr' onclick='loadme(\""+bcode+"\")'>"+bcode+"</span>";
-    pid = $("#saved").html();
-    $("#saved").html(pid+" "+cid);
-    $("#barcode").val('');
+    if(bcode) {
+        cid = "<span class='bdr' onclick='loadme(\""+bcode+"\")'>"+bcode+"</span>";
+        pid = $("#saved").html();
+        $("#saved").html(pid+" "+cid);
+        $("#barcode").val('');
+    } else {
+        alert("Please select a barcode");
+    }
     $("#barcode").focus();
 }
 function loadme(bcode) {
