@@ -3,8 +3,36 @@
     <form name="product" id="add_product" method="post" action="index.php?module=product&func={if $data.id_product}update{else}insert{/if}">
         <table  border="0" cellspacing="2" cellpadding="2">
             <tr>
+                <td><b>Brand:</b></td>
+                <td><input type="text" class="form-control" required name="product[brand]" value="{$data.brand}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Barcode:</b></td>
+                <td><input type="text" class="form-control" required name="product[barcode]" value="{$data.barcode}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Code:</b></td>
+                <td><input type="text" class="form-control" required name="product[code]" value="{$data.code}" size="30"/></td>
+            </tr>
+            <tr>
                 <td><b>Name:</b></td>
                 <td><input type="text" class="form-control" required name="product[name]" value="{$data.name}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Category:</b></td>
+                <td><input type="text" class="form-control" required name="product[category]" value="{$data.category}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Type:</b></td>
+                <td><input type="text" class="form-control" required name="product[type]" value="{$data.type}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>Make:</b></td>
+                <td><input type="text" class="form-control" required name="product[make]" value="{$data.make}" size="30"/></td>
+            </tr>
+            <tr>
+                <td><b>MRP:</b></td>
+                <td><input type="text" class="form-control" required name="product[mrp]" value="{$data.mrp}" size="30"/></td>
             </tr>
             <tr>
                 <td><b>Description:</b></td>
