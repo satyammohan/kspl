@@ -29,6 +29,7 @@
 <div id="saved">
 </div>
 <script>
+codeadded = '';
 callauto("party", "index.php?module=head&func=getparty&ce=0");
 callauto("barcode", "index.php?module=order&func=barcode&ce=0");
 function save() {
@@ -48,12 +49,20 @@ function loadme(bcode) {
 }
 function getdetails() {
     bcode = $("#barcode").val();
-    $.post("index.php?module=order&func=getdetails&ce=0&barcode="+bcode, function(res){
-        //alert(res);
-        $("#barcode").val('');
-        $("#barcode").focus();
-        drawhtml(JSON.parse(res));
-    });
+    if (bcode) {
+        if (codeadded.includes(","+bcode)) {
+            alert("Item already added");
+            return;
+        } else {
+            codeadded = codeadded + "," + bcode;
+        } 
+        $.post("index.php?module=order&func=getdetails&ce=0&barcode="+bcode, function(res){
+            //alert(res);
+            $("#barcode").val('');
+            $("#barcode").focus();
+            drawhtml(JSON.parse(res));
+        });
+    }
 }
 function drawhtml(r) {
     //console.log(r.product+'--'+r.size);
