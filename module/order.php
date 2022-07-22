@@ -8,17 +8,24 @@ class order extends common {
     function booking() {
         $bar = @$_REQUEST['barcode'];
         if ($bar) {
-            $sql = $this->create_select("{$this->prefix}product", "code='$bar'");
-            $res =  $this->m->getall($this->m->query($sql));
+            $this->getdetails(1);
+        }
+    }
+    function getdetails($ret=0) {
+        $bar = @$_REQUEST['barcode'];
+        $sql = $this->create_select("{$this->prefix}product", "code='$bar'");
+        $res =  $this->m->getall($this->m->query($sql));
+        $id_brand = $res[0]['id_brand'];
+        $sql = $this->create_select("{$this->prefix}brand", "id_brand='$id_brand'");
+        $r =  $this->m->getall($this->m->query($sql));
+        $size = $r[0]['size'];
+        $s = explode(",", $size);
+        if ($ret==1) {
             $this->sm->assign("product", $res[0]);
-
-            $id_brand = $res[0]['id_brand'];
-            $sql = $this->create_select("{$this->prefix}brand", "id_brand='$id_brand'");
-            $r =  $this->m->getall($this->m->query($sql));
-            $size = $r[0]['size'];
-            $s = explode(",", $size);
-            
             $this->sm->assign("size", $s);
+        } else {
+            echo json_encode(array("product"=>$res[0], "size"=>$s));
+            exit;
         }
     }
     function savebooking() {

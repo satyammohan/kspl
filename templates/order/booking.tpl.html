@@ -1,44 +1,36 @@
 <h4>Order Booking</h4>
 <form method="post">
-<table border="0" cellspacing="2" cellpadding="2">
+<table border="0" id="order" cellspacing="2" cellpadding="2">
     <tr>
         <td><b>Party:</b></td>
         <td><input type="text" class="form-control" required name="party" id="party" value="{$smarty.request.party}" size="30"/></td>
     </tr>
     <tr>
         <td><b>QR Code:</b></td>
-        <td><input type="text" id="barcode" onabort="getdetails()" class="form-control" required name="barcode" value="{$smarty.request.barcode}" size="30"/></td>
+        <td><input type="text" id="barcode" onblur="getdetails()" class="form-control" required name="barcode" value="{$smarty.request.barcode}" size="30"/></td>
         </td>
     </tr>
 
     <tr>
         <td>Name</td><td>Category</td><td>Type</td><td>Make</td><td>MRP</td><td>Copy</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
     </tr>
-    <tr>
-        {if $smarty.request.barcode}
-            <td>{$product.name}</td>
-            <td>{$product.category}</td>
-            <td>{$product.type}</td>
-            <td>{$product.make}</td>
-            <td>{$product.mrp}</td>
-            <td><input type="checkbox"></td>
-            {foreach from=$size item=mod}
-                <td><input placeholder="{$mod}" size=4></td>
-            {/foreach}
-            <td><input class="btn btn-primary" onclick="save();" value="Save"></td>
-        {/if}
-    </tr>
+    <body>
+    </body>
+    <tfoot>
     <tr>
         <td align="center" colspan="2">
             <input type="submit" class="btn btn-success" value="Submit" />
             <input type="reset"  class="btn btn-danger" value="Reset"/>
         </td>
     </tr>
+    </tfoot>
 </table>
 </form>
 <div id="saved">
 </div>
 <script>
+callauto("party", "index.php?module=head&func=getparty&ce=0");
+callauto("barcode", "index.php?module=order&func=barcode&ce=0");
 function save() {
     bcode = $("#barcode").val();
     if(bcode) {
@@ -54,10 +46,33 @@ function save() {
 function loadme(bcode) {
     alert("Loading "+bcode);
 }
-callauto("party", "index.php?module=head&func=getparty&ce=0");
-callauto("barcode", "index.php?module=order&func=barcode&ce=0");
 function getdetails() {
+    bcode = $("#barcode").val();
+    $.post("index.php?module=order&func=getdetails&ce=0&barcode="+bcode, function(res){
+        //alert(res);
+        $("#barcode").val('');
+        $("#barcode").focus();
+        drawhtml(JSON.parse(res));
+    });
+}
+function drawhtml(r) {
+    //console.log(r.product+'--'+r.size);
+    p = r.product;
+    html = '';
+    html = html + "<td>"+p.name+"</td>";
+    html = html + "<td>"+p.category+"</td>";
+    html = html + "<td>"+p.type+"</td>";
+    html = html + "<td>"+p.make+"</td>";
+    html = html + "<td>"+p.mrp+"</td>";
+    html = html + "<td><input type='checkbox'></td>";
 
+    s = r.size;
+    for(i in s) {
+        html = html + "<td><input size=4 placeholder='"+s[i]+"'</td>";
+    }
+    $("#order").find('tbody').append("<tr>"+html+"</tr>");
+
+    console.log(html);
 }
 </script>
 <style>
