@@ -45,7 +45,7 @@ class brand extends common {
     }
     function listing() {
         $this->get_permission("brand", "REPORT");
-        $sql = "SELECT * FROM {$this->prefix}brand ORDER BY company, brand, category";
+        $sql = "SELECT * FROM {$this->prefix}brand ORDER BY company, brand, product";
         $profile = $this->m->getall($this->m->query($sql));
         $this->sm->assign("brand", $profile);
     }

@@ -9,7 +9,7 @@
             </th>
             <th><a title="Add Head" href="index.php?module=product&func=edit"><i class="fa fa-plus fa-2x"></i></a></th>
         </tr>
-        <tr><th>Brand</th><th>Barcode</th><th>Code</th><th>Name</th><th>Category</th><th>Type</th><th>Make</th><th>MRP</th><th>Date</th><th>Action</th></tr>
+        <tr><th>Brand</th><th>Barcode</th><th>Code</th><th>Name</th><th>Description</th><th>Product</th><th>Fit</th><th>MRP</th><th>Date</th><th>Action</th></tr>
     </thead>
     {foreach from=$product item=mod}
     <tr>
@@ -17,9 +17,9 @@
         <td>{$mod.barcode}</td>
         <td>{$mod.code}</td>
         <td>{$mod.name}</td>
-        <td>{$mod.category}</td>
-        <td>{$mod.type}</td>
-        <td>{$mod.make}</td>
+        <td>{$mod.description}</td>
+        <td>{$mod.product}</td>
+        <td>{$mod.fit}</td>
         <td>{$mod.mrp}</td>
         <td>{$mod.date_added|date_format:"%d-%m-%Y"}</td>
         <td>

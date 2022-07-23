@@ -12,7 +12,7 @@
     </tr>
 
     <tr>
-        <td>Name</td><td>Category</td><td>Type</td><td>Make</td><td>MRP</td><td>Copy</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        <td>Barcode</th><td>Name</td><td>Product</td><td>Brand</td><td>Fit</td><td>MRP</td><td>Copy</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
     </tr>
     <body>
     </body>
@@ -68,10 +68,11 @@ function drawhtml(r) {
     //console.log(r.product+'--'+r.size);
     p = r.product;
     html = '';
+    html = html + "<td>"+p.barcode+"</td>";
     html = html + "<td>"+p.name+"</td>";
-    html = html + "<td>"+p.category+"</td>";
-    html = html + "<td>"+p.type+"</td>";
-    html = html + "<td>"+p.make+"</td>";
+    html = html + "<td>"+p.product+"</td>";
+    html = html + "<td>"+p.brand+"</td>";
+    html = html + "<td>"+p.fit+"</td>";
     html = html + "<td>"+p.mrp+"</td>";
     html = html + "<td><input type='checkbox'></td>";
 
