@@ -7,6 +7,12 @@ class util extends common {
         $this->table_prefix();
         parent:: __construct();
     }
+    function updatebrand() {
+        $sql = "UPDATE {$this->prefix}product p, {$this->prefix}brand b SET p.id_brand=b.id_brand WHERE p.brand=b.brand AND p.product=b.product";
+        $this->m->query( $sql );
+        $_SESSION[ 'msg' ] = 'Brand Update Successful.';
+        $this->redirect( 'index.php' );
+    }
     function checkindex() {
         $this->m->query("DROP view IF EXISTS `{$this->prefix}ledger`");
         $this->m->query("DROP view IF EXISTS `{$this->prefix}tb`");
